@@ -1,6 +1,6 @@
 # slogo team meeting 2/13
 
-## Discussion on Simulation team 5
+## Discussion on Simulation team 5  
 
 ###method should not be part of the API (i.e., it should not be public)
 

@@ -9,7 +9,7 @@ command from the UI, passing it to the parser, and calling the model for each li
 
 
 Public Methods 
-
+ 
 Constructor - create both a view, model and parser. 
 
 
