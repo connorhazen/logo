@@ -29,3 +29,8 @@ How is the GUI updated after a command has completed execution?
 execute. In order to get the drawing function to work, it would make sense for the front end to receive command-by-command updates 
 from the back end so that it can store where the turtle has been, but the display does not actually update until the entire 
 command has been run so that it can backtrack to its initial state if it runs into an error.
+
+* We are tentatively thinking that we will have a separate command parser that will be in the runner. So, the front end can 
+pass the string to the runner which can parse the command and then send the commands to the back end. This leaves some flexibility 
+to change the design later if we feel it makes more sense to put the parser in either the front end or the back end, or we can 
+keep it as is.
