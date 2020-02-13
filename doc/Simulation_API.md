@@ -93,4 +93,7 @@ grouped in some javafx object)
 ### internal: a new developer joins the the backend team and adds a new possible kind of simulation that can be available for the frontend to choose
 
 English: how do you want programmers to think of the process of using the API to accomplish this task using metaphors or analogies (e.g., folder paradigm), or standard programming ideas (e.g., step by step or substitution via polymorphism) beyond simply restating the procedural steps
+
+The backend is updated in order to code the update logic (Adding a Cell subclass), afterwards everything else is setup to know to direct to it given that the xml file is correctly setup
+
 Java: list the actual Java methods you expect to use from the API to accomplish this task with a comment about how they would be used (e.g., call, implement, or change)
