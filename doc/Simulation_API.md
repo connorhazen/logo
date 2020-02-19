@@ -1,4 +1,4 @@
-# slogo team meeting 2/13
+# exceptions team meeting 2/13
 
 ## Discussion on Simulation team 5  
 

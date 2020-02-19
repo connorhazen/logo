@@ -1,4 +1,4 @@
-package slogo;
+package exceptions;
 
 /**
  * Feel free to completely change this code or delete it entirely. 
