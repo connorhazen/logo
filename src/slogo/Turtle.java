@@ -1,21 +1,23 @@
+import java.util.List;
+import javafx.util.Pair;
+
 public interface Turtle{
-  public Turtle();
 
-  public boolean setLocation(double xCord, double yCord);
+  boolean setLocation(double xCord, double yCord);
 
-  public boolean changeSize(double newSize);
+  boolean changeSize(double newSize);
 
-  public double getX();
+  double getX();
 
-  public double getY();
+  double getY();
 
-  public boolean setAngle(double newAngle);
+  boolean setAngle(double newAngle);
 
-  public boolean reset();
+  boolean reset();
 
-  public boolean setPenDown(boolean penStatus);
+  boolean setPenDown(boolean penStatus);
 
-  public List<Pair<integer, integer>> getHistory();
+  List<Pair<Integer, Integer>> getHistory();
 
-  public boolean clearHistory();
+  boolean clearHistory();
 }

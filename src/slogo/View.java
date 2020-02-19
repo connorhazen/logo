@@ -1,9 +1,7 @@
 public interface View{
 
-  public View();
+  void redrawTurtle();
 
-  public redrawTurtle();
-
-  public void printError(Exception exception);
+  void printError(Exception exception);
 
 }
