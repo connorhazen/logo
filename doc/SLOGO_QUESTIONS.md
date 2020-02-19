@@ -1,4 +1,4 @@
-# SLogo High Level Design
+# SLogo High Level Design 
 
 When does parsing need to take place and what does it need to start properly?
 
