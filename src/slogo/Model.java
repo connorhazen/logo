@@ -1,12 +1,17 @@
+package slogo;
+
 import exceptions.UnkownCommandException;
 
-public interface Model{
+public class Model implements ModelInterface{
+    private Parser parser;
 
-  /**
-   * This method is called by the controller whenever the user clicks the run button.
-   * @param input String input to be parsed and executed.
-   * @return
-   */
-  boolean runCommand(String input) throws UnkownCommandException;
+    public Model(){
+        parser = new Parser();
+    }
 
+    @Override
+    public boolean runCommand(String input) throws UnkownCommandException {
+        String[] parsedCommand = parser.parseCommand(input);
+        return true;
+    }
 }
