@@ -10,7 +10,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class View implements ViewInterface  {
+public class View implements ViewInterface {
 
   private final ControllerInterface controller;
 
@@ -47,4 +47,5 @@ public class View implements ViewInterface  {
   public void printError(Exception exception) {
 
   }
+
 }
