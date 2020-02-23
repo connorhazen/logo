@@ -1,3 +1,4 @@
+package slogo;
 
 public interface ControllerInterface{
 

@@ -34,7 +34,7 @@
 
 * Simulator class
 
-* View class constructor and updateAllCells
+* ViewInterface class constructor and updateAllCells
 
 * controllerPackage constructor, updateSim, resetSim
 
@@ -64,7 +64,7 @@
 
 * all of CellVisual class
 
-* clear and replace colors from View method
+* clear and replace colors from ViewInterface method
 
 * the rest of the controllerPackage is internal
 
