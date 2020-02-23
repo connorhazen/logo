@@ -43,6 +43,8 @@ public class Turtle implements TurtleInterface{
         return true;
     }
 
+
+
     @Override
     public boolean changeSize(double newSize) {
         mySize = newSize;
@@ -62,6 +64,16 @@ public class Turtle implements TurtleInterface{
     @Override
     public double getY() {
         return myY;
+    }
+
+    @Override
+    public void setX(double x) {
+        myX = x;
+    }
+
+    @Override
+    public void setY(double y) {
+        myY = y;
     }
 
     @Override

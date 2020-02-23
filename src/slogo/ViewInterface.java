@@ -6,7 +6,7 @@ public interface ViewInterface {
   /**
    * This command is called after model has executed user command.
    */
-  void updateView();
+  void updateView(Turtle turtle);
 
   /**
    * Prints given exception message.

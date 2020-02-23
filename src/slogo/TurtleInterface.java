@@ -15,6 +15,10 @@ public interface TurtleInterface {
 
   double getY();
 
+  void setX(double x);
+
+  void setY(double y);
+
   boolean setAngle(double newAngle);
 
   double getAngle();
