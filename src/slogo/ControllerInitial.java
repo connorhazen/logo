@@ -3,33 +3,41 @@ package slogo;
 import java.util.ArrayList;
 import javafx.stage.Stage;
 
-public class ControllerInitial implements ControllerInterface{
+public class ControllerInitial implements ControllerInterface {
+
   private ViewInterface view;
   private ArrayList<ViewInterface> listeners;
+  private Turtle turtle;
 
-  public ControllerInitial(Stage primaryStage){
+  public ControllerInitial(Stage primaryStage) {
+
     listeners = new ArrayList<>();
     view = generateView(this, primaryStage);
+    turtle = new Turtle(250,250,10,10);
   }
 
-  private ViewInterface generateView(ControllerInterface cont, Stage primaryStage){
+  private ViewInterface generateView(ControllerInterface cont, Stage primaryStage) {
     ViewInterface view = new View(this, primaryStage);
     addViewListener(view);
     return view;
   }
 
-  private void addViewListener(ViewInterface vi){
+  private void addViewListener(ViewInterface vi) {
     listeners.add(vi);
   }
-  
-  private void alertView(){
-    for(ViewInterface vi : listeners){
-      vi.updateView();
+
+  private void alertView() {
+    for (ViewInterface vi : listeners) {
+      vi.updateView(new Turtle(250,250,0,10));
     }
   }
 
   @Override
-  public void updateModel() {
-
+  public void updateModel(String commandString) {
+    turtle.setX(turtle.getX()-20);
+    turtle.setY(turtle.getY()-20);
+    view.updateView(turtle);
   }
 }
+
+

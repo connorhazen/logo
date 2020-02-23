@@ -9,9 +9,15 @@ public interface TurtleInterface {
 
   boolean changeSize(double newSize);
 
+  double getSize();
+
   double getX();
 
   double getY();
+
+  void setX(double x);
+
+  void setY(double y);
 
   boolean setAngle(double newAngle);
 
@@ -19,7 +25,9 @@ public interface TurtleInterface {
 
   boolean reset();
 
-  boolean setPenDown(boolean penStatus);
+  boolean setPenStatus(boolean penStatus);
+
+  boolean getPenStatus();
 
   List<Pair<Integer, Integer>> getHistory();
 
