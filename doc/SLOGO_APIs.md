@@ -16,7 +16,7 @@ Constructor - create both a view, model and parser.
 ## Parser
 
 
-## View
+## ViewInterface
 The view is responsible for creating the UI and displaying the current turtle location and 
 any pen down drawings. 
 
