@@ -199,7 +199,7 @@ command is added to the environment's history.
  there and obtains its value. It replaces ‘cmd’ with ‘fd 50’ in the original command string that it was passed. It then 
  parses that command as normal.
  
- * Turtle moves off screen:
+ * TurtleInterface moves off screen:
  
  Only the view would know if the turtle has moved off the display screen. So, when view is called to update, it would 
  call internal methods to determine its new location. If the the pen was down, it would call either a class or method 
@@ -262,6 +262,6 @@ Sebastian: Main, Controller, Front End
 
 Connor: Main, Controller, Asst Front End
 
-Olga: Commands (including sub-classes), Turtle
+Olga: Commands (including sub-classes), TurtleInterface
 
 Avivah: Parser, General Model class 

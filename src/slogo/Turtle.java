@@ -1,23 +1,74 @@
-import java.util.List;
+package slogo;
+
 import javafx.util.Pair;
 
-public interface Turtle{
+import java.util.List;
 
-  boolean setLocation(double xCord, double yCord);
+public class Turtle implements TurtleInterface{
+    private int X;
+    private int Y;
+    private double angle;
+    private boolean penBool = false;
+    private List<Pair<Integer, Integer>> history;
 
-  boolean changeSize(double newSize);
+    private static final double threeSixty = 360;
 
-  double getX();
 
-  double getY();
+    public Turtle(int xCoor, int yCoor, double orrientation){
+        X = xCoor;
+        Y = yCoor;
+        angle = orrientation % threeSixty;
+    }
 
-  boolean setAngle(double newAngle);
+    @Override
+    public boolean setLocation(double xCord, double yCord) {
+        return false;
+    }
 
-  boolean reset();
+    @Override
+    public boolean changeSize(double newSize) {
+        return false;
+    }
 
-  boolean setPenDown(boolean penStatus);
+    @Override
+    public double getX() {
+        return X;
+    }
 
-  List<Pair<Integer, Integer>> getHistory();
+    @Override
+    public double getY() {
+        return Y;
+    }
 
-  boolean clearHistory();
+    @Override
+    public boolean setAngle(double newAngle) {
+        return false;
+    }
+
+    @Override
+    public double getAngle(){
+        return angle;
+    }
+
+    @Override
+    public boolean reset() {
+        return false;
+    }
+
+    @Override
+    public boolean setPenDown(boolean penStatus) {
+        penBool = penStatus;
+        return penStatus;
+    }
+
+    @Override
+    public List<Pair<Integer, Integer>> getHistory() {
+        return history;
+    }
+
+    @Override
+    public boolean clearHistory() {
+        history = null;
+        return true;
+    }
 }
