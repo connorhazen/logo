@@ -4,71 +4,107 @@ import javafx.util.Pair;
 
 import java.util.List;
 
+//todo: add checking for if updating turtle location is valid
+
 public class Turtle implements TurtleInterface{
-    private int X;
-    private int Y;
-    private double angle;
-    private boolean penBool = false;
-    private List<Pair<Integer, Integer>> history;
+    private static double myInitialX;
+    private static double myInitialY;
+    private static double myInitialAngle;
+    private static double myInitialSize;
+
+    private double myX;
+    private double myY;
+    private double myAngle;
+    private boolean myPenStatus = false;
+    private double mySize; // turtles are approximated by a circle shape with the diameter equal to mySize
+    private List<Pair<Integer, Integer>> myHistory;
 
     private static final double threeSixty = 360;
 
 
-    public Turtle(int xCoor, int yCoor, double orrientation){
-        X = xCoor;
-        Y = yCoor;
-        angle = orrientation % threeSixty;
+    public Turtle(double xCoor, double yCoor, double orrientation, double size){
+        myInitialX = xCoor;
+        myInitialY = yCoor;
+        myInitialAngle = orrientation % threeSixty;
+        myInitialSize = size;
+
+        myX = xCoor;
+        myY = yCoor;
+        mySize = size;
+        myAngle = orrientation % threeSixty;
     }
+
+
 
     @Override
     public boolean setLocation(double xCord, double yCord) {
-        return false;
+        myX = xCord;
+        myY = yCord;
+        return true;
     }
 
     @Override
     public boolean changeSize(double newSize) {
-        return false;
+        mySize = newSize;
+        return true;
+    }
+
+    @Override
+    public double getSize(){
+        return mySize;
     }
 
     @Override
     public double getX() {
-        return X;
+        return myX;
     }
 
     @Override
     public double getY() {
-        return Y;
+        return myY;
     }
 
     @Override
     public boolean setAngle(double newAngle) {
-        return false;
+        myAngle = newAngle % threeSixty;
+        return true;
     }
 
     @Override
     public double getAngle(){
-        return angle;
+        return myAngle;
     }
 
     @Override
     public boolean reset() {
-        return false;
+        myX = myInitialX;
+        myY = myInitialY;
+        mySize = myInitialSize;
+        myAngle = myInitialAngle;
+        myHistory = null;
+
+        return true;
     }
 
     @Override
-    public boolean setPenDown(boolean penStatus) {
-        penBool = penStatus;
+    public boolean setPenStatus(boolean penStatus) {
+        myPenStatus = penStatus;
         return penStatus;
     }
 
     @Override
+    public boolean getPenStatus(){
+        return myPenStatus;
+    }
+
+    @Override
     public List<Pair<Integer, Integer>> getHistory() {
-        return history;
+        return myHistory;
     }
 
     @Override
     public boolean clearHistory() {
-        history = null;
+        myHistory = null;
         return true;
     }
 }
