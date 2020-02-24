@@ -5,6 +5,8 @@ import javafx.util.Pair;
 
 public interface TurtleInterface {
 
+  int getID();
+
   boolean setLocation(double xCord, double yCord);
 
   boolean changeSize(double newSize);

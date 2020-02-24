@@ -5,12 +5,17 @@ import javafx.util.Pair;
 import java.util.List;
 
 //todo: add checking for if updating turtle location is valid
+//todo: add statuses for turtle command execution
+
+
 
 public class Turtle implements TurtleInterface{
     private static double myInitialX;
     private static double myInitialY;
     private static double myInitialAngle;
     private static double myInitialSize;
+
+    private static int myID;
 
     private double myX;
     private double myY;
@@ -22,11 +27,13 @@ public class Turtle implements TurtleInterface{
     private static final double threeSixty = 360;
 
 
-    public Turtle(double xCoor, double yCoor, double orrientation, double size){
+    public Turtle(int ID, double xCoor, double yCoor, double orrientation, double size){
         myInitialX = xCoor;
         myInitialY = yCoor;
         myInitialAngle = orrientation % threeSixty;
         myInitialSize = size;
+
+        myID = ID;
 
         myX = xCoor;
         myY = yCoor;
@@ -34,6 +41,10 @@ public class Turtle implements TurtleInterface{
         myAngle = orrientation % threeSixty;
     }
 
+    @Override
+    public int getID(){
+        return myID;
+    }
 
 
     @Override
