@@ -24,6 +24,10 @@ import slogo.windows.SelectLanguage;
 
 public class View implements ViewInterface {
 
+  private final int WIDTH = 500;
+  private final int HEIGHT = 500;
+
+
   private final ControllerInterface controller;
   private final Scene scene;
   private Stage mainStage;
@@ -33,7 +37,7 @@ public class View implements ViewInterface {
     this.mainStage = primaryStage;
     controller = cont;
     makeScreen(primaryStage);
-    scene = new Scene(createBorderPane(), 500, 500);
+    scene = new Scene(createBorderPane(), WIDTH, HEIGHT);
     mainStage.setScene(scene);
     mainStage.show();
     makeTurtle(turtle);
@@ -66,14 +70,14 @@ public class View implements ViewInterface {
   }
 
   private HBox createTopHBox(){
-    HBox htop = new HBox();
-    htop.setSpacing(5);
-    htop.getChildren().add(makeButton("Help", e -> helpWindow()));
-    htop.getChildren().add(makeButton("Set Pen Color", e -> setPenColorWindow()));
-    htop.getChildren().add(makeButton("Set Background Color", e -> setBackGroundColorWindow()));
-    htop.getChildren().add(makeButton("Set Image", e -> setImageWindow()));
-    htop.getChildren().add(makeButton("Language", e -> setLanguageWindow()));
-    return htop;
+    HBox hTop = new HBox();
+    hTop.setSpacing(5);
+    hTop.getChildren().add(makeButton("Help", e -> helpWindow()));
+    hTop.getChildren().add(makeButton("Set Pen Color", e -> setPenColorWindow()));
+    hTop.getChildren().add(makeButton("Set Background Color", e -> setBackGroundColorWindow()));
+    hTop.getChildren().add(makeButton("Set Image", e -> setImageWindow()));
+    hTop.getChildren().add(makeButton("Language", e -> setLanguageWindow()));
+    return hTop;
   }
 
   private void launchWindow(Application application){
@@ -116,7 +120,7 @@ public class View implements ViewInterface {
     ta.setStyle("-fx-max-height: 100;");
     ta.setOnKeyPressed(e -> submitText(e, ta.getText(), ta));
     Button run = makeButton("Run", e -> {controller.executeCommand(ta.getText()); ta.clear();});
-    run.setStyle("-fx-max-height: 100;");
+    run.setStyle("-fx-max-height: 100; -fx-min-width: 60;");
     bottom.getChildren().addAll(ta, run);
     return bottom;
   }
@@ -161,6 +165,8 @@ public class View implements ViewInterface {
 
   @Override
   public void printError(Exception exception) {
+
+    System.out.println(exception.getMessage());
 
   }
 
