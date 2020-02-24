@@ -1,4 +1,4 @@
-package slogo;
+package slogo.commands;
 
 public interface CommandInterface {
 

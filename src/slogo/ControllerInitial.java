@@ -3,6 +3,10 @@ package slogo;
 import java.util.ArrayList;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
+import slogo.ControllerInterface;
+import slogo.Turtle;
+import slogo.View;
+import slogo.ViewInterface;
 
 public class ControllerInitial implements ControllerInterface {
 
