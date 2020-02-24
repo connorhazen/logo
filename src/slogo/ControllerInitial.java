@@ -1,6 +1,7 @@
 package slogo;
 
 import java.util.ArrayList;
+import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
 public class ControllerInitial implements ControllerInterface {
@@ -37,6 +38,16 @@ public class ControllerInitial implements ControllerInterface {
     turtle.setX(turtle.getX()-20);
     turtle.setY(turtle.getY()-20);
     view.updateView(turtle);
+  }
+
+  @Override
+  public void executeCommand(String commandText) {
+    System.out.println(commandText);
+  }
+
+  @Override
+  public void setLanguage(String title) {
+    System.out.println("Language: " + title);
   }
 }
 
