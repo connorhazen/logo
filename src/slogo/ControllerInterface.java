@@ -1,5 +1,7 @@
 package slogo;
 
+import javafx.scene.control.TextArea;
+
 public interface ControllerInterface{
 
 
@@ -10,4 +12,7 @@ public interface ControllerInterface{
   void updateModel(String commandString); //private
 
 
+  void executeCommand(String commandText);
+
+  void setLanguage(String title);
 }

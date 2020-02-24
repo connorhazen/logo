@@ -5,8 +5,12 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -43,15 +47,21 @@ public class View implements ViewInterface {
 
   }
 
+
   private BorderPane createBorderPane(){
     BorderPane borderPane = new BorderPane();
     borderPane.setTop(createTopHBox());
     borderPane.setRight(createRightVBox());
     borderPane.setBottom(createBottomHBox());
+    borderPane.setCenter(createMiddleCanvas());
     borderPane.setStyle("-fx-padding: 10;");
     return borderPane;
   }
 
+  private Canvas createMiddleCanvas(){
+    Canvas canvas = new Canvas();
+    return canvas;
+  }
   private VBox createRightVBox(){
     VBox right = new VBox();
     TextArea ta1 = new TextArea();
@@ -76,7 +86,7 @@ public class View implements ViewInterface {
 
   private void launchWindow(Application application){
     try{
-      application.start(mainStage);
+      application.start(new Stage());
     } catch (Exception e){
       //TODO: Implement proper error handling
       e.printStackTrace();
@@ -88,7 +98,7 @@ public class View implements ViewInterface {
   }
 
   private void setImageWindow() {
-    ImageSelection iw = new ImageSelection(controller);
+    ImageSelection iw = new ImageSelection(this);
     launchWindow(iw);
   }
 
@@ -111,8 +121,16 @@ public class View implements ViewInterface {
     HBox bottom = new HBox();
     TextArea ta = new TextArea();
     ta.setStyle("-fx-max-height: 100;");
+    ta.setOnKeyPressed(e -> submitText(e, ta.getText(), ta));
     bottom.getChildren().add(ta);
     return bottom;
+  }
+
+  private void submitText(KeyEvent keyEvent, String commandText, TextArea ta) {
+    if(keyEvent.getCode() == KeyCode.ENTER){
+      controller.executeCommand(commandText);
+      ta.clear();
+    }
   }
 
   private Button makeButton(String title, EventHandler<ActionEvent> ae){
