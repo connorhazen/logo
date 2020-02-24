@@ -1,10 +1,8 @@
 package slogo;
 
-
-import java.util.concurrent.TimeUnit;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -13,23 +11,28 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.util.Duration;
+import slogo.windows.BackgroundColor;
+import slogo.windows.HelpWindow;
+import slogo.windows.ImageSelection;
+import slogo.windows.PenColorWindow;
+import slogo.windows.SelectLanguage;
 
 public class View implements ViewInterface {
 
   private final ControllerInterface controller;
   private final Scene scene;
   private final Circle tCircle;
+  private Stage mainStage;
 
   public View(ControllerInterface cont, Stage primaryStage){
+    this.mainStage = primaryStage;
     controller = cont;
     makeScreen(primaryStage);
     Group root = new Group();
     scene = new Scene(createBorderPane(), 500, 500);
-    primaryStage.setScene(scene);
-    primaryStage.show();
+    mainStage.setScene(scene);
+    mainStage.show();
 
 
     tCircle = makeTurtle();
@@ -52,9 +55,9 @@ public class View implements ViewInterface {
   private VBox createRightVBox(){
     VBox right = new VBox();
     TextArea ta1 = new TextArea();
-    ta1.setStyle("-fx-max-width: 150");
+    ta1.setStyle("-fx-max-width: 150;");
     TextArea ta2 = new TextArea();
-    ta2.setStyle("-fx-max-width: 150");
+    ta2.setStyle("-fx-max-width: 150;");
     right.getChildren().add(ta1);
     right.getChildren().add(ta2);
     return right;
@@ -62,10 +65,46 @@ public class View implements ViewInterface {
 
   private HBox createTopHBox(){
     HBox htop = new HBox();
-    htop.getChildren().add(makeButton("Button 1"));
-    htop.getChildren().add(makeButton("Button 2"));
-    htop.getChildren().add(makeButton("Button 3"));
+    htop.setSpacing(5);
+    htop.getChildren().add(makeButton("Help", e -> helpWindow()));
+    htop.getChildren().add(makeButton("Set Pen Color", e -> setPenColorWindow()));
+    htop.getChildren().add(makeButton("Set Background Color", e -> setBackGroundColorWindow()));
+    htop.getChildren().add(makeButton("Set Image", e -> setImageWindow()));
+    htop.getChildren().add(makeButton("Language", e -> setLanguageWindow()));
     return htop;
+  }
+
+  private void launchWindow(Application application){
+    try{
+      application.start(mainStage);
+    } catch (Exception e){
+      //TODO: Implement proper error handling
+      e.printStackTrace();
+    }
+  }
+  private void setLanguageWindow() {
+    SelectLanguage sl = new SelectLanguage(controller);
+    launchWindow(sl);
+  }
+
+  private void setImageWindow() {
+    ImageSelection iw = new ImageSelection(controller);
+    launchWindow(iw);
+  }
+
+  private void setBackGroundColorWindow() {
+    BackgroundColor bc = new BackgroundColor(controller);
+    launchWindow(bc);
+  }
+
+  private void setPenColorWindow() {
+    PenColorWindow pcw = new PenColorWindow(controller);
+    launchWindow(pcw);
+  }
+
+  private void helpWindow() {
+    HelpWindow hw = new HelpWindow(controller);
+    launchWindow(hw);
   }
 
   private HBox createBottomHBox(){
@@ -76,8 +115,11 @@ public class View implements ViewInterface {
     return bottom;
   }
 
-  private Button makeButton(String title){
-    return new Button(title);
+  private Button makeButton(String title, EventHandler<ActionEvent> ae){
+    Button btn = new Button(title);
+    btn.setOnAction(ae);
+    btn.setStyle("-fx-padding: 5px");
+    return btn;
   }
 
 //  private void startAnimation() {
