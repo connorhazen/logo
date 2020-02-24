@@ -26,23 +26,17 @@ public class View implements ViewInterface {
 
   private final ControllerInterface controller;
   private final Scene scene;
-  private final Circle tCircle;
   private Stage mainStage;
+  private Canvas canvas;
 
-  public View(ControllerInterface cont, Stage primaryStage){
+  public View(ControllerInterface cont, Stage primaryStage, Turtle turtle){
     this.mainStage = primaryStage;
     controller = cont;
     makeScreen(primaryStage);
-    Group root = new Group();
     scene = new Scene(createBorderPane(), 500, 500);
     mainStage.setScene(scene);
     mainStage.show();
-
-
-    tCircle = makeTurtle();
-    root.getChildren().add(tCircle);
-    //startAnimation();
-
+    makeTurtle(turtle);
   }
 
 
@@ -57,7 +51,7 @@ public class View implements ViewInterface {
   }
 
   private Canvas createMiddleCanvas(){
-    Canvas canvas = new Canvas();
+    canvas = new Canvas();
     return canvas;
   }
   private VBox createRightVBox(){
@@ -151,16 +145,17 @@ public class View implements ViewInterface {
   private void makeScreen(Stage primaryStage){
 
   }
-  private Circle makeTurtle(){
-    Circle ret = new Circle(250,250,10);
-    return ret;
+
+  private void makeTurtle(Turtle turtle){
+    GraphicsContext gc = canvas.getGraphicsContext2D();
+    gc.fillOval(turtle.getX(), turtle.getY(), turtle.getSize(), turtle.getSize());
+    System.out.println("here");
   }
 
 
   @Override
   public void updateView(Turtle turtle) {
-    tCircle.setCenterX(turtle.getX());
-    tCircle.setCenterY(turtle.getY());
+    makeTurtle(turtle);
   }
 
 

@@ -9,6 +9,6 @@ public interface ModelInterface{
    * @param input String input to be parsed and executed.
    * @return
    */
-  boolean runCommand(String input) throws UnkownCommandException;
+  Turtle runCommand(String input, Turtle turtle) throws UnkownCommandException;
 
 }

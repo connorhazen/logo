@@ -12,17 +12,22 @@ public class ControllerInitial implements ControllerInterface {
 
   private ViewInterface view;
   private ArrayList<ViewInterface> listeners;
-  private Turtle turtle;
+  private Turtle myTurtle;
+  private Model model;
 
   public ControllerInitial(Stage primaryStage) {
 
+    model = new Model();
+
+    myTurtle = new Turtle(250,250,10,10, 10);
     listeners = new ArrayList<>();
-    view = generateView(this, primaryStage);
-    turtle = new Turtle(250,250,10,10, 10);
+    view = generateView(this, primaryStage, myTurtle);
+
   }
 
-  private ViewInterface generateView(ControllerInterface cont, Stage primaryStage) {
-    ViewInterface view = new View(this, primaryStage);
+  private ViewInterface generateView(ControllerInterface cont, Stage primaryStage,
+      Turtle turtle) {
+    ViewInterface view = new View(this, primaryStage, turtle);
     addViewListener(view);
     return view;
   }
@@ -38,14 +43,13 @@ public class ControllerInitial implements ControllerInterface {
   }
 
   @Override
-  public void updateModel(String commandString) {
-    turtle.setX(turtle.getX()-20);
-    turtle.setY(turtle.getY()-20);
-    view.updateView(turtle);
-  }
-
-  @Override
   public void executeCommand(String commandText) {
+    try{
+      view.updateView(model.runCommand(commandText, myTurtle));
+    }
+    catch (exceptions.UnkownCommandException e){
+      view.printError(e);
+    }
     System.out.println(commandText);
   }
 
