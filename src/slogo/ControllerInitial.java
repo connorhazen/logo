@@ -18,7 +18,7 @@ public class ControllerInitial implements ControllerInterface {
 
     listeners = new ArrayList<>();
     view = generateView(this, primaryStage);
-    turtle = new Turtle(250,250,10,10);
+    turtle = new Turtle(250,250,10,10, 10);
   }
 
   private ViewInterface generateView(ControllerInterface cont, Stage primaryStage) {
@@ -33,7 +33,7 @@ public class ControllerInitial implements ControllerInterface {
 
   private void alertView() {
     for (ViewInterface vi : listeners) {
-      vi.updateView(new Turtle(250,250,0,10));
+      vi.updateView(new Turtle(250,250,0,10,10));
     }
   }
 

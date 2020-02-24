@@ -41,8 +41,6 @@ public class View implements ViewInterface {
 
     tCircle = makeTurtle();
     root.getChildren().add(tCircle);
-    root.getChildren().add(makeRun());
-
     //startAnimation();
 
   }
@@ -119,10 +117,13 @@ public class View implements ViewInterface {
 
   private HBox createBottomHBox(){
     HBox bottom = new HBox();
+    bottom.setSpacing(5);
     TextArea ta = new TextArea();
     ta.setStyle("-fx-max-height: 100;");
     ta.setOnKeyPressed(e -> submitText(e, ta.getText(), ta));
-    bottom.getChildren().add(ta);
+    Button run = makeButton("Run", e -> {controller.executeCommand(ta.getText()); ta.clear();});
+    run.setStyle("-fx-max-height: 100;");
+    bottom.getChildren().addAll(ta, run);
     return bottom;
   }
 
@@ -155,20 +156,12 @@ public class View implements ViewInterface {
     return ret;
   }
 
-  private Button makeRun(){
-    Button b = new Button();
-
-    b.setOnAction(e -> {controller.updateModel("");});
-    return b;
-
-  }
 
   @Override
   public void updateView(Turtle turtle) {
     tCircle.setCenterX(turtle.getX());
     tCircle.setCenterY(turtle.getY());
   }
-
 
 
   @Override
