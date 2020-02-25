@@ -1,17 +1,22 @@
 package slogo;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.security.Key;
+import java.util.HashMap;
+import java.util.Scanner;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
-import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -89,12 +94,52 @@ public class View implements ViewInterface {
   private HBox createTopHBox(){
     HBox hTop = new HBox();
     hTop.setSpacing(5);
-    hTop.getChildren().add(makeButton("Help", e -> helpWindow()));
-    hTop.getChildren().add(makeButton("Set Pen Color", e -> setPenColorWindow()));
-    hTop.getChildren().add(makeButton("Set Background Color", e -> setBackGroundColorWindow()));
-    hTop.getChildren().add(makeButton("Set Image", e -> setImageWindow()));
+    HashMap<String, EventHandler<ActionEvent>> buttonMap = getButtonProperties();
+    try{
+      for(String k : buttonMap.keySet()){
+        Class[] paraActionEvent = new Class[1];
+        paraActionEvent[0] = EventHandler.class;
+        Class[] paraString = new Class[1];
+        paraString[0] = String.class;
+        Class<?> cls = Button.class;
+        Object obj = cls.getDeclaredConstructor().newInstance();
+        Method method = Labeled.class.getDeclaredMethod("setText", paraString);
+        method.invoke(obj, k);
+        Method method2 = ButtonBase.class.getDeclaredMethod("setOnAction", EventHandler.class);
+        method2.invoke(obj, buttonMap.get(k));
+        hTop.getChildren().add((Button) obj);
+      }
+
+    } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException cnfe){
+      //TODO: Proper error handling
+      System.out.println("Error" + cnfe.toString());
+    }
     hTop.getChildren().add(setLanguageWindow());
     return hTop;
+  }
+  private HashMap<String, EventHandler<ActionEvent>> getButtonProperties() {
+    HashMap<String, EventHandler<ActionEvent>> buttonMap = new HashMap<>();
+    EventHandler<ActionEvent>[] eae = new EventHandler[]
+        {e -> helpWindow(),
+            e -> setPenColorWindow(),
+            e -> setBackGroundColorWindow(),
+            e -> setImageWindow()
+        };
+    Scanner s;
+    try{
+      s = new Scanner(new File("src/slogo/button_properties.txt"));
+      s.useDelimiter(" ");
+      while(s.hasNext()){
+        int i = 0;
+        buttonMap.putIfAbsent(s.next(), eae[i]);
+        i++;
+      }
+      System.out.println(buttonMap.toString());
+    } catch(FileNotFoundException fnfe){
+      //TODO: Implement proper error handling
+      System.out.println("File not found");
+    }
+    return buttonMap;
   }
 
   private void launchWindow(Application application){
@@ -110,6 +155,7 @@ public class View implements ViewInterface {
   }
 
   private void setImageWindow() {
+    System.out.println("tedst");
     ImageSelection iw = new ImageSelection(this);
     launchWindow(iw);
   }
