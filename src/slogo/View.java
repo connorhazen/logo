@@ -19,6 +19,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import slogo.windows.BackgroundColor;
 import slogo.windows.HelpWindow;
@@ -37,6 +39,7 @@ public class View implements ViewInterface {
   private Stage mainStage;
   private Pane canvas;
   private Turtle currentTurtle;
+  private static final String STYLESHEET = "slogo/default.css";
 
   public View(ControllerInterface cont, Stage primaryStage, Turtle turtle){
     currentTurtle = turtle;
@@ -45,6 +48,7 @@ public class View implements ViewInterface {
     makeScreen(primaryStage);
     BorderPane pane = createBorderPane();
     scene = new Scene(pane, WIDTH, HEIGHT);
+    scene.getStylesheets().add(STYLESHEET);
     mainStage.setScene(scene);
     mainStage.show();
     makeTurtle(turtle);
@@ -62,7 +66,13 @@ public class View implements ViewInterface {
 
   private Pane createMiddleCanvas(){
     canvas = new Pane();
-    canvas.setVisible(true);
+    Rectangle edges = new Rectangle();
+    canvas.getChildren().add(edges);
+
+    edges.widthProperty().bind(canvas.widthProperty());
+    edges.heightProperty().bind(canvas.heightProperty());
+    edges.setFill(Color.WHITE);
+
     return canvas;
   }
   private VBox createRightVBox(){
