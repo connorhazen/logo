@@ -34,18 +34,15 @@ public abstract class TurtleCommand extends Command implements TurtleSpecificCom
         currentTurtle.setAngle(newAngle);
     }
 
+    protected void turn(double deltaAngle, Turtle currentTurtle){
+        double currentAngle = currentTurtle.getAngle();
+        setHeading(currentAngle + deltaAngle, currentTurtle);
+    }
+
     protected Pair<Double, Double> getPosition(Turtle currentTurtle) {
         double xPos = currentTurtle.getX();
         double yPos = currentTurtle.getY();
         return new Pair(xPos, yPos);
-    }
-
-    protected void togglePenState() {
-        // TODO
-    }
-
-    protected void togglePenVisibility() {
-        // TODO
     }
 
     protected void checkNegativeArgumentException(double distance) {
