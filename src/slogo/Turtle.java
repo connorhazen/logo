@@ -49,12 +49,13 @@ public class Turtle implements TurtleInterface{
 
     @Override
     public boolean setLocation(double xCord, double yCord) {
+        Pair storeCurLoc = new Pair(myX, myY);
+        myHistory.add(storeCurLoc);
+
         myX = xCord;
         myY = yCord;
         return true;
     }
-
-
 
     @Override
     public boolean changeSize(double newSize) {
