@@ -1,11 +1,12 @@
 package slogo;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.Property;
+
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.util.Pair;
 
-import java.util.List;
+
 
 //todo: add checking for if updating turtle location is valid
 //todo: add statuses for turtle command execution
@@ -23,10 +24,10 @@ public class Turtle implements TurtleInterface{
     private SimpleDoubleProperty myX;
     private SimpleDoubleProperty myY;
     private double myAngle;
-    private boolean myPenStatus = true; // down when false
+    private boolean myPenStatus = true; // up when false
     private boolean myVisibilityStatus = true; //visibile when true
     private double mySize; // turtles are approximated by a circle shape with the diameter equal to mySize
-    private List<Pair<Integer, Integer>> myHistory;
+    private ObservableList<Object> myHistory;
 
     private static final double threeSixty = 360;
 
@@ -43,6 +44,8 @@ public class Turtle implements TurtleInterface{
         myY = new SimpleDoubleProperty(yCoor);
         mySize = size;
         myAngle = orrientation % threeSixty;
+
+        myHistory =  FXCollections.observableArrayList();
     }
 
     @Override
@@ -53,11 +56,14 @@ public class Turtle implements TurtleInterface{
 
     @Override
     public boolean setLocation(double xCord, double yCord) {
-        Pair storeCurLoc = new Pair(myX.getValue(), myY.getValue());
-        myHistory.add(storeCurLoc);
+        Pair<Double, Double> storeCurLoc = new Pair<>(myX.getValue(), myY.getValue());
+
+
 
         myX.set(xCord);
         myY.set(yCord);
+
+        myHistory.add(storeCurLoc);
         return true;
     }
 
@@ -120,7 +126,7 @@ public class Turtle implements TurtleInterface{
 
         mySize = myInitialSize;
         myAngle = myInitialAngle;
-        myHistory = null;
+        myHistory .clear();
 
         return true;
     }
@@ -137,13 +143,13 @@ public class Turtle implements TurtleInterface{
     }
 
     @Override
-    public List<Pair<Integer, Integer>> getHistory() {
+    public ObservableList<Object> getHistory() {
         return myHistory;
     }
 
     @Override
     public boolean clearHistory() {
-        myHistory = null;
+        myHistory.clear();
         return true;
     }
 
