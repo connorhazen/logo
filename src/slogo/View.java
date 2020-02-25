@@ -2,11 +2,14 @@ package slogo;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -45,6 +48,7 @@ public class View implements ViewInterface {
   private Pane canvas;
   private Turtle currentTurtle;
   private static final String STYLESHEET = "slogo/default.css";
+  private static final String PROPERTIES = "src/slogo/button_properties.txt";
 
   public View(ControllerInterface cont, Stage primaryStage, Turtle turtle){
     currentTurtle = turtle;
@@ -91,23 +95,33 @@ public class View implements ViewInterface {
     return right;
   }
 
+  private List<EventHandler<ActionEvent>> getButtonActions(){
+    return new ArrayList<EventHandler<ActionEvent>>(){{
+      add(e -> helpWindow());
+      add(e -> setPenColorWindow());
+      add(e -> setBackGroundColorWindow());
+      add(e -> setImageWindow());
+    }};
+  }
   private HBox createTopHBox(){
+    List<EventHandler<ActionEvent>> eae = getButtonActions();
+    List<String> buttonMap = getButtonProperties();
     HBox hTop = new HBox();
     hTop.setSpacing(5);
-    HashMap<String, EventHandler<ActionEvent>> buttonMap = getButtonProperties();
     try{
-      for(String k : buttonMap.keySet()){
+      int index = 0;
+      for(String k : buttonMap){
         Class[] paraActionEvent = new Class[1];
         paraActionEvent[0] = EventHandler.class;
         Class[] paraString = new Class[1];
         paraString[0] = String.class;
-        Class<?> cls = Button.class;
-        Object obj = cls.getDeclaredConstructor().newInstance();
-        Method method = Labeled.class.getDeclaredMethod("setText", paraString);
-        method.invoke(obj, k);
-        Method method2 = ButtonBase.class.getDeclaredMethod("setOnAction", EventHandler.class);
-        method2.invoke(obj, buttonMap.get(k));
+        Object obj = Button.class.getDeclaredConstructor().newInstance();
+        Method setText = Labeled.class.getDeclaredMethod("setText", paraString);
+        setText.invoke(obj, k);
+        Method setOnAction = ButtonBase.class.getDeclaredMethod("setOnAction", EventHandler.class);
+        setOnAction.invoke(obj, (EventHandler<ActionEvent>) eae.get(index));
         hTop.getChildren().add((Button) obj);
+        index++;
       }
 
     } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException cnfe){
@@ -117,24 +131,15 @@ public class View implements ViewInterface {
     hTop.getChildren().add(setLanguageWindow());
     return hTop;
   }
-  private HashMap<String, EventHandler<ActionEvent>> getButtonProperties() {
-    HashMap<String, EventHandler<ActionEvent>> buttonMap = new HashMap<>();
-    EventHandler<ActionEvent>[] eae = new EventHandler[]
-        {e -> helpWindow(),
-            e -> setPenColorWindow(),
-            e -> setBackGroundColorWindow(),
-            e -> setImageWindow()
-        };
+  private ArrayList<String> getButtonProperties() {
+    ArrayList<String> buttonMap = new ArrayList<>();
     Scanner s;
     try{
-      s = new Scanner(new File("src/slogo/button_properties.txt"));
+      s = new Scanner(new File(PROPERTIES));
       s.useDelimiter(" ");
       while(s.hasNext()){
-        int i = 0;
-        buttonMap.putIfAbsent(s.next(), eae[i]);
-        i++;
+        buttonMap.add(s.next());
       }
-      System.out.println(buttonMap.toString());
     } catch(FileNotFoundException fnfe){
       //TODO: Implement proper error handling
       System.out.println("File not found");
@@ -155,7 +160,6 @@ public class View implements ViewInterface {
   }
 
   private void setImageWindow() {
-    System.out.println("tedst");
     ImageSelection iw = new ImageSelection(this);
     launchWindow(iw);
   }
