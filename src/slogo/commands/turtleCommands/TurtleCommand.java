@@ -16,7 +16,7 @@ public abstract class TurtleCommand extends Command implements TurtleSpecificCom
     protected void move(double distance, Turtle currentTurtle) {
         double xLoc = currentTurtle.getX();
         double yLoc = currentTurtle.getY();
-        double angle = currentTurtle.getAngle();
+        double angle = Math.toRadians(currentTurtle.getAngle());
 
         xLoc = xLoc + distance * Math.cos(angle);
         yLoc = yLoc + distance * Math.sin(angle);
@@ -24,6 +24,7 @@ public abstract class TurtleCommand extends Command implements TurtleSpecificCom
 
         moveToLoc(xLoc, yLoc, currentTurtle);
     }
+
 
     protected void moveToLoc(double newX, double newY, Turtle currentTurtle) {
         currentTurtle.setLocation(newX, newY);
