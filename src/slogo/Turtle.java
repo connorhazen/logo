@@ -23,7 +23,8 @@ public class Turtle implements TurtleInterface{
     private SimpleDoubleProperty myX;
     private SimpleDoubleProperty myY;
     private double myAngle;
-    private boolean myPenStatus = false;
+    private boolean myPenStatus = true; // down when false
+    private boolean myVisibilityStatus = true; //visibile when true
     private double mySize; // turtles are approximated by a circle shape with the diameter equal to mySize
     private List<Pair<Integer, Integer>> myHistory;
 
@@ -144,5 +145,16 @@ public class Turtle implements TurtleInterface{
     public boolean clearHistory() {
         myHistory = null;
         return true;
+    }
+
+    @Override
+    public boolean getVisibilityStatus() {
+        return myVisibilityStatus;
+    }
+
+    @Override
+    public boolean setVisibilityStatus(boolean visibilityStatus) {
+        myVisibilityStatus = visibilityStatus;
+        return myVisibilityStatus;
     }
 }

@@ -40,4 +40,8 @@ public interface TurtleInterface {
   List<Pair<Integer, Integer>> getHistory();
 
   boolean clearHistory();
+
+  boolean getVisibilityStatus();
+
+  boolean setVisibilityStatus(boolean visibilityStatus);
 }
