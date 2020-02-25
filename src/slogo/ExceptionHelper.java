@@ -8,7 +8,7 @@ import javafx.scene.control.Alert.AlertType;
 
 public class ExceptionHelper {
   Alert alert;
-
+  private static final String EXCEPTION_MESSAGES = "src/slogo/exception_messages.txt";
   public ExceptionHelper(){
     alert = new Alert(AlertType.ERROR);
   }
@@ -29,7 +29,7 @@ public class ExceptionHelper {
   public String getErrorMessage(Exception e){
     Scanner s;
     try{
-      s = new Scanner(new File("src/slogo/exception_messages.txt"));
+      s = new Scanner(new File(EXCEPTION_MESSAGES));
       s.useDelimiter(":");
       while(s.hasNext()){
         if(s.next().equals(e.getClass().getCanonicalName())) return s.next();
