@@ -1,20 +1,22 @@
 package slogo;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import slogo.windows.BackgroundColor;
 import slogo.windows.HelpWindow;
@@ -31,13 +33,16 @@ public class View implements ViewInterface {
   private final ControllerInterface controller;
   private final Scene scene;
   private Stage mainStage;
-  private Canvas canvas;
+  private Pane canvas;
+  private Turtle currentTurtle;
 
   public View(ControllerInterface cont, Stage primaryStage, Turtle turtle){
+    currentTurtle = turtle;
     this.mainStage = primaryStage;
     controller = cont;
     makeScreen(primaryStage);
-    scene = new Scene(createBorderPane(), WIDTH, HEIGHT);
+    BorderPane pane = createBorderPane();
+    scene = new Scene(pane, WIDTH, HEIGHT);
     mainStage.setScene(scene);
     mainStage.show();
     makeTurtle(turtle);
@@ -50,12 +55,11 @@ public class View implements ViewInterface {
     borderPane.setRight(createRightVBox());
     borderPane.setBottom(createBottomHBox());
     borderPane.setCenter(createMiddleCanvas());
-    borderPane.setStyle("-fx-padding: 10;");
     return borderPane;
   }
 
-  private Canvas createMiddleCanvas(){
-    canvas = new Canvas();
+  private Pane createMiddleCanvas(){
+    canvas = new Pane();
     return canvas;
   }
   private VBox createRightVBox(){
@@ -151,15 +155,14 @@ public class View implements ViewInterface {
   }
 
   private void makeTurtle(Turtle turtle){
-    GraphicsContext gc = canvas.getGraphicsContext2D();
-    gc.fillOval(turtle.getX(), turtle.getY(), turtle.getSize(), turtle.getSize());
-    System.out.println("here");
+    TurtleDrawer.drawTurtle(canvas, turtle);
   }
 
 
   @Override
   public void updateView(Turtle turtle) {
-    makeTurtle(turtle);
+    currentTurtle = turtle;
+    makeTurtle(currentTurtle);
   }
 
 
