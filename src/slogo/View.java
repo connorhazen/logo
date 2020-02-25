@@ -10,6 +10,8 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -26,8 +28,8 @@ import slogo.windows.SelectLanguage;
 
 public class View implements ViewInterface {
 
-  private final int WIDTH = 500;
-  private final int HEIGHT = 500;
+  private final int WIDTH = 900;
+  private final int HEIGHT = 600;
 
 
   private final ControllerInterface controller;
@@ -60,14 +62,15 @@ public class View implements ViewInterface {
 
   private Pane createMiddleCanvas(){
     canvas = new Pane();
+    canvas.setVisible(true);
     return canvas;
   }
   private VBox createRightVBox(){
     VBox right = new VBox();
+    right.setSpacing(5);
+    right.setPrefWidth(150);
     TextArea ta1 = new TextArea();
-    ta1.setStyle("-fx-max-width: 150;");
     TextArea ta2 = new TextArea();
-    ta2.setStyle("-fx-max-width: 150;");
     right.getChildren().add(ta1);
     right.getChildren().add(ta2);
     return right;
@@ -80,7 +83,7 @@ public class View implements ViewInterface {
     hTop.getChildren().add(makeButton("Set Pen Color", e -> setPenColorWindow()));
     hTop.getChildren().add(makeButton("Set Background Color", e -> setBackGroundColorWindow()));
     hTop.getChildren().add(makeButton("Set Image", e -> setImageWindow()));
-    hTop.getChildren().add(makeButton("Language", e -> setLanguageWindow()));
+    hTop.getChildren().add(setLanguageWindow());
     return hTop;
   }
 
@@ -92,9 +95,8 @@ public class View implements ViewInterface {
       e.printStackTrace();
     }
   }
-  private void setLanguageWindow() {
-    SelectLanguage sl = new SelectLanguage(controller);
-    launchWindow(sl);
+  private ChoiceBox setLanguageWindow() {
+    return SelectLanguage.languageDropDown(controller);
   }
 
   private void setImageWindow() {
@@ -119,12 +121,12 @@ public class View implements ViewInterface {
 
   private HBox createBottomHBox(){
     HBox bottom = new HBox();
+    bottom.setPrefHeight(100);
     bottom.setSpacing(5);
     TextArea ta = new TextArea();
-    ta.setStyle("-fx-max-height: 100;");
     ta.setOnKeyPressed(e -> submitText(e, ta.getText(), ta));
     Button run = makeButton("Run", e -> {controller.executeCommand(ta.getText()); ta.clear();});
-    run.setStyle("-fx-max-height: 100; -fx-min-width: 60;");
+    run.setPrefHeight(bottom.getPrefHeight());
     bottom.getChildren().addAll(ta, run);
     return bottom;
   }
