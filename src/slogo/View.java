@@ -209,6 +209,7 @@ public class View implements ViewInterface {
   }
 
 
+
   private Button makeButton(String title, EventHandler<ActionEvent> ae){
     Button btn = new Button(title);
     btn.setOnAction(ae);
@@ -228,7 +229,7 @@ public class View implements ViewInterface {
   }
 
   private void makeTurtle(Turtle turtle){
-    TurtleDrawer.drawTurtle(canvas, turtle);
+    TurtleDrawer.addTurtleToCanvas(canvas, turtle);
   }
 
   private void reset(Turtle turtle){
