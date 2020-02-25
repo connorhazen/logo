@@ -1,5 +1,8 @@
 package slogo;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.util.Pair;
 
 import java.util.List;
@@ -17,8 +20,8 @@ public class Turtle implements TurtleInterface{
 
     private static int myID;
 
-    private double myX;
-    private double myY;
+    private SimpleDoubleProperty myX;
+    private SimpleDoubleProperty myY;
     private double myAngle;
     private boolean myPenStatus = false;
     private double mySize; // turtles are approximated by a circle shape with the diameter equal to mySize
@@ -35,8 +38,8 @@ public class Turtle implements TurtleInterface{
 
         myID = ID;
 
-        myX = xCoor;
-        myY = yCoor;
+        myX = new SimpleDoubleProperty(xCoor);
+        myY = new SimpleDoubleProperty(yCoor);
         mySize = size;
         myAngle = orrientation % threeSixty;
     }
@@ -49,11 +52,11 @@ public class Turtle implements TurtleInterface{
 
     @Override
     public boolean setLocation(double xCord, double yCord) {
-        Pair storeCurLoc = new Pair(myX, myY);
+        Pair storeCurLoc = new Pair(myX.getValue(), myY.getValue());
         myHistory.add(storeCurLoc);
 
-        myX = xCord;
-        myY = yCord;
+        myX.set(xCord);
+        myY.set(yCord);
         return true;
     }
 
@@ -70,22 +73,32 @@ public class Turtle implements TurtleInterface{
 
     @Override
     public double getX() {
-        return myX;
+        return myX.doubleValue();
     }
 
     @Override
     public double getY() {
+        return myY.doubleValue();
+    }
+
+    @Override
+    public SimpleDoubleProperty getXProperty() {
+        return myX;
+    }
+
+    @Override
+    public SimpleDoubleProperty getYProperty() {
         return myY;
     }
 
     @Override
     public void setX(double x) {
-        myX = x;
+        myX.set(x);
     }
 
     @Override
     public void setY(double y) {
-        myY = y;
+        myY.set(y);
     }
 
     @Override
@@ -101,8 +114,9 @@ public class Turtle implements TurtleInterface{
 
     @Override
     public boolean reset() {
-        myX = myInitialX;
-        myY = myInitialY;
+        setY(myInitialY);
+        setX(myInitialX);
+
         mySize = myInitialSize;
         myAngle = myInitialAngle;
         myHistory = null;

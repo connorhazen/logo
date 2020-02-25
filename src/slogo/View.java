@@ -1,20 +1,22 @@
 package slogo;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import slogo.windows.BackgroundColor;
 import slogo.windows.HelpWindow;
@@ -24,16 +26,23 @@ import slogo.windows.SelectLanguage;
 
 public class View implements ViewInterface {
 
+  private final int WIDTH = 500;
+  private final int HEIGHT = 500;
+
+
   private final ControllerInterface controller;
   private final Scene scene;
   private Stage mainStage;
-  private Canvas canvas;
+  private Pane canvas;
+  private Turtle currentTurtle;
 
   public View(ControllerInterface cont, Stage primaryStage, Turtle turtle){
+    currentTurtle = turtle;
     this.mainStage = primaryStage;
     controller = cont;
     makeScreen(primaryStage);
-    scene = new Scene(createBorderPane(), 500, 500);
+    BorderPane pane = createBorderPane();
+    scene = new Scene(pane, WIDTH, HEIGHT);
     mainStage.setScene(scene);
     mainStage.show();
     makeTurtle(turtle);
@@ -46,12 +55,11 @@ public class View implements ViewInterface {
     borderPane.setRight(createRightVBox());
     borderPane.setBottom(createBottomHBox());
     borderPane.setCenter(createMiddleCanvas());
-    borderPane.setStyle("-fx-padding: 10;");
     return borderPane;
   }
 
-  private Canvas createMiddleCanvas(){
-    canvas = new Canvas();
+  private Pane createMiddleCanvas(){
+    canvas = new Pane();
     return canvas;
   }
   private VBox createRightVBox(){
@@ -66,14 +74,14 @@ public class View implements ViewInterface {
   }
 
   private HBox createTopHBox(){
-    HBox htop = new HBox();
-    htop.setSpacing(5);
-    htop.getChildren().add(makeButton("Help", e -> helpWindow()));
-    htop.getChildren().add(makeButton("Set Pen Color", e -> setPenColorWindow()));
-    htop.getChildren().add(makeButton("Set Background Color", e -> setBackGroundColorWindow()));
-    htop.getChildren().add(makeButton("Set Image", e -> setImageWindow()));
-    htop.getChildren().add(makeButton("Language", e -> setLanguageWindow()));
-    return htop;
+    HBox hTop = new HBox();
+    hTop.setSpacing(5);
+    hTop.getChildren().add(makeButton("Help", e -> helpWindow()));
+    hTop.getChildren().add(makeButton("Set Pen Color", e -> setPenColorWindow()));
+    hTop.getChildren().add(makeButton("Set Background Color", e -> setBackGroundColorWindow()));
+    hTop.getChildren().add(makeButton("Set Image", e -> setImageWindow()));
+    hTop.getChildren().add(makeButton("Language", e -> setLanguageWindow()));
+    return hTop;
   }
 
   private void launchWindow(Application application){
@@ -116,7 +124,7 @@ public class View implements ViewInterface {
     ta.setStyle("-fx-max-height: 100;");
     ta.setOnKeyPressed(e -> submitText(e, ta.getText(), ta));
     Button run = makeButton("Run", e -> {controller.executeCommand(ta.getText()); ta.clear();});
-    run.setStyle("-fx-max-height: 100;");
+    run.setStyle("-fx-max-height: 100; -fx-min-width: 60;");
     bottom.getChildren().addAll(ta, run);
     return bottom;
   }
@@ -147,20 +155,20 @@ public class View implements ViewInterface {
   }
 
   private void makeTurtle(Turtle turtle){
-    GraphicsContext gc = canvas.getGraphicsContext2D();
-    gc.fillOval(turtle.getX(), turtle.getY(), turtle.getSize(), turtle.getSize());
-    System.out.println("here");
+    TurtleDrawer.drawTurtle(canvas, turtle);
   }
 
-
-  @Override
-  public void updateView(Turtle turtle) {
-    makeTurtle(turtle);
+  private void reset(Turtle turtle){
+    turtle.reset();
+    TurtleDrawer.clearCanvas(canvas, turtle);
   }
+
 
 
   @Override
   public void printError(Exception exception) {
+
+    System.out.println(exception.getMessage());
 
   }
 
