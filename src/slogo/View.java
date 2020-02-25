@@ -158,12 +158,11 @@ public class View implements ViewInterface {
     TurtleDrawer.drawTurtle(canvas, turtle);
   }
 
-
-  @Override
-  public void updateView(Turtle turtle) {
-    currentTurtle = turtle;
-    makeTurtle(currentTurtle);
+  private void reset(Turtle turtle){
+    turtle.reset();
+    TurtleDrawer.clearCanvas(canvas, turtle);
   }
+
 
 
   @Override

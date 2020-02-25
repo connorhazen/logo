@@ -35,17 +35,13 @@ public class ControllerInitial implements ControllerInterface {
   private void addViewListener(ViewInterface vi) {
     listeners.add(vi);
   }
-
-  private void alertView() {
-    for (ViewInterface vi : listeners) {
-      vi.updateView(new Turtle(250,250,0,10,10));
-    }
-  }
+  
 
   @Override
   public void executeCommand(String commandText) {
     try{
-      view.updateView(model.runCommand(commandText, myTurtle));
+      model.runCommand(commandText, myTurtle);
+      //view.updateView(model.runCommand(commandText, myTurtle));
     }
     catch (exceptions.UnkownCommandException e){
       view.printError(e);

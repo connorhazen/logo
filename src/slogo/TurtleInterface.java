@@ -1,6 +1,8 @@
 package slogo;
 
 import java.util.List;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.util.Pair;
 
 public interface TurtleInterface {
@@ -16,6 +18,10 @@ public interface TurtleInterface {
   double getX();
 
   double getY();
+
+  SimpleDoubleProperty getXProperty();
+
+  SimpleDoubleProperty getYProperty();
 
   void setX(double x);
 

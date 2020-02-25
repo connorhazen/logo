@@ -18,18 +18,20 @@ public class TurtleDrawer {
     newTurt.setRadius(turtle.getSize());
 
     NumberBinding xLoc =
-        Bindings.add(Bindings.divide(canvas.widthProperty(),2), turtle.getX());
-
+        Bindings.add(Bindings.divide(canvas.widthProperty(),2), turtle.getXProperty());
     newTurt.centerXProperty().bind(xLoc);
 
     NumberBinding yLoc =
-        Bindings.add(Bindings.divide(canvas.heightProperty(),2), turtle.getY());
-
+        Bindings.add(Bindings.divide(canvas.heightProperty(),2), turtle.getYProperty());
     newTurt.centerYProperty().bind(yLoc);
-
 
     canvas.getChildren().add(newTurt);
   }
 
 
+  public static void clearCanvas(Pane canvas, Turtle turtle) {
+    canvas.getChildren().clear();
+    drawTurtle(canvas, turtle);
+
+  }
 }
