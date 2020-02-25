@@ -187,6 +187,7 @@ public class View implements ViewInterface {
     ta.setOnKeyPressed(e -> submitText(e, ta.getText(), ta));
     Button run = makeButton("Run", e -> {controller.executeCommand(ta.getText()); ta.clear();});
     run.setPrefHeight(bottom.getPrefHeight());
+    //TODO make reset button
     bottom.getChildren().addAll(ta, run);
     return bottom;
   }
@@ -217,7 +218,7 @@ public class View implements ViewInterface {
   }
 
   private void makeTurtle(Turtle turtle){
-    TurtleDrawer.drawTurtle(canvas, turtle);
+    TurtleDrawer.addTurtleToCanvas(canvas, turtle);
   }
 
   private void reset(Turtle turtle){
