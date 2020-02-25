@@ -15,6 +15,13 @@
 .button:hover {
   -fx-background-color: #eee9e7;
 }
+.vbox{
+  -fx-spacing: 5;
+  -fx-max-width: 150;
+}
+.hbox{
+  -fx-spacing: 5;
+}
 
 .choice-box:hover{
   -fx-background-color: #eee9e7;
@@ -27,7 +34,7 @@
   -fx-background-radius: 2;
   -fx-padding: 5;
 }
-
+.
 
 
 

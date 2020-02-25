@@ -2,20 +2,17 @@ package slogo;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.security.Key;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ChoiceBox;
@@ -41,7 +38,6 @@ public class View implements ViewInterface {
   private final int WIDTH = 900;
   private final int HEIGHT = 600;
 
-
   private final ControllerInterface controller;
   private final Scene scene;
   private Stage mainStage;
@@ -49,20 +45,20 @@ public class View implements ViewInterface {
   private Turtle currentTurtle;
   private static final String STYLESHEET = "slogo/default.css";
   private static final String PROPERTIES = "src/slogo/button_properties.txt";
+  private final ExceptionHelper errorHelper;
 
   public View(ControllerInterface cont, Stage primaryStage, Turtle turtle){
+    errorHelper = new ExceptionHelper();
     currentTurtle = turtle;
     this.mainStage = primaryStage;
     controller = cont;
     makeScreen(primaryStage);
-    BorderPane pane = createBorderPane();
-    scene = new Scene(pane, WIDTH, HEIGHT);
+    scene = new Scene(createBorderPane(), WIDTH, HEIGHT);
     scene.getStylesheets().add(STYLESHEET);
     mainStage.setScene(scene);
     mainStage.show();
     makeTurtle(turtle);
   }
-
 
   private BorderPane createBorderPane(){
     BorderPane borderPane = new BorderPane();
@@ -84,10 +80,10 @@ public class View implements ViewInterface {
 
     return canvas;
   }
+
   private VBox createRightVBox(){
     VBox right = new VBox();
-    right.setSpacing(5);
-    right.setPrefWidth(150);
+    right.getStyleClass().add("vbox");
     TextArea ta1 = new TextArea();
     TextArea ta2 = new TextArea();
     right.getChildren().add(ta1);
@@ -96,18 +92,19 @@ public class View implements ViewInterface {
   }
 
   private List<EventHandler<ActionEvent>> getButtonActions(){
-    return new ArrayList<EventHandler<ActionEvent>>(){{
+    return new ArrayList<>() {{
       add(e -> helpWindow());
       add(e -> setPenColorWindow());
       add(e -> setBackGroundColorWindow());
       add(e -> setImageWindow());
     }};
   }
+
   private HBox createTopHBox(){
     List<EventHandler<ActionEvent>> eae = getButtonActions();
     List<String> buttonMap = getButtonProperties();
     HBox hTop = new HBox();
-    hTop.setSpacing(5);
+    hTop.getStyleClass().add("hbox");
     try{
       int index = 0;
       for(String k : buttonMap){
@@ -115,22 +112,25 @@ public class View implements ViewInterface {
         paraActionEvent[0] = EventHandler.class;
         Class[] paraString = new Class[1];
         paraString[0] = String.class;
+
         Object obj = Button.class.getDeclaredConstructor().newInstance();
         Method setText = Labeled.class.getDeclaredMethod("setText", paraString);
         setText.invoke(obj, k);
+
         Method setOnAction = ButtonBase.class.getDeclaredMethod("setOnAction", EventHandler.class);
         setOnAction.invoke(obj, (EventHandler<ActionEvent>) eae.get(index));
         hTop.getChildren().add((Button) obj);
         index++;
       }
-
+      hTop.getChildren().add(setLanguageWindow());
     } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException cnfe){
-      //TODO: Proper error handling
-      System.out.println("Error" + cnfe.toString());
+      errorHelper.reflectionError(cnfe);
     }
-    hTop.getChildren().add(setLanguageWindow());
     return hTop;
   }
+
+
+
   private ArrayList<String> getButtonProperties() {
     ArrayList<String> buttonMap = new ArrayList<>();
     Scanner s;
@@ -141,18 +141,18 @@ public class View implements ViewInterface {
         buttonMap.add(s.next());
       }
     } catch(FileNotFoundException fnfe){
-      //TODO: Implement proper error handling
-      System.out.println("File not found");
+      errorHelper.fileNotFound(fnfe);
     }
     return buttonMap;
   }
 
+
+
   private void launchWindow(Application application){
-    try{
+    try {
       application.start(new Stage());
-    } catch (Exception e){
-      //TODO: Implement proper error handling
-      e.printStackTrace();
+    } catch (Exception e) {
+      errorHelper.fileNotFound(e);
     }
   }
   private ChoiceBox setLanguageWindow() {
