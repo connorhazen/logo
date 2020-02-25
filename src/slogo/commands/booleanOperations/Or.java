@@ -6,8 +6,8 @@ import java.util.List;
 
 public class Or extends BooleanOperation {
 
-    public Or(String text, List<String> args, List<Turtle> toldTurtles) {
-        super(text, args, toldTurtles);
+    public Or(String text, List<String> args, Turtle toldTurtle) {
+        super(text, args, toldTurtle);
     }
 
     //returns 1 if true, 0 if false
