@@ -1,47 +1,40 @@
 package slogo.windows;
 
-import javafx.application.Application;
-import javafx.scene.Scene;
+import java.io.File;
+
 import javafx.scene.control.Button;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
+
 import slogo.ControllerInterface;
 
-public class SelectLanguage extends Application {
+public class SelectLanguage {
 
-  ControllerInterface controllerInterface;
 
-  public SelectLanguage(ControllerInterface cl){
-    controllerInterface = cl;
+  public static ChoiceBox languageDropDown(ControllerInterface cI){
+    return getComboBox(cI);
   }
 
-  @Override
-  public void start(Stage primaryStage) {
-    Stage myStage = primaryStage;
-    Scene scene = new Scene(makeVBox(), 90, 300);
-    myStage.setScene(scene);
-    myStage.show();
+
+  private static ChoiceBox getComboBox(ControllerInterface cI){
+
+    File lang = new File("src/resources/languages");
+
+    ChoiceBox <String> cb = new ChoiceBox<>();
+
+    for(File file : lang.listFiles()){
+      String [] name = file.getPath().split("/");
+      String name1 = name[name.length-1].split("\\.")[0];
+      if(name1.equals("English")){
+        cb.setValue(name1);
+      }
+      cb.getItems().add(name1);
+    }
+    cI.setLanguage(cb.getValue());
+    cb.setOnAction(e -> {cI.setLanguage(cb.getValue());});
+    return cb;
   }
 
-  private VBox makeVBox(){
-    VBox vb = new VBox();
-    vb.getChildren().addAll(
-        makeLangButton("Chinese"),
-        makeLangButton("English"),
-        makeLangButton("French"),
-        makeLangButton("German"),
-        makeLangButton("Italian"),
-        makeLangButton("Portuguese"),
-        makeLangButton("Russia"),
-        makeLangButton("Spanish"),
-        makeLangButton("Urdu"));
-    vb.setSpacing(5);
-    return vb;
-  }
 
-  private Button makeLangButton(String title){
-    Button btn = new Button(title);
-    btn.setOnAction(e -> controllerInterface.setLanguage(title));
-    return btn;
-  }
 }

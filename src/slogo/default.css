@@ -1,0 +1,42 @@
+.root {
+  -fx-font-size: 14pt;
+  -fx-base: rgb(145, 142, 141);
+  -fx-background: rgb(104, 150, 158);
+}
+
+.button {
+  -fx-text-fill: #a8a7a7;
+  -fx-background-color: #803840;
+  -fx-border-radius: 2;
+  -fx-background-radius: 2;
+  -fx-padding: 5;
+}
+
+.button:hover {
+  -fx-background-color: #eee9e7;
+}
+.vbox{
+  -fx-spacing: 5;
+  -fx-max-width: 150;
+}
+.hbox{
+  -fx-spacing: 5;
+}
+
+.choice-box:hover{
+  -fx-background-color: #eee9e7;
+}
+
+.choice-box > .label{
+  -fx-text-fill: #a8a7a7;
+  -fx-background-color: #803840;
+  -fx-border-radius: 2;
+  -fx-background-radius: 2;
+  -fx-padding: 5;
+}
+.
+
+
+
+
+

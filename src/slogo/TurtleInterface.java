@@ -1,9 +1,7 @@
 package slogo;
 
-import java.util.List;
-import javafx.beans.property.Property;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.util.Pair;
+import javafx.collections.ObservableList;
 
 public interface TurtleInterface {
 
@@ -37,7 +35,11 @@ public interface TurtleInterface {
 
   boolean getPenStatus();
 
-  List<Pair<Integer, Integer>> getHistory();
+  ObservableList<Object> getHistory();
 
   boolean clearHistory();
+
+  boolean getVisibilityStatus();
+
+  boolean setVisibilityStatus(boolean visibilityStatus);
 }
