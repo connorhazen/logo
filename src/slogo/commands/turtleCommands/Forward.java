@@ -8,6 +8,7 @@ public class Forward extends TurtleCommand{
 
     public Forward(String text, List<String> args, Turtle toldTurtle) {
         super(text, args, toldTurtle);
+        setMyNumArgs(1);
     }
 
     @Override
@@ -16,5 +17,6 @@ public class Forward extends TurtleCommand{
         move(distance, executeOnTurtle);
         return distance;
     }
-    
+
+
 }

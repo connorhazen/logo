@@ -11,6 +11,8 @@ public abstract class Command implements CommandInterface {
     //private List<Turtle> myTurtles;
     private Turtle myTurtle;
 
+    private static int myNumArgs;
+
     public Command(String text, List<String> args, Turtle toldTurtle){
         myText = text;
         myArgs = args;
@@ -50,5 +52,21 @@ public abstract class Command implements CommandInterface {
             doubleList.add(Double.parseDouble(stringArgument));
         }
         return doubleList;
+    }
+
+    protected String getMyText(){
+        return myText;
+    }
+
+    protected String getArgString(int index) {
+        return myArgs.get(index);
+    }
+
+    protected void setMyNumArgs(int numArgs){
+        myNumArgs = numArgs;
+    }
+
+    public int getNumArgs(){
+        return myNumArgs;
     }
 }
