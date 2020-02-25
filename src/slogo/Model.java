@@ -10,8 +10,10 @@ public class Model implements ModelInterface{
     }
 
     @Override
-    public boolean runCommand(String input) throws UnkownCommandException {
-        String[] parsedCommand = parser.parseCommand(input);
-        return true;
+    public Turtle runCommand(String input, Turtle turtle) throws UnkownCommandException {
+        turtle.setX(turtle.getX()+5);
+        turtle.setY(turtle.getY()+5);
+        return turtle;
+        //return parser.parseCommand(input);
     }
 }
