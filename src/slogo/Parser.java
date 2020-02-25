@@ -1,7 +1,9 @@
 package slogo;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 public class Parser implements ParserInterface{
     private Map<String, String> savedCommands;
@@ -18,7 +20,14 @@ public class Parser implements ParserInterface{
         if(parsedCommand[SAVE_SYMBOL_INDEX].equals(SAVE_SYMBOL)){
             saveCommand(parsedCommand);
         }
-        return parsedCommand;
+        return convertToBasicCommands(parsedCommand);
+    }
+
+    private String[] convertToBasicCommands(String[] originalCmd){
+        Stack argumentStack = new Stack();
+        Stack commandStack = new Stack();
+
+        return null;
     }
 
     private void saveCommand(String[] parsedCommand) {
@@ -29,5 +38,12 @@ public class Parser implements ParserInterface{
             else {commandToSave += parsedCommand[i] + " ";}
         }
         savedCommands.put(parsedCommand[COMMAND_TO_SAVE_INDEX], commandToSave);
+    }
+
+    /**
+     * Returns an immutable map containing the saved commands which can be displayed in the view.
+     */
+    public Map<String, String> getSavedCommands(){
+        return Collections.unmodifiableMap(savedCommands);
     }
 }
