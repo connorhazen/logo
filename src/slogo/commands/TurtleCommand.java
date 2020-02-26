@@ -1,6 +1,7 @@
 package slogo.commands;
 
 import javafx.util.Pair;
+import slogo.structs.CommandStruct;
 import slogo.Turtle;
 import slogo.commands.Command;
 import slogo.commands.TurtleSpecificCommand;
@@ -9,8 +10,8 @@ import java.util.List;
 
 public abstract class TurtleCommand extends Command implements TurtleSpecificCommand {
 
-    public TurtleCommand(String text, List<String> args, Turtle toldTurtle) {
-        super(text, args, toldTurtle);
+    public TurtleCommand(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
+        super(commandStruct, text, args, toldTurtle);
     }
 
     protected void move(double distance, Turtle currentTurtle) {

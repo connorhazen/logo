@@ -22,6 +22,10 @@
 .hbox{
   -fx-spacing: 5;
 }
+.hbox-bot{
+  -fx-pref-height: 150;
+  -fx-spacing: 5;
+}
 
 .choice-box:hover{
   -fx-background-color: #eee9e7;

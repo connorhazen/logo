@@ -1,5 +1,6 @@
 package slogo.commands;
 
+import slogo.structs.CommandStruct;
 import slogo.Turtle;
 
 import java.util.ArrayList;
@@ -8,14 +9,16 @@ import java.util.List;
 public abstract class Command implements CommandInterface {
     private static String myText;
     private List<String> myArgs;
+    private CommandStruct myCommandStruct;
     //private List<Turtle> myTurtles;
     private Turtle myTurtle;
 
     private static int myNumArgs;
 
-    public Command(String text, List<String> args, Turtle toldTurtle){
+    public Command(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle){
         myText = text;
         myArgs = args;
+        myCommandStruct = commandStruct;
         myTurtle = toldTurtle;
         //myTurtles = toldTurtles;
     }
@@ -68,5 +71,9 @@ public abstract class Command implements CommandInterface {
 
     public int getNumArgs(){
         return myNumArgs;
+    }
+
+    protected CommandStruct getCommandStruct() {
+        return myCommandStruct;
     }
 }

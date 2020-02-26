@@ -1,6 +1,7 @@
 package slogo.commands;
 
 import slogo.Turtle;
+import slogo.structs.CommandStruct;
 
 import java.util.List;
 
@@ -8,8 +9,8 @@ import java.util.List;
 //TODO: implement execute
 public class For extends Misc{
 
-    public For(String text, List<String> args, Turtle toldTurtle) {
-        super(text, args, toldTurtle);
+    public For(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
+        super(commandStruct, text, args, toldTurtle);
     }
 
     @Override

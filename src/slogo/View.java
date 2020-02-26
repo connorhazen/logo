@@ -60,6 +60,10 @@ public class View implements ViewInterface {
     makeTurtle(turtle);
   }
 
+  /**
+   * Methods for creating elements in the UI
+   */
+
   private BorderPane createBorderPane(){
     BorderPane borderPane = new BorderPane();
     borderPane.setTop(createTopHBox());
@@ -91,15 +95,6 @@ public class View implements ViewInterface {
     return right;
   }
 
-  private List<EventHandler<ActionEvent>> getButtonActions(){
-    return new ArrayList<>() {{
-      add(e -> helpWindow());
-      add(e -> setPenColorWindow());
-      add(e -> setBackGroundColorWindow());
-      add(e -> setImageWindow());
-    }};
-  }
-
   private HBox createTopHBox(){
     List<EventHandler<ActionEvent>> eae = getButtonActions();
     List<String> buttonMap = getButtonProperties();
@@ -114,6 +109,7 @@ public class View implements ViewInterface {
         paraString[0] = String.class;
 
         Object obj = Button.class.getDeclaredConstructor().newInstance();
+
         Method setText = Labeled.class.getDeclaredMethod("setText", paraString);
         setText.invoke(obj, k);
 
@@ -129,7 +125,30 @@ public class View implements ViewInterface {
     return hTop;
   }
 
+  private HBox createBottomHBox(){
+    //TODO: Use reflection to add run button
+    HBox bottom = new HBox();
+    bottom.getStyleClass().add("hbox-bot");
+    TextArea ta = new TextArea();
+    ta.setOnKeyPressed(e -> submitText(e, ta.getText(), ta));
+    Button run = makeButton("Run", e -> {controller.executeCommand(ta.getText()); ta.clear();});
+    run.setPrefHeight(bottom.getPrefHeight());
+    bottom.getChildren().addAll(ta, run);
+    return bottom;
+  }
 
+  /**
+   * Helper methods for creating UI elements
+   */
+
+  private List<EventHandler<ActionEvent>> getButtonActions(){
+    return new ArrayList<>() {{
+      add(e -> helpWindow());
+      add(e -> setPenColorWindow());
+      add(e -> setBackGroundColorWindow());
+      add(e -> setImageWindow());
+    }};
+  }
 
   private ArrayList<String> getButtonProperties() {
     ArrayList<String> buttonMap = new ArrayList<>();
@@ -146,7 +165,16 @@ public class View implements ViewInterface {
     return buttonMap;
   }
 
+  private void submitText(KeyEvent keyEvent, String commandText, TextArea ta) {
+    if(keyEvent.getCode() == KeyCode.ENTER){
+      controller.executeCommand(commandText);
+      ta.clear();
+    }
+  }
 
+  /**
+   * Methods for launching settings windows
+   */
 
   private void launchWindow(Application application){
     try {
@@ -155,6 +183,7 @@ public class View implements ViewInterface {
       errorHelper.fileNotFound(e);
     }
   }
+
   private ChoiceBox setLanguageWindow() {
     return SelectLanguage.languageDropDown(controller);
   }
@@ -179,25 +208,7 @@ public class View implements ViewInterface {
     launchWindow(hw);
   }
 
-  private HBox createBottomHBox(){
-    HBox bottom = new HBox();
-    bottom.setPrefHeight(100);
-    bottom.setSpacing(5);
-    TextArea ta = new TextArea();
-    ta.setOnKeyPressed(e -> submitText(e, ta.getText(), ta));
-    Button run = makeButton("Run", e -> {controller.executeCommand(ta.getText()); ta.clear();});
-    run.setPrefHeight(bottom.getPrefHeight());
-    //TODO make reset button
-    bottom.getChildren().addAll(ta, run);
-    return bottom;
-  }
 
-  private void submitText(KeyEvent keyEvent, String commandText, TextArea ta) {
-    if(keyEvent.getCode() == KeyCode.ENTER){
-      controller.executeCommand(commandText);
-      ta.clear();
-    }
-  }
 
   private Button makeButton(String title, EventHandler<ActionEvent> ae){
     Button btn = new Button(title);
@@ -225,8 +236,6 @@ public class View implements ViewInterface {
     turtle.reset();
     TurtleDrawer.clearCanvas(canvas, turtle);
   }
-
-
 
   @Override
   public void printError(Exception exception) {

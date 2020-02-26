@@ -1,12 +1,13 @@
 package slogo.commands;
 
+import slogo.structs.CommandStruct;
 import slogo.Turtle;
 
 import java.util.List;
 
 public class Not extends BooleanOperation {
-    public Not(String text, List<String> args, Turtle toldTurtle) {
-        super(text, args, toldTurtle);
+    public Not(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
+        super(commandStruct, text, args, toldTurtle);
         setMyNumArgs(1);
     }
 
