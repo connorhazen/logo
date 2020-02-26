@@ -1,24 +1,36 @@
 package slogo;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.regex.Pattern;
+
+import static java.lang.Class.forName;
 
 public class Parser implements ParserInterface{
     private Map<String, String> savedCommands;
     private Pattern integerPattern;
     private Stack argumentStack;
     private Stack commandStack;
+    private Map<String, String> commandMap;
+    private ResourceBundle languageResource;
     private static final String SAVE_SYMBOL = "=";
     private static final int COMMAND_TO_SAVE_INDEX = 0;
     private static final int SAVE_SYMBOL_INDEX = 1;
     private static final String INTEGER_PATTERN_REGEX = "-?[0-9]*";
+    private Class<?> noparams[] = {};
+    private Class<?> forwardParams[] = new Class<?>[] {String.class, List.class, Turtle.class};
+    private Object forward[] = new Object[] {"", new ArrayList<>(), new Turtle(0,0,0,0,0)};
 
     // TODO: Need to obtain correct resource file from user selection
-    private ResourceBundle languageResource = ResourceBundle.getBundle("resources.languages/English");
+    private String languageFile = "resources.languages/English";
 
     public Parser(){
         savedCommands = new HashMap<>();
+        commandMap = new HashMap<>();
         integerPattern = Pattern.compile(INTEGER_PATTERN_REGEX);
+        languageResource = ResourceBundle.getBundle(languageFile);
+        fillCommandMap();
     }
 
     public List<String> parseCommand(String cmd){
@@ -39,23 +51,53 @@ public class Parser implements ParserInterface{
             if(isInteger(s)) {
                 argumentStack.push(s);
             }
-            else {
+            else if (commandMap.containsKey(s)){
                 commandStack.push(s);
+            }
+            else {
+                System.out.println("ERROR");
+                // TODO: Error? OR if commandMap does not contain user-defined commands/variable, check if it's one of those
             }
             basicCommandList = buildTree(basicCommandList);
         }
-        return basicCommandList;
+        return basicCommandList; // Reverse?
     }
 
     private List<String> buildTree(List<String> commandList){
         while(!commandStack.empty()){
-            String command = languageResource.getString((String) commandStack.peek());
-            // If command in list of commands, check if argumentStack.size is at least # of arguments for command.
-            // If so, pop from command stack and pop number of arguments, get return value and add to argumentStack.
-            // Append basic command to commandList.
-            // Break if not.
+            String basicCommand = "";
+            String command = (String) commandStack.peek();
+            if (commandMap.containsKey(command)) {
+                String commandClassName = commandMap.get(command);
+                int commandNumArgs = getCommandNumArgs(commandClassName);
+                if(argumentStack.size() >= commandNumArgs){
+                    basicCommand += commandStack.pop();
+                    for(int i = 0; i < commandNumArgs; i++) {
+                        String arg = (String) argumentStack.pop();
+                        basicCommand += " " + arg;
+                    }
+                    commandList.add(basicCommand);
+                }
+                else{ break; }
+            }
+            else {
+                // TODO: Throw error for unknown command
+            }
         }
         return commandList;
+    }
+
+    private int getCommandNumArgs(String cmd) {
+        try {
+            Class cls = forName("slogo.commands.turtleCommands." + cmd); // TODO: move all commands to one package? Currently only works for commands in turtleCommands
+            Constructor cons = cls.getDeclaredConstructor(forwardParams);
+            Object obj = cons.newInstance(forward);
+            Method method = cls.getMethod("getNumArgs", noparams);
+            return (int) method.invoke(obj);
+        } catch (Exception e) {
+            e.printStackTrace(); // TODO: Throw error
+            return Integer.MAX_VALUE;
+        }
     }
 
     private void saveCommand(String[] parsedCommand) {
@@ -71,6 +113,18 @@ public class Parser implements ParserInterface{
     private boolean isInteger(String s){
         if(s == null) {return false;}
         return integerPattern.matcher(s).matches();
+    }
+
+    private void fillCommandMap(){
+        Enumeration<String> commands = languageResource.getKeys();
+        while(commands.hasMoreElements()){
+            String commandName = commands.nextElement();
+            String cmds = languageResource.getString(commandName);
+            String[] recognizedCmds = cmds.split("\\|");
+            for (String recognizedCmd : recognizedCmds) {
+                commandMap.put(recognizedCmd, commandName);
+            }
+        }
     }
 
     /**
