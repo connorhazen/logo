@@ -1,12 +1,13 @@
 package slogo.commands.booleanOperations;
 
+import slogo.structs.CommandStruct;
 import slogo.Turtle;
 
 import java.util.List;
 
 public class And extends BooleanOperation{
-    public And(String text, List<String> args, Turtle toldTurtle) {
-        super(text, args, toldTurtle);
+    public And(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
+        super(commandStruct, text, args, toldTurtle);
         setMyNumArgs(2);
     }
 

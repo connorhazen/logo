@@ -1,17 +1,15 @@
 package slogo.commands.basicSyntax;
 
+import slogo.structs.CommandStruct;
 import slogo.Turtle;
 import slogo.commands.Command;
 
 import java.util.List;
 
 public abstract class BasicSyntax extends Command {
-    public BasicSyntax(String text, List<String> args, Turtle toldTurtle) {
-        super(text, args, toldTurtle);
+    public BasicSyntax(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
+        super(commandStruct, text, args, toldTurtle);
     }
 
-    @Override
-    public double execute(Turtle toldTurtle) {
-        return Double.parseDouble(getMyText());
-    }
+
 }
