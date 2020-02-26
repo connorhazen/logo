@@ -52,8 +52,6 @@ public class Parser implements ParserInterface{
         argumentStack = new Stack();
         commandStack = new Stack();
         List<String> basicCommandList = new ArrayList<>();
-
-        System.out.println(commandMap); // REGEX for commands
         for(String s : originalCmd) {
 
             if(isInteger(s)) {
@@ -73,26 +71,12 @@ public class Parser implements ParserInterface{
 
     private List<String> buildTree(List<String> commandList){
         while(!commandStack.empty()){
-            String basicCommand = "";
             String command = (String) commandStack.peek();
             if (commandMap.containsKey(command)) {
                 String commandClassName = commandMap.get(command);
                 int commandNumArgs = getCommandNumArgs(commandClassName);
                 if(argumentStack.size() >= commandNumArgs){
-                    basicCommand += commandStack.pop();
-                    if(commandNumArgs > 0) {
-                        List<String> arguments = new ArrayList<>();
-                        for (int i = 0; i < commandNumArgs; i++) {
-                            String arg = argumentStack.pop().toString();
-                            arguments.add(arg);
-                        }
-                        Collections.reverse(arguments);
-                        for (String arg : arguments) {
-                            basicCommand += " " + arg;
-                        }
-                        argumentStack.push(getCommandRetValue(basicCommand));
-                    }
-                    commandList.add(basicCommand);
+                    addBasicCmdToList(commandList, commandNumArgs);
                 }
                 else{ break; }
             }
@@ -100,6 +84,22 @@ public class Parser implements ParserInterface{
         }
         if(commandStack.empty()) { argumentStack.clear(); }
         return commandList;
+    }
+
+    private void addBasicCmdToList(List<String> commandList, int commandNumArgs) {
+        String basicCommand = "";
+        basicCommand += commandStack.pop();
+        if(commandNumArgs > 0) {
+            List<String> arguments = new ArrayList<>();
+            for (int i = 0; i < commandNumArgs; i++) {
+                String arg = argumentStack.pop().toString();
+                arguments.add(arg);
+            }
+            Collections.reverse(arguments);
+            for (String arg : arguments) { basicCommand += " " + arg; }
+            argumentStack.push(getCommandRetValue(basicCommand));
+        }
+        commandList.add(basicCommand);
     }
 
     private int getCommandNumArgs(String cmd) {
@@ -158,6 +158,7 @@ public class Parser implements ParserInterface{
             String cmds = languageResource.getString(commandName);
             String[] recognizedCmds = cmds.split("\\|");
             for (String recognizedCmd : recognizedCmds) {
+                recognizedCmd = recognizedCmd.replace("\\", "");
                 commandMap.put(recognizedCmd, commandName);
             }
         }
