@@ -1,5 +1,7 @@
 package slogo;
 
+import slogo.exceptions.UnknownCommandException;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -55,7 +57,7 @@ public class Parser implements ParserInterface{
                 commandStack.push(s);
             }
             else {
-                System.out.println("ERROR");
+                throw new UnknownCommandException("Command not recognized: " + s);
                 // TODO: Error? OR if commandMap does not contain user-defined commands/variable, check if it's one of those
             }
             basicCommandList = buildTree(basicCommandList);
@@ -81,7 +83,7 @@ public class Parser implements ParserInterface{
                 else{ break; }
             }
             else {
-                // TODO: Throw error for unknown command
+                throw new UnknownCommandException("Command not recognized: " + command); // TODO: Put message in properties files
             }
         }
         return commandList;
@@ -89,7 +91,7 @@ public class Parser implements ParserInterface{
 
     private int getCommandNumArgs(String cmd) {
         try {
-            Class cls = forName("slogo.commands.turtleCommands." + cmd); // TODO: move all commands to one package? Currently only works for commands in turtleCommands
+            Class cls = forName("slogo.commands." + cmd);
             Constructor cons = cls.getDeclaredConstructor(forwardParams);
             Object obj = cons.newInstance(forward);
             Method method = cls.getMethod("getNumArgs", noparams);
