@@ -43,7 +43,7 @@ public class ControllerInitial implements ControllerInterface {
       model.runCommand(commandText, myTurtle);
       //view.updateView(model.runCommand(commandText, myTurtle));
     }
-    catch (exceptions.UnkownCommandException e){
+    catch (slogo.exceptions.UnknownCommandException e){
       view.printError(e);
     }
     System.out.println(commandText);

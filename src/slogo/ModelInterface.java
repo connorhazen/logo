@@ -1,6 +1,6 @@
 package slogo;
 
-import exceptions.UnkownCommandException;
+import slogo.exceptions.UnknownCommandException;
 
 public interface ModelInterface{
 
@@ -9,6 +9,6 @@ public interface ModelInterface{
    * @param input String input to be parsed and executed.
    * @return
    */
-  Turtle runCommand(String input, Turtle turtle) throws UnkownCommandException;
+  Turtle runCommand(String input, Turtle turtle) throws UnknownCommandException;
 
 }
