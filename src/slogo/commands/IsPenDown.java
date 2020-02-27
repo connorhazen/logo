@@ -5,8 +5,8 @@ import slogo.Turtle;
 
 import java.util.List;
 
-public class PenDownQ extends TurtleQuery {
-    public PenDownQ(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
+public class IsPenDown extends TurtleQuery {
+    public IsPenDown(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
         super(commandStruct, text, args, toldTurtle);
         setMyNumArgs(0);
     }
