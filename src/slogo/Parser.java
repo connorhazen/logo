@@ -1,5 +1,6 @@
 package slogo;
 
+import slogo.exceptions.InvalidParameterException;
 import slogo.exceptions.UnknownCommandException;
 import slogo.structs.CommandStruct;
 
@@ -21,12 +22,14 @@ public class Parser implements ParserInterface{
     public static final int COMMAND_INDEX = 0;
     private static final int SAVE_SYMBOL_INDEX = 1;
     private static final String DOUBLE_PATTERN_REGEX = "-?[0-9]*(\\.[0-9]*)?";
-    private static final Turtle DUMMY_TURTLE = new Turtle(0,0,0,0,0);
+    private static final Turtle DUMMY_TURTLE = new Turtle(0,0,0,0);
     private static final Class<?> NOPARAMS[] = {};
     public static final Class<?> COMMAND_CLASS_PARAMS[] = new Class<?>[] {CommandStruct.class, String.class, List.class, Turtle.class};
     private static final Object COMMAND_PARAMS[] = new Object[] {new CommandStruct("", null), "", new ArrayList<>(), DUMMY_TURTLE};
     public static final Class<?> EXECUTE_CLASS_PARAMS[] = new Class<?>[] {Turtle.class};
     private static final Object EXECUTE_PARAMS[] = new Object[] {DUMMY_TURTLE};
+    private static final String LIST_BEGIN_SYMBOL = "[";
+    private static final String LIST_END_SYMBOL = "]";
 
     // TODO: Need to obtain correct resource file from user selection
     private String languageFile = "resources.languages/English";
@@ -37,10 +40,13 @@ public class Parser implements ParserInterface{
         integerPattern = Pattern.compile(DOUBLE_PATTERN_REGEX);
         languageResource = ResourceBundle.getBundle(languageFile);
         getCommandMap();
+        argumentStack = new Stack();
+        commandStack = new Stack();
     }
 
-    public List<String> parseCommand(String cmd){
-        String cleanCommand = cmd.replace(System.getProperty("line.separator"), "");
+
+    public List<String> parseCommand(String cmd) throws UnknownCommandException, InvalidParameterException {
+        String cleanCommand = cmd.replace(System.getProperty("line.separator"), " ");
         String[] parsedCommand = cleanCommand.split(" ");
         if(parsedCommand.length > SAVE_SYMBOL_INDEX && parsedCommand[SAVE_SYMBOL_INDEX].equals(SAVE_SYMBOL)){
             saveCommand(parsedCommand);
@@ -48,28 +54,39 @@ public class Parser implements ParserInterface{
         return convertToBasicCommands(parsedCommand);
     }
 
-    private List<String> convertToBasicCommands(String[] originalCmd){
-        argumentStack = new Stack();
-        commandStack = new Stack();
+    public List<String> convertToBasicCommands(String[] originalCmd) throws UnknownCommandException, InvalidParameterException {
+        clearStacks();
         List<String> basicCommandList = new ArrayList<>();
+        boolean isSlogoList = false; String listCommand = ""; int beginCount = 0; int endCount = 0;
         for(String s : originalCmd) {
-
-            if(isInteger(s)) {
-                argumentStack.push(s);
-            }
-            else if (commandMap.containsKey(s)){
-                commandStack.push(s);
+            if(s.equals(LIST_BEGIN_SYMBOL)){ isSlogoList = true;}
+            if(isSlogoList){
+                if(s.equals(LIST_BEGIN_SYMBOL)) {beginCount += 1; listCommand += s + " ";}
+                else if(s.equals(LIST_END_SYMBOL)) {
+                    endCount += 1;
+                    if(beginCount == endCount) {
+                        listCommand += s;
+                        argumentStack.push(listCommand); //
+                        isSlogoList = false; listCommand = ""; beginCount = 0; endCount = 0;
+                    }
+                } else { listCommand += s + " "; }
             }
             else {
-                throw new UnknownCommandException("Command not recognized: " + s);
-                // TODO: Error? OR if commandMap does not contain user-defined commands/variable, check if it's one of those
+                if (isInteger(s)) { argumentStack.push(s); }
+                else if (commandMap.containsKey(s)) { commandStack.push(s); }
+                else { throw new UnknownCommandException("Command not recognized: " + s); } // TODO: Error? OR if commandMap does not contain user-defined commands/variable, check if it's one of those
             }
             basicCommandList = buildTree(basicCommandList);
         }
         return basicCommandList;
     }
 
-    private List<String> buildTree(List<String> commandList){
+    private void clearStacks(){
+        argumentStack.clear();
+        commandStack.clear();
+    }
+
+    private List<String> buildTree(List<String> commandList) throws UnknownCommandException, InvalidParameterException {
         while(!commandStack.empty()){
             String command = (String) commandStack.peek();
             if (commandMap.containsKey(command)) {
@@ -86,7 +103,7 @@ public class Parser implements ParserInterface{
         return commandList;
     }
 
-    private void addBasicCmdToList(List<String> commandList, int commandNumArgs) {
+    private void addBasicCmdToList(List<String> commandList, int commandNumArgs) throws InvalidParameterException {
         String basicCommand = "";
         basicCommand += commandStack.pop();
         if(commandNumArgs > 0) {
@@ -115,7 +132,7 @@ public class Parser implements ParserInterface{
         }
     }
 
-    private double getCommandRetValue(String cmd){
+    private double getCommandRetValue(String cmd) throws InvalidParameterException {
         String[] parsedCommand = cmd.split(" ");
         String command = commandMap.get(parsedCommand[COMMAND_INDEX]);
         List<String> args = new ArrayList<>();
@@ -131,9 +148,8 @@ public class Parser implements ParserInterface{
             method.setAccessible(true);
             return (double) method.invoke(obj, EXECUTE_PARAMS);
         } catch (Exception e) {
-            e.printStackTrace(); // TODO: Throw error
+            throw new InvalidParameterException(e, "The following command could not be executed due to an invalid parameter: " + cmd); // TODO: Put message in properties file
         }
-        return 0;
     }
 
     private void saveCommand(String[] parsedCommand) {

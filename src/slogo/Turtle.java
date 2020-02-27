@@ -1,7 +1,9 @@
 package slogo;
 
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.util.Pair;
@@ -17,7 +19,6 @@ public class Turtle implements TurtleInterface{
     private static double myInitialX;
     private static double myInitialY;
     private static double myInitialAngle;
-    private static double myInitialSize;
 
     private static int myID;
 
@@ -25,25 +26,25 @@ public class Turtle implements TurtleInterface{
     private SimpleDoubleProperty myY;
     private SimpleDoubleProperty myAngle;
     private boolean myPenStatus = true; // up when false
-    private boolean myVisibilityStatus = true; //visibile when true
-    private double mySize; // turtles are approximated by a circle shape with the diameter equal to mySize
+    private SimpleBooleanProperty myVisibilityStatus; //visibile when true
     private ObservableList<Object> myHistory;
 
     private static final double threeSixty = 360;
 
 
-    public Turtle(int ID, double xCoor, double yCoor, double orrientation, double size){
+    public Turtle(int ID, double xCoor, double yCoor, double orientation){
         myInitialX = xCoor;
         myInitialY = yCoor;
-        myInitialAngle = orrientation % threeSixty;
-        myInitialSize = size;
+        myInitialAngle = orientation % threeSixty;
 
         myID = ID;
 
         myX = new SimpleDoubleProperty(xCoor);
         myY = new SimpleDoubleProperty(yCoor);
-        myAngle = new SimpleDoubleProperty(orrientation % threeSixty);
-        mySize = size;
+        myAngle = new SimpleDoubleProperty(orientation % threeSixty);
+
+
+        myVisibilityStatus = new SimpleBooleanProperty(true);
 
         myHistory =  FXCollections.observableArrayList();
     }
@@ -58,24 +59,11 @@ public class Turtle implements TurtleInterface{
     public boolean setLocation(double xCord, double yCord) {
         Pair<Double, Double> storeCurLoc = new Pair<>(myX.getValue(), myY.getValue());
 
-
-
         myX.set(xCord);
         myY.set(yCord);
 
         myHistory.add(storeCurLoc);
         return true;
-    }
-
-    @Override
-    public boolean changeSize(double newSize) {
-        mySize = newSize;
-        return true;
-    }
-
-    @Override
-    public double getSize(){
-        return mySize;
     }
 
     @Override
@@ -127,10 +115,10 @@ public class Turtle implements TurtleInterface{
     public boolean reset() {
         setY(myInitialY);
         setX(myInitialX);
-
-        mySize = myInitialSize;
         myAngle.set(myInitialAngle);
+        myVisibilityStatus.set(true);
         myHistory .clear();
+
 
         return true;
     }
@@ -159,12 +147,18 @@ public class Turtle implements TurtleInterface{
 
     @Override
     public boolean getVisibilityStatus() {
-        return myVisibilityStatus;
+        return myVisibilityStatus.getValue();
     }
 
     @Override
     public boolean setVisibilityStatus(boolean visibilityStatus) {
-        myVisibilityStatus = visibilityStatus;
+        myVisibilityStatus.set(visibilityStatus);
+        return getVisibilityStatus();
+    }
+
+    @Override
+    public SimpleBooleanProperty getVisibleProperty() {
         return myVisibilityStatus;
     }
+
 }

@@ -20,10 +20,13 @@ public class ImageSelection {
     ChoiceBox <String> cb = new ChoiceBox<>();
 
     for(File file : lang.listFiles()){
-      String [] name = file.getPath().split("/");
-      String name1 = name[name.length-1].split("\\.")[0];
+      String [] name = file.getName().split("\\.");
+      String name1 = name[0];
       cb.getItems().add(name1);
     }
+
+    cb.setValue(cb.getItems().get(0));
+    vI.setImage(cb.getValue());
     cb.setOnAction(e -> {vI.setImage(cb.getValue());});
     return cb;
   }

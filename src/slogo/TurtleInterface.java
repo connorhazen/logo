@@ -1,6 +1,8 @@
 package slogo;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 
 public interface TurtleInterface {
@@ -8,10 +10,6 @@ public interface TurtleInterface {
   int getID();
 
   boolean setLocation(double xCord, double yCord);
-
-  boolean changeSize(double newSize);
-
-  double getSize();
 
   double getX();
 
@@ -44,4 +42,7 @@ public interface TurtleInterface {
   boolean getVisibilityStatus();
 
   boolean setVisibilityStatus(boolean visibilityStatus);
+
+  SimpleBooleanProperty getVisibleProperty();
+
 }

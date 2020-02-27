@@ -1,12 +1,15 @@
 package slogo;
 
 import java.util.ArrayList;
+import java.util.List;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import slogo.ControllerInterface;
 import slogo.Turtle;
 import slogo.View;
 import slogo.ViewInterface;
+import slogo.exceptions.InvalidParameterException;
+import slogo.exceptions.UnknownCommandException;
 
 public class ControllerInitial implements ControllerInterface {
 
@@ -19,7 +22,7 @@ public class ControllerInitial implements ControllerInterface {
 
     model = new Model();
 
-    myTurtle = new Turtle(250,0,0,-90, 75);
+    myTurtle = new Turtle(250,0,0,-90);
     listeners = new ArrayList<>();
     view = generateView(this, primaryStage, myTurtle);
 
@@ -40,11 +43,13 @@ public class ControllerInitial implements ControllerInterface {
   @Override
   public void executeCommand(String commandText) {
     try{
-      model.runCommand(commandText, myTurtle);
+      List<String> history = model.runCommand(commandText, myTurtle);
+      view.printHistory(history);
       //view.updateView(model.runCommand(commandText, myTurtle));
     }
-    catch (slogo.exceptions.UnknownCommandException e){
-      view.printError(e);
+
+    catch (UnknownCommandException | InvalidParameterException e){
+      view.printErrorFromException(e);
     }
     System.out.println(commandText);
   }

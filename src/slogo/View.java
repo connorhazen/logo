@@ -1,5 +1,6 @@
 package slogo;
 
+import java.awt.Canvas;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
@@ -16,6 +17,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
@@ -36,7 +38,7 @@ import slogo.windows.SelectLanguage;
 public class View implements ViewInterface {
 
   private final int WIDTH = 900;
-  private final int HEIGHT = 600;
+  private final int HEIGHT = 900;
 
   private final ControllerInterface controller;
   private final Scene scene;
@@ -47,8 +49,13 @@ public class View implements ViewInterface {
   private static final String PROPERTIES = "src/slogo/button_properties.txt";
   private final ExceptionHelper errorHelper;
   private final TurtleDrawer drawer;
+  private TextArea errorBox;
+  private TextArea historyBox;
+
 
   public View(ControllerInterface cont, Stage primaryStage, Turtle turtle){
+    drawer = new TurtleDrawer();
+
     errorHelper = new ExceptionHelper();
     currentTurtle = turtle;
     this.mainStage = primaryStage;
@@ -59,8 +66,9 @@ public class View implements ViewInterface {
     mainStage.setScene(scene);
     mainStage.show();
 
-    drawer = new TurtleDrawer(canvas, turtle);
+
     makeTurtle();
+
   }
 
   /**
@@ -80,7 +88,6 @@ public class View implements ViewInterface {
     canvas = new Pane();
     Rectangle edges = new Rectangle();
     canvas.getChildren().add(edges);
-
     edges.widthProperty().bind(canvas.widthProperty());
     edges.heightProperty().bind(canvas.heightProperty());
     edges.setFill(Color.WHITE);
@@ -91,10 +98,15 @@ public class View implements ViewInterface {
   private VBox createRightVBox(){
     VBox right = new VBox();
     right.getStyleClass().add("vbox");
-    TextArea ta1 = new TextArea();
+    Label his = new Label("History");
+    historyBox = new TextArea();
+    Label coms = new Label("Saved Commands");
     TextArea ta2 = new TextArea();
-    right.getChildren().add(ta1);
-    right.getChildren().add(ta2);
+    Label error = new Label("Status:");
+    errorBox = new TextArea();
+    errorBox.setWrapText(true);
+
+    right.getChildren().addAll(his, historyBox, coms, ta2, error, errorBox);
     return right;
   }
 
@@ -179,7 +191,6 @@ public class View implements ViewInterface {
   /**
    * Methods for launching settings windows
    */
-
   private void launchWindow(Application application){
     try {
       application.start(new Stage());
@@ -232,30 +243,43 @@ public class View implements ViewInterface {
   }
 
   private void makeTurtle(){
-    drawer.addTurtleToCanvas();
+    drawer.addTurtleToCanvas(canvas, currentTurtle);
   }
 
   private void reset(Turtle turtle){
     turtle.reset();
-    drawer.clearCanvas();
+    drawer.reset();
+    errorBox.clear();
+    historyBox.clear();
+    drawer.addTurtleToCanvas(canvas, currentTurtle);
   }
 
-  private void reset(Turtle turtle, String image){
-    turtle.reset();
-    drawer.clearCanvas(image);
-  }
 
   @Override
-  public void printError(Exception exception) {
+  public void printErrorFromException(Exception exception) {
+    printError(exception.getMessage());
+  }
 
-    System.out.println(exception.getMessage());
-
+  private void printError(String message){
+    errorBox.appendText(message + "\n");
   }
 
   @Override
   public void setImage(String file){
+    try {
+      drawer.changeImage(file);
+    }
+    catch (Exception e){
+      printError("TurtleFileNotFound");
+    }
 
-    reset(currentTurtle, file);
+  }
+
+  @Override
+  public void printHistory(List<String> history) {
+    for(String s : history){
+      historyBox.appendText(s+"\n");
+    }
 
   }
 
