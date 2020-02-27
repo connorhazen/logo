@@ -46,6 +46,7 @@ public class View implements ViewInterface {
   private static final String STYLESHEET = "slogo/default.css";
   private static final String PROPERTIES = "src/slogo/button_properties.txt";
   private final ExceptionHelper errorHelper;
+  private final TurtleDrawer drawer;
 
   public View(ControllerInterface cont, Stage primaryStage, Turtle turtle){
     errorHelper = new ExceptionHelper();
@@ -57,7 +58,9 @@ public class View implements ViewInterface {
     scene.getStylesheets().add(STYLESHEET);
     mainStage.setScene(scene);
     mainStage.show();
-    makeTurtle(turtle);
+
+    drawer = new TurtleDrawer(canvas, turtle);
+    makeTurtle();
   }
 
   /**
@@ -132,8 +135,10 @@ public class View implements ViewInterface {
     TextArea ta = new TextArea();
     //ta.setOnKeyPressed(e -> submitText(e, ta.getText(), ta));
     Button run = makeButton("Run", e -> {controller.executeCommand(ta.getText()); ta.clear();});
+    Button reset = makeButton("Reset", e -> {reset(currentTurtle);});
     run.getStyleClass().add("run-bot");
-    bottom.getChildren().addAll(ta, run);
+    reset.getStyleClass().add("run-bot");
+    bottom.getChildren().addAll(ta, run, reset);
     return bottom;
   }
 
@@ -228,13 +233,13 @@ public class View implements ViewInterface {
 
   }
 
-  private void makeTurtle(Turtle turtle){
-    TurtleDrawer.addTurtleToCanvas(canvas, turtle);
+  private void makeTurtle(){
+    drawer.addTurtleToCanvas();
   }
 
   private void reset(Turtle turtle){
     turtle.reset();
-    TurtleDrawer.clearCanvas(canvas, turtle);
+    drawer.clearCanvas();
   }
 
   @Override
