@@ -23,6 +23,9 @@ public class ImageSelection {
       String [] name = file.getPath().split("/");
       String name1 = name[name.length-1].split("\\.")[0];
       cb.getItems().add(name1);
+      if (name1.equals("turtle")){
+        cb.setValue(name1);
+      }
     }
     cb.setOnAction(e -> {vI.setImage(cb.getValue());});
     return cb;

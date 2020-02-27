@@ -17,7 +17,7 @@
 }
 .vbox{
   -fx-spacing: 5;
-  -fx-max-width: 150;
+  -fx-max-width: 250;
 }
 .hbox{
   -fx-spacing: 5;

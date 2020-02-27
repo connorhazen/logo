@@ -16,6 +16,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
@@ -36,7 +37,7 @@ import slogo.windows.SelectLanguage;
 public class View implements ViewInterface {
 
   private final int WIDTH = 900;
-  private final int HEIGHT = 600;
+  private final int HEIGHT = 900;
 
   private final ControllerInterface controller;
   private final Scene scene;
@@ -47,6 +48,7 @@ public class View implements ViewInterface {
   private static final String PROPERTIES = "src/slogo/button_properties.txt";
   private final ExceptionHelper errorHelper;
   private final TurtleDrawer drawer;
+  private TextArea errorBox;
 
   public View(ControllerInterface cont, Stage primaryStage, Turtle turtle){
     errorHelper = new ExceptionHelper();
@@ -91,10 +93,15 @@ public class View implements ViewInterface {
   private VBox createRightVBox(){
     VBox right = new VBox();
     right.getStyleClass().add("vbox");
+    Label his = new Label("History");
     TextArea ta1 = new TextArea();
+    Label coms = new Label("Saved Commands");
     TextArea ta2 = new TextArea();
-    right.getChildren().add(ta1);
-    right.getChildren().add(ta2);
+    Label error = new Label("Status:");
+    errorBox = new TextArea();
+    errorBox.setWrapText(true);
+
+    right.getChildren().addAll(his, ta1, coms, ta2, error, errorBox);
     return right;
   }
 
@@ -243,12 +250,13 @@ public class View implements ViewInterface {
   private void reset(Turtle turtle, String image){
     turtle.reset();
     drawer.clearCanvas(image);
+    errorBox.clear();
   }
 
   @Override
   public void printError(Exception exception) {
 
-    System.out.println(exception.getMessage());
+    errorBox.appendText(exception.getMessage()+ "\n");
 
   }
 
