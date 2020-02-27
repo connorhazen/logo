@@ -1,6 +1,6 @@
 package slogo.commands;
 
-import slogo.Turtle;
+import slogo.view.Turtle;
 import slogo.exceptions.InvalidParameterException;
 import slogo.exceptions.UnknownCommandException;
 import slogo.structs.CommandStruct;

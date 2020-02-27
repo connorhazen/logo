@@ -1,6 +1,6 @@
 package slogo.commands;
 
-import slogo.Turtle;
+import slogo.view.Turtle;
 import slogo.exceptions.InvalidParameterException;
 import slogo.exceptions.UnknownCommandException;
 import slogo.structs.CommandStruct;
@@ -17,12 +17,16 @@ public class IfElse extends Misc {
     protected double execute(Turtle executeOnTurtle) throws UnknownCommandException, InvalidParameterException {
         double ret = 0;
 
-        if(getArgsDouble().get(0) != 0){
+        if(getArgsDouble().get(0) != 0){ //TODO: refactor
             getCommandStruct().getModel().runCommand(getListString1(), executeOnTurtle);
             if(getListString1().length() > 1){  // TODO: change to not hardcode
                 ret = lastRetVal(getListString1());
             }
-
+        }else{
+            getCommandStruct().getModel().runCommand(getListString2(), executeOnTurtle);
+            if(getListString2().length() > 1){  // TODO: change to not hardcode
+                ret = lastRetVal(getListString2());
+            }
         }
 
         return ret;
