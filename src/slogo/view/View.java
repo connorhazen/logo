@@ -46,7 +46,7 @@ public class View implements ViewInterface {
   private Pane canvas;
   private Turtle currentTurtle;
   private static final String STYLESHEET = "slogo/view/default.css";
-  private static final String PROPERTIES = "src/slogo/button_properties.txt";
+  private static final String PROPERTIES = "src/slogo/view/button_properties.txt";
   private final ExceptionHelper errorHelper;
   private final TurtleDrawer drawer;
   private TextArea errorBox;
