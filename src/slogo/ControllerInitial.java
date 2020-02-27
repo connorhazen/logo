@@ -7,6 +7,8 @@ import slogo.ControllerInterface;
 import slogo.Turtle;
 import slogo.View;
 import slogo.ViewInterface;
+import slogo.exceptions.InvalidParameterException;
+import slogo.exceptions.UnknownCommandException;
 
 public class ControllerInitial implements ControllerInterface {
 
@@ -43,7 +45,7 @@ public class ControllerInitial implements ControllerInterface {
       model.runCommand(commandText, myTurtle);
       //view.updateView(model.runCommand(commandText, myTurtle));
     }
-    catch (slogo.exceptions.UnknownCommandException e){
+    catch (UnknownCommandException | InvalidParameterException e){
       view.printError(e);
     }
     System.out.println(commandText);

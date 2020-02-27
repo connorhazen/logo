@@ -1,6 +1,6 @@
 package slogo.exceptions;
 
-public class UnknownCommandException extends RuntimeException {
+public class UnknownCommandException extends Exception {
     public UnknownCommandException(String message, Object ... values) {
         super(String.format(message, values));
     }
