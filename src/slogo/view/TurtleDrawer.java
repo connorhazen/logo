@@ -1,4 +1,4 @@
-package slogo;
+package slogo.view;
 
 
 import java.io.FileInputStream;
@@ -27,7 +27,9 @@ public class TurtleDrawer {
   }
 
   public void addTurtleToCanvas(Pane canvas, Turtle turtle) {
-    canvas.getChildren().add(elements);
+    if(!canvas.getChildren().contains(elements)){
+      canvas.getChildren().add(elements);
+    }
     makeTurtleBind(canvas, turtle);
     makeLineBind(canvas, turtle);
   }

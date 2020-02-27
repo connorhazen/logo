@@ -3,7 +3,7 @@ package slogo.commands;
 import slogo.exceptions.InvalidParameterException;
 import slogo.exceptions.UnknownCommandException;
 import slogo.structs.CommandStruct;
-import slogo.Turtle;
+import slogo.view.Turtle;
 
 import java.util.ArrayList;
 import java.util.List;

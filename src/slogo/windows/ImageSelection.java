@@ -1,11 +1,8 @@
 package slogo.windows;
 
 import java.io.File;
-import javafx.application.Application;
 import javafx.scene.control.ChoiceBox;
-import javafx.stage.Stage;
-import slogo.ControllerInterface;
-import slogo.ViewInterface;
+import slogo.view.ViewInterface;
 
 public class ImageSelection {
   public static ChoiceBox imageDropDown(ViewInterface vI){

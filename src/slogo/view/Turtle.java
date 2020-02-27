@@ -1,4 +1,4 @@
-package slogo;
+package slogo.view;
 
 
 import javafx.beans.property.SimpleBooleanProperty;
@@ -7,15 +7,14 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.util.Pair;
-
-
+import slogo.TurtleInterface;
 
 //todo: add checking for if updating turtle location is valid
 //todo: add statuses for turtle command execution
 
 
 
-public class Turtle implements TurtleInterface{
+public class Turtle implements TurtleInterface {
     private static double myInitialX;
     private static double myInitialY;
     private static double myInitialAngle;

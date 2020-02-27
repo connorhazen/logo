@@ -1,6 +1,5 @@
-package slogo;
+package slogo.view;
 
-import java.awt.Canvas;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
@@ -12,8 +11,7 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
+
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ChoiceBox;
@@ -29,6 +27,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import slogo.ControllerInterface;
+import slogo.ExceptionHelper;
 import slogo.windows.BackgroundColor;
 import slogo.windows.HelpWindow;
 import slogo.windows.ImageSelection;
@@ -45,31 +45,49 @@ public class View implements ViewInterface {
   private Stage mainStage;
   private Pane canvas;
   private Turtle currentTurtle;
-  private static final String STYLESHEET = "slogo/default.css";
-  private static final String PROPERTIES = "src/slogo/button_properties.txt";
+  private static final String STYLESHEET = "slogo/view/default.css";
+  private static final String PROPERTIES = "src/slogo/view/button_properties.txt";
   private final ExceptionHelper errorHelper;
   private final TurtleDrawer drawer;
   private TextArea errorBox;
   private TextArea historyBox;
+  private TextArea inputBox;
+  private CommandHistoryView boxHistory;
+
 
 
   public View(ControllerInterface cont, Stage primaryStage, Turtle turtle){
     drawer = new TurtleDrawer();
+    boxHistory = new CommandHistoryView();
 
     errorHelper = new ExceptionHelper();
     currentTurtle = turtle;
     this.mainStage = primaryStage;
     controller = cont;
     makeScreen(primaryStage);
-    scene = new Scene(createBorderPane(), WIDTH, HEIGHT);
+
+    scene = new Scene(createBorderPane() , WIDTH, HEIGHT);
     scene.getStylesheets().add(STYLESHEET);
+
     mainStage.setScene(scene);
     mainStage.show();
-
-
+    makeKeyListens();
     makeTurtle();
 
   }
+
+  private void makeKeyListens(){
+    inputBox.setOnKeyPressed(event ->  {
+
+        switch (event.getCode()) {
+          case UP:    changeInputBox(boxHistory.getPast()); break;
+
+          case DOWN:  changeInputBox(boxHistory.getNext()); break;
+        }
+
+    });
+  }
+
 
   /**
    * Methods for creating elements in the UI
@@ -144,14 +162,20 @@ public class View implements ViewInterface {
     //TODO: Use reflection to add run button
     HBox bottom = new HBox();
     bottom.getStyleClass().add("hbox-bot");
-    TextArea ta = new TextArea();
+    inputBox = new TextArea();
     //ta.setOnKeyPressed(e -> submitText(e, ta.getText(), ta));
-    Button run = makeButton("Run", e -> {controller.executeCommand(ta.getText()); ta.clear();});
+    Button run = makeButton("Run", e -> {runButtonEvent();});
     Button reset = makeButton("Reset", e -> {reset(currentTurtle);});
     run.getStyleClass().add("run-bot");
     reset.getStyleClass().add("run-bot");
-    bottom.getChildren().addAll(ta, run, reset);
+    bottom.getChildren().addAll(inputBox, run, reset);
     return bottom;
+  }
+
+  private void runButtonEvent() {
+    controller.executeCommand(inputBox.getText());
+    boxHistory.add(inputBox.getText());
+    inputBox.clear();
   }
 
   /**
@@ -281,6 +305,11 @@ public class View implements ViewInterface {
       historyBox.appendText(s+"\n");
     }
 
+  }
+
+  private void changeInputBox(String replace){
+    inputBox.clear();
+    inputBox.appendText(replace);
   }
 
 }

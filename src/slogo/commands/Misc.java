@@ -1,8 +1,10 @@
 package slogo.commands;
 
-import slogo.Turtle;
+
+import slogo.view.Turtle;
 import slogo.commands.Command;
 import slogo.exceptions.InvalidParameterException;
+
 import slogo.structs.CommandStruct;
 import slogo.structs.VariableStruct;
 

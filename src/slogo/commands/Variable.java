@@ -1,7 +1,7 @@
 package slogo.commands;
 
 import slogo.structs.CommandStruct;
-import slogo.Turtle;
+import slogo.view.Turtle;
 import slogo.structs.VariableStruct;
 
 import java.util.List;
