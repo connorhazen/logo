@@ -1,1 +1,1 @@
-Help SetPenColor SetBackgroundColor SetImage
+Help SetPenColor SetBackgroundColor

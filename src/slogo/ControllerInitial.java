@@ -21,7 +21,7 @@ public class ControllerInitial implements ControllerInterface {
 
     model = new Model();
 
-    myTurtle = new Turtle(250,0,0,10, 10);
+    myTurtle = new Turtle(250,0,0,-90, 75);
     listeners = new ArrayList<>();
     view = generateView(this, primaryStage, myTurtle);
 

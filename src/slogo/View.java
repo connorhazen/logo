@@ -16,6 +16,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
@@ -36,7 +37,7 @@ import slogo.windows.SelectLanguage;
 public class View implements ViewInterface {
 
   private final int WIDTH = 900;
-  private final int HEIGHT = 600;
+  private final int HEIGHT = 900;
 
   private final ControllerInterface controller;
   private final Scene scene;
@@ -46,6 +47,8 @@ public class View implements ViewInterface {
   private static final String STYLESHEET = "slogo/default.css";
   private static final String PROPERTIES = "src/slogo/button_properties.txt";
   private final ExceptionHelper errorHelper;
+  private final TurtleDrawer drawer;
+  private TextArea errorBox;
 
   public View(ControllerInterface cont, Stage primaryStage, Turtle turtle){
     errorHelper = new ExceptionHelper();
@@ -57,7 +60,9 @@ public class View implements ViewInterface {
     scene.getStylesheets().add(STYLESHEET);
     mainStage.setScene(scene);
     mainStage.show();
-    makeTurtle(turtle);
+
+    drawer = new TurtleDrawer(canvas, turtle);
+    makeTurtle();
   }
 
   /**
@@ -88,10 +93,15 @@ public class View implements ViewInterface {
   private VBox createRightVBox(){
     VBox right = new VBox();
     right.getStyleClass().add("vbox");
+    Label his = new Label("History");
     TextArea ta1 = new TextArea();
+    Label coms = new Label("Saved Commands");
     TextArea ta2 = new TextArea();
-    right.getChildren().add(ta1);
-    right.getChildren().add(ta2);
+    Label error = new Label("Status:");
+    errorBox = new TextArea();
+    errorBox.setWrapText(true);
+
+    right.getChildren().addAll(his, ta1, coms, ta2, error, errorBox);
     return right;
   }
 
@@ -118,7 +128,7 @@ public class View implements ViewInterface {
         hTop.getChildren().add((Button) obj);
         index++;
       }
-      hTop.getChildren().add(setLanguageWindow());
+      hTop.getChildren().addAll(setLanguageWindow(), setImageWindow());
     } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException cnfe){
       errorHelper.reflectionError(cnfe);
     }
@@ -130,10 +140,12 @@ public class View implements ViewInterface {
     HBox bottom = new HBox();
     bottom.getStyleClass().add("hbox-bot");
     TextArea ta = new TextArea();
-    ta.setOnKeyPressed(e -> submitText(e, ta.getText(), ta));
+    //ta.setOnKeyPressed(e -> submitText(e, ta.getText(), ta));
     Button run = makeButton("Run", e -> {controller.executeCommand(ta.getText()); ta.clear();});
-    run.setPrefHeight(bottom.getPrefHeight());
-    bottom.getChildren().addAll(ta, run);
+    Button reset = makeButton("Reset", e -> {reset(currentTurtle);});
+    run.getStyleClass().add("run-bot");
+    reset.getStyleClass().add("run-bot");
+    bottom.getChildren().addAll(ta, run, reset);
     return bottom;
   }
 
@@ -146,7 +158,6 @@ public class View implements ViewInterface {
       add(e -> helpWindow());
       add(e -> setPenColorWindow());
       add(e -> setBackGroundColorWindow());
-      add(e -> setImageWindow());
     }};
   }
 
@@ -188,9 +199,8 @@ public class View implements ViewInterface {
     return SelectLanguage.languageDropDown(controller);
   }
 
-  private void setImageWindow() {
-    ImageSelection iw = new ImageSelection(this);
-    launchWindow(iw);
+  private ChoiceBox setImageWindow() {
+   return ImageSelection.imageDropDown(this);
   }
 
   private void setBackGroundColorWindow() {
@@ -228,19 +238,32 @@ public class View implements ViewInterface {
 
   }
 
-  private void makeTurtle(Turtle turtle){
-    TurtleDrawer.addTurtleToCanvas(canvas, turtle);
+  private void makeTurtle(){
+    drawer.addTurtleToCanvas();
   }
 
   private void reset(Turtle turtle){
     turtle.reset();
-    TurtleDrawer.clearCanvas(canvas, turtle);
+    drawer.clearCanvas();
+  }
+
+  private void reset(Turtle turtle, String image){
+    turtle.reset();
+    drawer.clearCanvas(image);
+    errorBox.clear();
   }
 
   @Override
   public void printError(Exception exception) {
 
-    System.out.println(exception.getMessage());
+    errorBox.appendText(exception.getMessage()+ "\n");
+
+  }
+
+  @Override
+  public void setImage(String file){
+
+    reset(currentTurtle, file);
 
   }
 
