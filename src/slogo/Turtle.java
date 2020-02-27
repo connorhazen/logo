@@ -23,7 +23,7 @@ public class Turtle implements TurtleInterface{
 
     private SimpleDoubleProperty myX;
     private SimpleDoubleProperty myY;
-    private double myAngle;
+    private SimpleDoubleProperty myAngle;
     private boolean myPenStatus = true; // up when false
     private boolean myVisibilityStatus = true; //visibile when true
     private double mySize; // turtles are approximated by a circle shape with the diameter equal to mySize
@@ -42,8 +42,8 @@ public class Turtle implements TurtleInterface{
 
         myX = new SimpleDoubleProperty(xCoor);
         myY = new SimpleDoubleProperty(yCoor);
+        myAngle = new SimpleDoubleProperty(orrientation % threeSixty);
         mySize = size;
-        myAngle = orrientation % threeSixty;
 
         myHistory =  FXCollections.observableArrayList();
     }
@@ -97,6 +97,10 @@ public class Turtle implements TurtleInterface{
     public SimpleDoubleProperty getYProperty() {
         return myY;
     }
+    @Override
+    public SimpleDoubleProperty getAngleProperty() {
+        return myAngle;
+    }
 
     @Override
     public void setX(double x) {
@@ -110,13 +114,13 @@ public class Turtle implements TurtleInterface{
 
     @Override
     public boolean setAngle(double newAngle) {
-        myAngle = newAngle % threeSixty;
+        myAngle.set(newAngle % threeSixty);
         return true;
     }
 
     @Override
     public double getAngle(){
-        return myAngle;
+        return myAngle.getValue();
     }
 
     @Override
@@ -125,7 +129,7 @@ public class Turtle implements TurtleInterface{
         setX(myInitialX);
 
         mySize = myInitialSize;
-        myAngle = myInitialAngle;
+        myAngle.set(myInitialAngle);
         myHistory .clear();
 
         return true;

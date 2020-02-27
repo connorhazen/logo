@@ -130,9 +130,9 @@ public class View implements ViewInterface {
     HBox bottom = new HBox();
     bottom.getStyleClass().add("hbox-bot");
     TextArea ta = new TextArea();
-    ta.setOnKeyPressed(e -> submitText(e, ta.getText(), ta));
+    //ta.setOnKeyPressed(e -> submitText(e, ta.getText(), ta));
     Button run = makeButton("Run", e -> {controller.executeCommand(ta.getText()); ta.clear();});
-    run.setPrefHeight(bottom.getPrefHeight());
+    run.getStyleClass().add("run-bot");
     bottom.getChildren().addAll(ta, run);
     return bottom;
   }
