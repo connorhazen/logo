@@ -76,4 +76,5 @@ public abstract class Command implements CommandInterface {
     protected CommandStruct getCommandStruct() {
         return myCommandStruct;
     }
+
 }

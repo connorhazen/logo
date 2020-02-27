@@ -24,7 +24,7 @@ public class Parser implements ParserInterface{
     private static final Turtle DUMMY_TURTLE = new Turtle(0,0,0,0,0);
     private static final Class<?> NOPARAMS[] = {};
     public static final Class<?> COMMAND_CLASS_PARAMS[] = new Class<?>[] {CommandStruct.class, String.class, List.class, Turtle.class};
-    private static final Object COMMAND_PARAMS[] = new Object[] {new CommandStruct(""), "", new ArrayList<>(), DUMMY_TURTLE};
+    private static final Object COMMAND_PARAMS[] = new Object[] {new CommandStruct("", null), "", new ArrayList<>(), DUMMY_TURTLE};
     public static final Class<?> EXECUTE_CLASS_PARAMS[] = new Class<?>[] {Turtle.class};
     private static final Object EXECUTE_PARAMS[] = new Object[] {DUMMY_TURTLE};
 
@@ -125,7 +125,7 @@ public class Parser implements ParserInterface{
         try {
             Class cls = forName("slogo.commands." + command);
             Constructor cons = cls.getDeclaredConstructor(COMMAND_CLASS_PARAMS);
-            Object params[] = new Object[] {new CommandStruct(""), "", args, DUMMY_TURTLE};
+            Object params[] = new Object[] {new CommandStruct("", null), "", args, DUMMY_TURTLE};
             Object obj = cons.newInstance(params);
             Method method = cls.getDeclaredMethod("execute", EXECUTE_CLASS_PARAMS);
             method.setAccessible(true);

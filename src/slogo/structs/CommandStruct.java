@@ -1,5 +1,7 @@
 package slogo.structs;
 
+import slogo.Model;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,13 +9,17 @@ public class CommandStruct {
     List<VariableStruct> myVariables;
     private List<UserCommandStruct> myUserCommands;
     private String myLanguage;
-    private int activeActorIndex;
+    private Model myModel;
 
-    public CommandStruct(String language) {
+    public CommandStruct(String language, Model inputModel) {
         myVariables = new ArrayList<VariableStruct>();
         myUserCommands = new ArrayList<UserCommandStruct>();
         myLanguage = language;
-        this.activeActorIndex = 0;
+        myModel = inputModel;
+    }
+
+    public Model getModel(){
+        return myModel;
     }
 
     public List<VariableStruct> getVariables() {

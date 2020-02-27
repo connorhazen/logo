@@ -1,16 +1,25 @@
 package slogo.structs;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 public abstract class Struct implements Comparable<Struct> {
-    private String myName;
+    private StringProperty myName;
 
     public Struct(String name){
-        myName = name;
+        nameProperty().set(name);
     }
 
     public String getName(){
-        return myName;
+        return nameProperty().get();
     }
 
+    public StringProperty nameProperty() {
+        if (myName == null) {
+            myName = new SimpleStringProperty(this, "");
+        }
+        return myName;
+    }
 
     @Override
     public int compareTo(Struct o) {
