@@ -31,7 +31,6 @@ public class Model implements ModelInterface{
             for (int i = 1; i < parsedCommand.length; i++) {
                 args.add(parsedCommand[i]);
             }
-            System.out.println(command);
             try {
                 Class cls = forName("slogo.commands." + command);
                 Constructor cons = cls.getDeclaredConstructor(Parser.COMMAND_CLASS_PARAMS);
