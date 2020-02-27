@@ -1,6 +1,7 @@
 package slogo;
 
 import java.awt.Canvas;
+import java.awt.TextField;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
@@ -11,9 +12,9 @@ import java.util.Scanner;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
+
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ChoiceBox;
@@ -51,25 +52,43 @@ public class View implements ViewInterface {
   private final TurtleDrawer drawer;
   private TextArea errorBox;
   private TextArea historyBox;
+  private TextArea inputBox;
+  private CommandHistoryView boxHistory;
+
 
 
   public View(ControllerInterface cont, Stage primaryStage, Turtle turtle){
     drawer = new TurtleDrawer();
+    boxHistory = new CommandHistoryView();
 
     errorHelper = new ExceptionHelper();
     currentTurtle = turtle;
     this.mainStage = primaryStage;
     controller = cont;
     makeScreen(primaryStage);
-    scene = new Scene(createBorderPane(), WIDTH, HEIGHT);
+
+    scene = new Scene(createBorderPane() , WIDTH, HEIGHT);
     scene.getStylesheets().add(STYLESHEET);
+
     mainStage.setScene(scene);
     mainStage.show();
-
-
+    makeKeyListens();
     makeTurtle();
 
   }
+
+  private void makeKeyListens(){
+    inputBox.setOnKeyPressed(event ->  {
+
+        switch (event.getCode()) {
+          case UP:    changeInputBox(boxHistory.getPast()); break;
+
+          case DOWN:  changeInputBox(boxHistory.getNext()); break;
+        }
+
+    });
+  }
+
 
   /**
    * Methods for creating elements in the UI
@@ -144,14 +163,20 @@ public class View implements ViewInterface {
     //TODO: Use reflection to add run button
     HBox bottom = new HBox();
     bottom.getStyleClass().add("hbox-bot");
-    TextArea ta = new TextArea();
+    inputBox = new TextArea();
     //ta.setOnKeyPressed(e -> submitText(e, ta.getText(), ta));
-    Button run = makeButton("Run", e -> {controller.executeCommand(ta.getText()); ta.clear();});
+    Button run = makeButton("Run", e -> {runButtonEvent();});
     Button reset = makeButton("Reset", e -> {reset(currentTurtle);});
     run.getStyleClass().add("run-bot");
     reset.getStyleClass().add("run-bot");
-    bottom.getChildren().addAll(ta, run, reset);
+    bottom.getChildren().addAll(inputBox, run, reset);
     return bottom;
+  }
+
+  private void runButtonEvent() {
+    controller.executeCommand(inputBox.getText());
+    boxHistory.add(inputBox.getText());
+    inputBox.clear();
   }
 
   /**
@@ -281,6 +306,11 @@ public class View implements ViewInterface {
       historyBox.appendText(s+"\n");
     }
 
+  }
+
+  private void changeInputBox(String replace){
+    inputBox.clear();
+    inputBox.appendText(replace);
   }
 
 }
