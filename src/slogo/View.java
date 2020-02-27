@@ -1,5 +1,6 @@
 package slogo;
 
+import java.awt.Canvas;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
@@ -51,6 +52,8 @@ public class View implements ViewInterface {
   private TextArea errorBox;
 
   public View(ControllerInterface cont, Stage primaryStage, Turtle turtle){
+    drawer = new TurtleDrawer();
+
     errorHelper = new ExceptionHelper();
     currentTurtle = turtle;
     this.mainStage = primaryStage;
@@ -61,8 +64,9 @@ public class View implements ViewInterface {
     mainStage.setScene(scene);
     mainStage.show();
 
-    drawer = new TurtleDrawer(canvas, turtle);
+
     makeTurtle();
+
   }
 
   /**
@@ -82,7 +86,6 @@ public class View implements ViewInterface {
     canvas = new Pane();
     Rectangle edges = new Rectangle();
     canvas.getChildren().add(edges);
-
     edges.widthProperty().bind(canvas.widthProperty());
     edges.heightProperty().bind(canvas.heightProperty());
     edges.setFill(Color.WHITE);
@@ -186,7 +189,6 @@ public class View implements ViewInterface {
   /**
    * Methods for launching settings windows
    */
-
   private void launchWindow(Application application){
     try {
       application.start(new Stage());
@@ -239,31 +241,34 @@ public class View implements ViewInterface {
   }
 
   private void makeTurtle(){
-    drawer.addTurtleToCanvas();
+    drawer.addTurtleToCanvas(canvas, currentTurtle);
   }
 
   private void reset(Turtle turtle){
     turtle.reset();
-    drawer.clearCanvas();
+    drawer.reset();
+    errorBox.clear();
+    drawer.addTurtleToCanvas(canvas, currentTurtle);
   }
 
-  private void reset(Turtle turtle, String image){
-    turtle.reset();
-    drawer.clearCanvas(image);
-    errorBox.clear();
-  }
 
   @Override
-  public void printError(Exception exception) {
+  public void printErrorFromException(Exception exception) {
+    printError(exception.getMessage());
+  }
 
-    errorBox.appendText(exception.getMessage()+ "\n");
-
+  private void printError(String message){
+    errorBox.appendText(message + "\n");
   }
 
   @Override
   public void setImage(String file){
-
-    reset(currentTurtle, file);
+    try {
+      drawer.changeImage(file);
+    }
+    catch (Exception e){
+      printError("TurtleFileNotFound");
+    }
 
   }
 

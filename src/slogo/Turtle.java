@@ -58,8 +58,6 @@ public class Turtle implements TurtleInterface{
     public boolean setLocation(double xCord, double yCord) {
         Pair<Double, Double> storeCurLoc = new Pair<>(myX.getValue(), myY.getValue());
 
-
-
         myX.set(xCord);
         myY.set(yCord);
 

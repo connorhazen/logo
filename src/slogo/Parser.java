@@ -40,7 +40,7 @@ public class Parser implements ParserInterface{
     }
 
     public List<String> parseCommand(String cmd){
-        String cleanCommand = cmd.replace(System.getProperty("line.separator"), "");
+        String cleanCommand = cmd.replace(System.getProperty("line.separator"), " ");
         String[] parsedCommand = cleanCommand.split(" ");
         if(parsedCommand.length > SAVE_SYMBOL_INDEX && parsedCommand[SAVE_SYMBOL_INDEX].equals(SAVE_SYMBOL)){
             saveCommand(parsedCommand);

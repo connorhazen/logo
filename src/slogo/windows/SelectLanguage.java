@@ -24,8 +24,8 @@ public class SelectLanguage {
     ChoiceBox <String> cb = new ChoiceBox<>();
 
     for(File file : lang.listFiles()){
-      String [] name = file.getPath().split("/");
-      String name1 = name[name.length-1].split("\\.")[0];
+      String [] name = file.getName().split("\\.");
+      String name1 = name[0];
       if(name1.equals("English")){
         cb.setValue(name1);
       }

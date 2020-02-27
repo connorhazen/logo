@@ -44,7 +44,7 @@ public class ControllerInitial implements ControllerInterface {
       //view.updateView(model.runCommand(commandText, myTurtle));
     }
     catch (slogo.exceptions.UnknownCommandException e){
-      view.printError(e);
+      view.printErrorFromException(e);
     }
     System.out.println(commandText);
   }

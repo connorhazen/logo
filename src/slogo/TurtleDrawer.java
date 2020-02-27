@@ -1,13 +1,16 @@
 package slogo;
 
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.sql.SQLOutput;
+import java.util.IdentityHashMap;
 import java.util.Objects;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.NumberBinding;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ListChangeListener;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
@@ -22,31 +25,18 @@ import javax.swing.JPanel;
 
 public class TurtleDrawer {
 
-  private Pane canvas;
-  private Turtle turtle;
   private Group elements;
-  private String defaultTurtle = "turtle";
+  private SimpleObjectProperty currentTurtleGif;
 
-  public TurtleDrawer(Pane canvas, Turtle turtle){
+  public TurtleDrawer(){
+    currentTurtleGif = new SimpleObjectProperty();
     elements = new Group();
-    this.turtle = turtle;
-    this.canvas = canvas;
 
+  }
+
+  public void addTurtleToCanvas(Pane canvas, Turtle turtle){
     canvas.getChildren().add(elements);
-
-  }
-
-
-
-  public void addTurtleToCanvas(String image){
-    makeTurtleBind(canvas, turtle, image);
-
-    makeLineBind(canvas, turtle);
-  }
-
-  public void addTurtleToCanvas(){
-    makeTurtleBind(canvas, turtle, defaultTurtle);
-
+    makeTurtleBind(canvas, turtle);
     makeLineBind(canvas, turtle);
   }
 
@@ -65,14 +55,13 @@ public class TurtleDrawer {
     }
   }
 
-  private void makeTurtleBind(Pane canvas, Turtle turtle, String file) {
-    try{
-      FileInputStream inputStream = new FileInputStream("src/resources/turtleImages/" + file + ".gif");
+  private void makeTurtleBind(Pane canvas, Turtle turtle) {
 
-      defaultTurtle = file;
+    ImageView newTurt = newTurt = new ImageView();
 
-      Image turtleGif = new Image(inputStream);
-      ImageView newTurt = new ImageView(turtleGif);
+
+    newTurt.imageProperty().bind(currentTurtleGif);
+
       newTurt.setFitWidth(turtle.getSize());
       newTurt.setFitHeight(turtle.getSize());
 
@@ -89,28 +78,22 @@ public class TurtleDrawer {
       newTurt.yProperty().bind(yLoc);
 
       elements.getChildren().add(newTurt);
-    }
-    catch (Exception e){
-      if(file.equals(defaultTurtle)){
-        System.out.println("default turtle missing");
-        e.printStackTrace();
-      }
-      else{
-        System.out.println("Turtle GIF not found : using default");
-        makeTurtleBind(canvas, turtle, defaultTurtle);
-      }
-    }
+
   }
 
 
-  public void clearCanvas() {
+  public void reset(){
     elements.getChildren().clear();
-    addTurtleToCanvas();
-  }
-  public void clearCanvas(String file) {
-    elements.getChildren().clear();
-    addTurtleToCanvas(file);
   }
 
 
+  public void changeImage(String file) throws FileNotFoundException {
+    String path = "src/resources/turtleImages/" + file + ".gif";
+    setImage(path);
+  }
+
+  private void setImage(String path) throws FileNotFoundException {
+    FileInputStream inputStream = new FileInputStream(path);
+    currentTurtleGif.set(new Image(inputStream));
+  }
 }
