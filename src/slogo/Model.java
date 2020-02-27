@@ -42,4 +42,8 @@ public class Model implements ModelInterface{
         }
         return parsedCommands;
     }
+
+    public Parser getParser(){
+        return parser;
+    }
 }

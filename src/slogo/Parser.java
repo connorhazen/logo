@@ -132,7 +132,7 @@ public class Parser implements ParserInterface{
         }
     }
 
-    private double getCommandRetValue(String cmd) throws InvalidParameterException {
+    public double getCommandRetValue(String cmd) throws InvalidParameterException {
         String[] parsedCommand = cmd.split(" ");
         String command = commandMap.get(parsedCommand[COMMAND_INDEX]);
         List<String> args = new ArrayList<>();

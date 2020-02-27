@@ -2,6 +2,7 @@ package slogo.commands;
 
 import slogo.Turtle;
 import slogo.commands.Command;
+import slogo.exceptions.InvalidParameterException;
 import slogo.structs.CommandStruct;
 import slogo.structs.VariableStruct;
 
@@ -35,14 +36,14 @@ public abstract class Misc extends Command {
 
         if(listBeginIndex >= 0 && listEndIndex >= 0){
 
-            myList1 = stringIterator(textInput, listBeginIndex, listEndIndex);
+            myListString1 = stringIterator(textInput, listBeginIndex, listEndIndex);
 
             textInput = textInput.substring(listBeginIndex + 1);
             listBeginIndex = textInput.indexOf(listBegin);
             listEndIndex = textInput.indexOf(listEnd);
 
             if(listBeginIndex >= 0 && listEndIndex >= 0){
-                myList2 = stringIterator(textInput, listBeginIndex, listEndIndex);
+                myListString2 = stringIterator(textInput, listBeginIndex, listEndIndex);
             }
 
         }
@@ -71,6 +72,37 @@ public abstract class Misc extends Command {
 //    protected void populateBasicCommands(){
 //        myBasicCommands = getCommandStruct().getModel().runCommand()
 //    }
+
+    private String lastCommandInString(String input){ // find last "[" and then find the begining of a char substring
+        int commandStartIndex = 0;
+        int listBeginIndex = input.indexOf(listBegin);
+        if(listBeginIndex < 0){
+            listBeginIndex = 0;
+        }
+        for(int i = listBeginIndex; i < input.length(); i++){
+            if(input.charAt(i) == listBegin.charAt(0)){
+                listBeginIndex = i;
+            }
+        }
+        // now listBeginIndex points to the last occurance of "[" in the string
+        // itterate backwards through the string now to find the beginning of the char substring that indicates a command
+        for(int i = listBeginIndex; i >= 0; i--){
+            if(commandStartIndex != 0){
+                if(input.charAt(i) == ' '){
+                    break;
+                }
+            }
+            if(input.charAt(i) == listBegin.charAt(0)){
+                commandStartIndex = i;
+            }
+        }
+        return input.substring(commandStartIndex);
+    }
+
+    protected double lastRetVal(String basicCmd) throws InvalidParameterException {
+        return getCommandStruct().getModel().getParser().getCommandRetValue(lastCommandInString(getListString1()));
+    }
+
 
 
 }

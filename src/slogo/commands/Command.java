@@ -1,5 +1,7 @@
 package slogo.commands;
 
+import slogo.exceptions.InvalidParameterException;
+import slogo.exceptions.UnknownCommandException;
 import slogo.structs.CommandStruct;
 import slogo.Turtle;
 
@@ -36,7 +38,7 @@ public abstract class Command implements CommandInterface {
 //        return retValue;
 //    }
 
-    public double executeCommand(){
+    public double executeCommand() throws UnknownCommandException, InvalidParameterException {
         double retValue = -1.0;
 
         if (this instanceof TurtleSpecificCommand) {
@@ -47,7 +49,7 @@ public abstract class Command implements CommandInterface {
         return retValue;
     }
 
-    protected abstract double execute(Turtle executeOnTurtle);
+    protected abstract double execute(Turtle executeOnTurtle) throws UnknownCommandException, InvalidParameterException;
 
     protected List<Double> getArgsDouble() {
         List<Double> doubleList = new ArrayList<>();
