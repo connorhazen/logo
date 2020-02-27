@@ -50,6 +50,8 @@ public class View implements ViewInterface {
   private final ExceptionHelper errorHelper;
   private final TurtleDrawer drawer;
   private TextArea errorBox;
+  private TextArea historyBox;
+
 
   public View(ControllerInterface cont, Stage primaryStage, Turtle turtle){
     drawer = new TurtleDrawer();
@@ -97,14 +99,14 @@ public class View implements ViewInterface {
     VBox right = new VBox();
     right.getStyleClass().add("vbox");
     Label his = new Label("History");
-    TextArea ta1 = new TextArea();
+    historyBox = new TextArea();
     Label coms = new Label("Saved Commands");
     TextArea ta2 = new TextArea();
     Label error = new Label("Status:");
     errorBox = new TextArea();
     errorBox.setWrapText(true);
 
-    right.getChildren().addAll(his, ta1, coms, ta2, error, errorBox);
+    right.getChildren().addAll(his, historyBox, coms, ta2, error, errorBox);
     return right;
   }
 
@@ -248,6 +250,7 @@ public class View implements ViewInterface {
     turtle.reset();
     drawer.reset();
     errorBox.clear();
+    historyBox.clear();
     drawer.addTurtleToCanvas(canvas, currentTurtle);
   }
 
@@ -268,6 +271,14 @@ public class View implements ViewInterface {
     }
     catch (Exception e){
       printError("TurtleFileNotFound");
+    }
+
+  }
+
+  @Override
+  public void printHistory(List<String> history) {
+    for(String s : history){
+      historyBox.appendText(s+"\n");
     }
 
   }

@@ -22,7 +22,7 @@ public class Model implements ModelInterface{
     }
 
     @Override
-    public Turtle runCommand(String input, Turtle turtle) throws UnknownCommandException, InvalidParameterException {
+    public List<String> runCommand(String input, Turtle turtle) throws UnknownCommandException, InvalidParameterException {
         List<String> parsedCommands = parser.parseCommand(input);
         Map<String, String> commandMap = parser.getCommandMap();
         for (String basicCmd : parsedCommands) {
@@ -40,6 +40,6 @@ public class Model implements ModelInterface{
                 method.invoke(obj, turtle);
             } catch (Exception e) { throw new UnknownCommandException(e, "Command not recognized: " + command); }
         }
-        return turtle;
+        return parsedCommands;
     }
 }

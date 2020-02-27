@@ -1,5 +1,7 @@
 package slogo;
 
+import java.util.List;
+
 public interface ViewInterface {
 
   /**
@@ -9,4 +11,6 @@ public interface ViewInterface {
   void printErrorFromException(Exception exception);
 
   void setImage(String value);
+
+  void printHistory(List<String> history);
 }

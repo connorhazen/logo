@@ -1,6 +1,7 @@
 package slogo;
 
 import java.util.ArrayList;
+import java.util.List;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import slogo.ControllerInterface;
@@ -42,7 +43,8 @@ public class ControllerInitial implements ControllerInterface {
   @Override
   public void executeCommand(String commandText) {
     try{
-      model.runCommand(commandText, myTurtle);
+      List<String> history = model.runCommand(commandText, myTurtle);
+      view.printHistory(history);
       //view.updateView(model.runCommand(commandText, myTurtle));
     }
 

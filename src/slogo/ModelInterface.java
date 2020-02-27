@@ -1,5 +1,6 @@
 package slogo;
 
+import java.util.List;
 import slogo.exceptions.InvalidParameterException;
 import slogo.exceptions.UnknownCommandException;
 
@@ -10,6 +11,6 @@ public interface ModelInterface{
    * @param input String input to be parsed and executed.
    * @return
    */
-  Turtle runCommand(String input, Turtle turtle) throws UnknownCommandException, InvalidParameterException;
+  List<String> runCommand(String input, Turtle turtle) throws UnknownCommandException, InvalidParameterException;
 
 }
