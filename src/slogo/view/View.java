@@ -37,8 +37,8 @@ import slogo.windows.SelectLanguage;
 
 public class View implements ViewInterface {
 
-  private final int WIDTH = 900;
-  private final int HEIGHT = 900;
+  private final int WIDTH = 1200;
+  private final int HEIGHT = 600;
 
   private final ControllerInterface controller;
   private final Scene scene;
@@ -99,6 +99,7 @@ public class View implements ViewInterface {
     borderPane.setRight(createRightVBox());
     borderPane.setBottom(createBottomHBox());
     borderPane.setCenter(createMiddleCanvas());
+    borderPane.setLeft(createLeftVbox());
     return borderPane;
   }
 
@@ -116,16 +117,30 @@ public class View implements ViewInterface {
   private VBox createRightVBox(){
     VBox right = new VBox();
     right.getStyleClass().add("vbox");
-    Label his = new Label("History");
-    historyBox = new TextArea();
-    Label coms = new Label("Saved Commands");
-    TextArea ta2 = new TextArea();
     Label error = new Label("Status:");
     errorBox = new TextArea();
     errorBox.setWrapText(true);
 
-    right.getChildren().addAll(his, historyBox, coms, ta2, error, errorBox);
+    Label his = new Label("History:");
+    historyBox = new TextArea();
+
+
+    right.getChildren().addAll(his, historyBox, error, errorBox);
+
     return right;
+  }
+
+  private VBox createLeftVbox(){
+    VBox left = new VBox();
+    left.getStyleClass().add("vbox");
+    Label vars = new Label("Saved Variables:");
+    TextArea varBox = new TextArea();
+
+    Label coms = new Label("Saved Commands:");
+    TextArea ta2 = new TextArea();
+
+    left.getChildren().addAll(vars, varBox, coms, ta2);
+    return left;
   }
 
   private HBox createTopHBox(){

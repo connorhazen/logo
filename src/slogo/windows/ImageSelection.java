@@ -21,8 +21,7 @@ public class ImageSelection {
       String name1 = name[0];
       cb.getItems().add(name1);
     }
-
-    cb.setValue(cb.getItems().get(0));
+    cb.setValue("turtle");
     vI.setImage(cb.getValue());
     cb.setOnAction(e -> {vI.setImage(cb.getValue());});
     return cb;

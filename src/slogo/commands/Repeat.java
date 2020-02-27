@@ -26,7 +26,8 @@ public class Repeat extends Misc {
             if(i == runNumTimes - 1){
                 ret = lastRetVal(getListString1());
                 // ret = getCommandStruct().getModel().getParser().getCommandRetValue();
-                // TODO: access argument stack in parser to get the actual command being executed or write method
+                // TODO: access argument stack in parser to get the actual command being executed or write method:
+                // Could this just call the parser on the passed in String?
             }
 
         }
