@@ -18,14 +18,14 @@ public class Parser implements ParserInterface{
     private Map<String, String> commandMap;
     private ResourceBundle languageResource;
     private static final String SAVE_SYMBOL = "=";
-    private static final int COMMAND_INDEX = 0;
+    public static final int COMMAND_INDEX = 0;
     private static final int SAVE_SYMBOL_INDEX = 1;
     private static final String DOUBLE_PATTERN_REGEX = "-?[0-9]*(\\.[0-9]*)?";
     private static final Turtle DUMMY_TURTLE = new Turtle(0,0,0,0,0);
     private static final Class<?> NOPARAMS[] = {};
-    private static final Class<?> COMMAND_CLASS_PARAMS[] = new Class<?>[] {CommandStruct.class, String.class, List.class, Turtle.class};
+    public static final Class<?> COMMAND_CLASS_PARAMS[] = new Class<?>[] {CommandStruct.class, String.class, List.class, Turtle.class};
     private static final Object COMMAND_PARAMS[] = new Object[] {new CommandStruct(""), "", new ArrayList<>(), DUMMY_TURTLE};
-    private static final Class<?> EXECUTE_CLASS_PARAMS[] = new Class<?>[] {Turtle.class};
+    public static final Class<?> EXECUTE_CLASS_PARAMS[] = new Class<?>[] {Turtle.class};
     private static final Object EXECUTE_PARAMS[] = new Object[] {DUMMY_TURTLE};
 
     // TODO: Need to obtain correct resource file from user selection
@@ -36,7 +36,7 @@ public class Parser implements ParserInterface{
         commandMap = new HashMap<>();
         integerPattern = Pattern.compile(DOUBLE_PATTERN_REGEX);
         languageResource = ResourceBundle.getBundle(languageFile);
-        fillCommandMap();
+        getCommandMap();
     }
 
     public List<String> parseCommand(String cmd){
@@ -151,7 +151,7 @@ public class Parser implements ParserInterface{
         return integerPattern.matcher(s).matches();
     }
 
-    private void fillCommandMap(){
+    public Map<String, String> getCommandMap(){
         Enumeration<String> commands = languageResource.getKeys();
         while(commands.hasMoreElements()){
             String commandName = commands.nextElement();
@@ -162,6 +162,7 @@ public class Parser implements ParserInterface{
                 commandMap.put(recognizedCmd, commandName);
             }
         }
+        return commandMap;
     }
 
     /**
