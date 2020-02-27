@@ -2,9 +2,7 @@ package slogo.commands;
 
 import javafx.util.Pair;
 import slogo.structs.CommandStruct;
-import slogo.Turtle;
-import slogo.commands.Command;
-import slogo.commands.TurtleSpecificCommand;
+import slogo.view.Turtle;
 
 import java.util.List;
 

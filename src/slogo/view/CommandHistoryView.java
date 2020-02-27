@@ -1,4 +1,4 @@
-package slogo;
+package slogo.view;
 
 import java.util.ArrayList;
 import java.util.Iterator;

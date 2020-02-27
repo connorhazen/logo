@@ -1,7 +1,5 @@
-package slogo;
+package slogo.view;
 
-import java.awt.Canvas;
-import java.awt.TextField;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
@@ -12,7 +10,6 @@ import java.util.Scanner;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 
 import javafx.scene.control.Button;
@@ -30,6 +27,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import slogo.ControllerInterface;
+import slogo.ExceptionHelper;
 import slogo.windows.BackgroundColor;
 import slogo.windows.HelpWindow;
 import slogo.windows.ImageSelection;
@@ -46,7 +45,7 @@ public class View implements ViewInterface {
   private Stage mainStage;
   private Pane canvas;
   private Turtle currentTurtle;
-  private static final String STYLESHEET = "slogo/default.css";
+  private static final String STYLESHEET = "slogo/view/default.css";
   private static final String PROPERTIES = "src/slogo/button_properties.txt";
   private final ExceptionHelper errorHelper;
   private final TurtleDrawer drawer;

@@ -8,6 +8,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.regex.Pattern;
+import slogo.view.Turtle;
 
 import static java.lang.Class.forName;
 

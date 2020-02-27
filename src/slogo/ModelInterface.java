@@ -3,6 +3,7 @@ package slogo;
 import java.util.List;
 import slogo.exceptions.InvalidParameterException;
 import slogo.exceptions.UnknownCommandException;
+import slogo.view.Turtle;
 
 public interface ModelInterface{
 

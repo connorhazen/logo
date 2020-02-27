@@ -2,12 +2,10 @@ package slogo;
 
 import java.util.ArrayList;
 import java.util.List;
-import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
-import slogo.ControllerInterface;
-import slogo.Turtle;
-import slogo.View;
-import slogo.ViewInterface;
+import slogo.view.Turtle;
+import slogo.view.View;
+import slogo.view.ViewInterface;
 import slogo.exceptions.InvalidParameterException;
 import slogo.exceptions.UnknownCommandException;
 
