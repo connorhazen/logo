@@ -1,5 +1,6 @@
 package slogo;
 
+import slogo.exceptions.InvalidParameterException;
 import slogo.exceptions.UnknownCommandException;
 import slogo.structs.CommandStruct;
 
@@ -21,16 +22,14 @@ public class Model implements ModelInterface{
     }
 
     @Override
-    public Turtle runCommand(String input, Turtle turtle) throws UnknownCommandException {
+    public Turtle runCommand(String input, Turtle turtle) throws UnknownCommandException, InvalidParameterException {
         List<String> parsedCommands = parser.parseCommand(input);
         Map<String, String> commandMap = parser.getCommandMap();
         for (String basicCmd : parsedCommands) {
             String[] parsedCommand = basicCmd.split(" ");
             String command = commandMap.get(parsedCommand[Parser.COMMAND_INDEX]);
             List<String> args = new ArrayList<>();
-            for (int i = 1; i < parsedCommand.length; i++) {
-                args.add(parsedCommand[i]);
-            }
+            for (int i = 1; i < parsedCommand.length; i++) { args.add(parsedCommand[i]); }
             try {
                 Class cls = forName("slogo.commands." + command);
                 Constructor cons = cls.getDeclaredConstructor(Parser.COMMAND_CLASS_PARAMS);
@@ -39,7 +38,7 @@ public class Model implements ModelInterface{
                 Method method = cls.getDeclaredMethod("execute", Parser.EXECUTE_CLASS_PARAMS);
                 method.setAccessible(true);
                 method.invoke(obj, turtle);
-            } catch (Exception e) { throw new UnknownCommandException("Command not recognized: " + command); }
+            } catch (Exception e) { throw new UnknownCommandException(e, "Command not recognized: " + command); }
         }
         return turtle;
     }
