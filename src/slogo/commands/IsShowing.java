@@ -5,8 +5,8 @@ import slogo.Turtle;
 
 import java.util.List;
 
-public class ShowingQ extends TurtleQuery {
-    public ShowingQ(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
+public class IsShowing extends TurtleQuery {
+    public IsShowing(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
         super(commandStruct, text, args, toldTurtle);
         setMyNumArgs(0);
     }

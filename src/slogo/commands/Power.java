@@ -5,8 +5,8 @@ import slogo.Turtle;
 
 import java.util.List;
 
-public class Pow extends MathOperation {
-    public Pow(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
+public class Power extends MathOperation {
+    public Power(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
         super(commandStruct, text, args, toldTurtle);
         setMyNumArgs(2);
     }

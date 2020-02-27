@@ -5,8 +5,8 @@ import slogo.Turtle;
 
 import java.util.List;
 
-public class Towards extends TurtleCommand {
-    public Towards(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
+public class SetTowards extends TurtleCommand {
+    public SetTowards(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
         super(commandStruct, text, args, toldTurtle);
         setMyNumArgs(2);
     }
