@@ -8,4 +8,5 @@ public interface ViewInterface {
    */
   void printError(Exception exception);
 
+  void setImage(String value);
 }

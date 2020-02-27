@@ -107,6 +107,10 @@ public class TurtleDrawer {
     elements.getChildren().clear();
     addTurtleToCanvas();
   }
+  public void clearCanvas(String file) {
+    elements.getChildren().clear();
+    addTurtleToCanvas(file);
+  }
 
 
 }

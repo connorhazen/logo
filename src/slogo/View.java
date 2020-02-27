@@ -121,7 +121,7 @@ public class View implements ViewInterface {
         hTop.getChildren().add((Button) obj);
         index++;
       }
-      hTop.getChildren().add(setLanguageWindow());
+      hTop.getChildren().addAll(setLanguageWindow(), setImageWindow());
     } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException cnfe){
       errorHelper.reflectionError(cnfe);
     }
@@ -151,7 +151,6 @@ public class View implements ViewInterface {
       add(e -> helpWindow());
       add(e -> setPenColorWindow());
       add(e -> setBackGroundColorWindow());
-      add(e -> setImageWindow());
     }};
   }
 
@@ -193,9 +192,8 @@ public class View implements ViewInterface {
     return SelectLanguage.languageDropDown(controller);
   }
 
-  private void setImageWindow() {
-    ImageSelection iw = new ImageSelection(this);
-    launchWindow(iw);
+  private ChoiceBox setImageWindow() {
+   return ImageSelection.imageDropDown(this);
   }
 
   private void setBackGroundColorWindow() {
@@ -242,10 +240,22 @@ public class View implements ViewInterface {
     drawer.clearCanvas();
   }
 
+  private void reset(Turtle turtle, String image){
+    turtle.reset();
+    drawer.clearCanvas(image);
+  }
+
   @Override
   public void printError(Exception exception) {
 
     System.out.println(exception.getMessage());
+
+  }
+
+  @Override
+  public void setImage(String file){
+
+    reset(currentTurtle, file);
 
   }
 
