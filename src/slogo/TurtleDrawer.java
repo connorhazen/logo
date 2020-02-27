@@ -25,6 +25,7 @@ public class TurtleDrawer {
   private Pane canvas;
   private Turtle turtle;
   private Group elements;
+  private String defaultTurtle = "turtle";
 
   public TurtleDrawer(Pane canvas, Turtle turtle){
     elements = new Group();
@@ -37,9 +38,14 @@ public class TurtleDrawer {
 
 
 
-  public void addTurtleToCanvas(){
+  public void addTurtleToCanvas(String image){
+    makeTurtleBind(canvas, turtle, image);
 
-    makeTurtleBind(canvas, turtle);
+    makeLineBind(canvas, turtle);
+  }
+
+  public void addTurtleToCanvas(){
+    makeTurtleBind(canvas, turtle, defaultTurtle);
 
     makeLineBind(canvas, turtle);
   }
@@ -59,9 +65,12 @@ public class TurtleDrawer {
     }
   }
 
-  private void makeTurtleBind(Pane canvas, Turtle turtle) {
+  private void makeTurtleBind(Pane canvas, Turtle turtle, String file) {
     try{
-      FileInputStream inputStream = new FileInputStream("src/slogo/turtle.gif");
+      FileInputStream inputStream = new FileInputStream("src/resources/turtleImages/" + file + ".gif");
+
+      defaultTurtle = file;
+
       Image turtleGif = new Image(inputStream);
       ImageView newTurt = new ImageView(turtleGif);
       newTurt.setFitWidth(turtle.getSize());
@@ -82,11 +91,15 @@ public class TurtleDrawer {
       elements.getChildren().add(newTurt);
     }
     catch (Exception e){
-      System.out.println("Turtle GIF not found");
-      e.printStackTrace();
+      if(file.equals(defaultTurtle)){
+        System.out.println("default turtle missing");
+        e.printStackTrace();
+      }
+      else{
+        System.out.println("Turtle GIF not found : using default");
+        makeTurtleBind(canvas, turtle, defaultTurtle);
+      }
     }
-
-
   }
 
 
