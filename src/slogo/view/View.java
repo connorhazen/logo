@@ -3,9 +3,11 @@ package slogo.view;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -85,11 +87,6 @@ public class View implements ViewInterface {
     });
   }
 
-
-  /**
-   * Methods for creating elements in the UI
-   */
-
   private BorderPane createBorderPane(){
     BorderPane borderPane = new BorderPane();
     borderPane.setTop(makeTopHBox());
@@ -112,13 +109,15 @@ public class View implements ViewInterface {
   }
 
   private VBox createRightVBox(){
+    String colon = ":";
+    List<String> labels = new ArrayList<>(ResourceBundle.getBundle("slogo.view.labels").keySet());
     VBox right = new VBox();
     right.getStyleClass().add("vbox");
-    Label error = new Label("Status:");
+    Label error = new Label(labels.get(0) + colon);
     errorBox = new TextArea();
     errorBox.setWrapText(true);
 
-    Label his = new Label("History:");
+    Label his = new Label(labels.get(1) + colon);
     historyBox = new TextArea();
 
 
@@ -161,18 +160,6 @@ public class View implements ViewInterface {
     inputBox.clear();
   }
 
-  /**
-   * Helper methods for creating UI elements
-   */
-
-
-  private void submitText(KeyEvent keyEvent, String commandText, TextArea ta) {
-    if(keyEvent.getCode() == KeyCode.ENTER){
-      controller.executeCommand(commandText);
-      ta.clear();
-    }
-  }
-
   private HBox makeTopHBox(){
     HBox myBox = new HBox();
     Properties props = new Properties();
@@ -205,9 +192,7 @@ public class View implements ViewInterface {
     myBox.getChildren().addAll(setLanguageWindow(), setImageWindow());
     return myBox;
   }
-  /**
-   * Methods for launching settings windows
-   */
+
   private void launchWindow(Application application){
     try {
       application.start(new Stage());
@@ -224,16 +209,19 @@ public class View implements ViewInterface {
    return ImageSelection.imageDropDown(this);
   }
 
+  @SuppressWarnings("Used in reflection")
   private void setBackGroundColorWindow() {
     BackgroundColor bc = new BackgroundColor(controller);
     launchWindow(bc);
   }
 
+  @SuppressWarnings("Used in reflection")
   private void setPenColorWindow() {
     PenColorWindow pcw = new PenColorWindow(controller);
     launchWindow(pcw);
   }
 
+  @SuppressWarnings("Used in reflection")
   private void helpWindow() {
     HelpWindow hw = new HelpWindow(controller);
     launchWindow(hw);
