@@ -1,22 +1,19 @@
 package slogo.view;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Scanner;
+import java.util.Properties;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -95,7 +92,7 @@ public class View implements ViewInterface {
 
   private BorderPane createBorderPane(){
     BorderPane borderPane = new BorderPane();
-    borderPane.setTop(createTopHBox());
+    borderPane.setTop(makeTopHBox());
     borderPane.setRight(createRightVBox());
     borderPane.setBottom(createBottomHBox());
     borderPane.setCenter(createMiddleCanvas());
@@ -143,35 +140,6 @@ public class View implements ViewInterface {
     return left;
   }
 
-  private HBox createTopHBox(){
-    List<EventHandler<ActionEvent>> eae = getButtonActions();
-    List<String> buttonMap = getButtonProperties();
-    HBox hTop = new HBox();
-    hTop.getStyleClass().add("hbox");
-    try{
-      int index = 0;
-      for(String k : buttonMap){
-        Class[] paraActionEvent = new Class[1];
-        paraActionEvent[0] = EventHandler.class;
-        Class[] paraString = new Class[1];
-        paraString[0] = String.class;
-
-        Object obj = Button.class.getDeclaredConstructor().newInstance();
-
-        Method setText = Labeled.class.getDeclaredMethod("setText", paraString);
-        setText.invoke(obj, k);
-
-        Method setOnAction = ButtonBase.class.getDeclaredMethod("setOnAction", EventHandler.class);
-        setOnAction.invoke(obj, (EventHandler<ActionEvent>) eae.get(index));
-        hTop.getChildren().add((Button) obj);
-        index++;
-      }
-      hTop.getChildren().addAll(setLanguageWindow(), setImageWindow());
-    } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException cnfe){
-      errorHelper.reflectionError(cnfe);
-    }
-    return hTop;
-  }
 
   private HBox createBottomHBox(){
     //TODO: Use reflection to add run button
@@ -197,28 +165,6 @@ public class View implements ViewInterface {
    * Helper methods for creating UI elements
    */
 
-  private List<EventHandler<ActionEvent>> getButtonActions(){
-    return new ArrayList<>() {{
-      add(e -> helpWindow());
-      add(e -> setPenColorWindow());
-      add(e -> setBackGroundColorWindow());
-    }};
-  }
-
-  private ArrayList<String> getButtonProperties() {
-    ArrayList<String> buttonMap = new ArrayList<>();
-    Scanner s;
-    try{
-      s = new Scanner(new File(PROPERTIES));
-      s.useDelimiter(" ");
-      while(s.hasNext()){
-        buttonMap.add(s.next());
-      }
-    } catch(FileNotFoundException fnfe){
-      errorHelper.fileNotFound(fnfe);
-    }
-    return buttonMap;
-  }
 
   private void submitText(KeyEvent keyEvent, String commandText, TextArea ta) {
     if(keyEvent.getCode() == KeyCode.ENTER){
@@ -227,6 +173,38 @@ public class View implements ViewInterface {
     }
   }
 
+  private HBox makeTopHBox(){
+    HBox myBox = new HBox();
+    Properties props = new Properties();
+    HashMap<String, String> myButtonMap = new HashMap<>();
+    try {
+      props.load(View.class.getResourceAsStream("buttons.properties"));
+      for(String key : props.stringPropertyNames()){
+        myButtonMap.put(key, props.getProperty(key));
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    Class<?> thisView = View.class;
+    Object obj = this;
+    for(String key : myButtonMap.keySet()){
+      for(Method m : thisView.getDeclaredMethods()){
+        if(myButtonMap.get(key).equals(m.getName())){
+          Button b = new Button(key);
+          b.setOnAction(e -> {
+            try {
+              m.invoke(obj, null);
+            } catch (IllegalAccessException | InvocationTargetException ex) {
+              errorHelper.reflectionError(ex);
+            }
+          });
+          myBox.getChildren().add(b);
+        }
+      }
+    }
+    myBox.getChildren().addAll(setLanguageWindow(), setImageWindow());
+    return myBox;
+  }
   /**
    * Methods for launching settings windows
    */
