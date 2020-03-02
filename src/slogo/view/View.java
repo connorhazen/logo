@@ -89,7 +89,7 @@ public class View implements ViewInterface {
 
   private BorderPane createBorderPane(){
     BorderPane borderPane = new BorderPane();
-    borderPane.setTop(makeTopHBox());
+    borderPane.setTop(hboxfactory());
     borderPane.setRight(createRightVBox());
     borderPane.setBottom(createBottomHBox());
     borderPane.setCenter(createMiddleCanvas());
@@ -160,6 +160,11 @@ public class View implements ViewInterface {
     inputBox.clear();
   }
 
+  private HBox hboxfactory(){
+    SettingsBar sb = new SettingsBar(controller, this);
+    return (HBox) sb.getElement();
+  }
+  @Deprecated
   private HBox makeTopHBox(){
     HBox myBox = new HBox();
     Properties props = new Properties();
@@ -217,8 +222,8 @@ public class View implements ViewInterface {
 
   @SuppressWarnings("Used in reflection")
   private void setPenColorWindow() {
-    PenColorWindow pcw = new PenColorWindow(controller);
-    launchWindow(pcw);
+    //PenColorWindow pcw = new PenColorWindow(controller);
+    //launchWindow(pcw);
   }
 
   @SuppressWarnings("Used in reflection")
