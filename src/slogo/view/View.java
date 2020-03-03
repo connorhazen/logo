@@ -59,12 +59,16 @@ public class View implements ViewInterface {
     drawer = new TurtleDrawer();
     boxHistory = new CommandHistoryView();
 
+    canvas = new Pane();
+
     errorHelper = new ExceptionHelper();
     currentTurtle = turtle;
     this.mainStage = primaryStage;
     controller = cont;
     makeScreen(primaryStage);
-
+    errorBox = new TextArea();
+    historyBox = new TextArea();
+    inputBox = new TextArea();
     scene = new Scene(createBorderPane() , WIDTH, HEIGHT);
     scene.getStylesheets().add(STYLESHEET);
 
@@ -89,56 +93,13 @@ public class View implements ViewInterface {
 
   private BorderPane createBorderPane(){
     BorderPane borderPane = new BorderPane();
-    borderPane.setTop(new ElementFactory().getNode("SettingsBar", controller, this).getElement());
-    borderPane.setRight(createRightVBox());
-    borderPane.setBottom(createBottomHBox());
-    borderPane.setCenter(createMiddleCanvas());
-    borderPane.setLeft(new ElementFactory().getNode("CommandView", controller, this).getElement());
+    borderPane.setTop(new ElementFactory().getNode("SettingsBar", controller, this, currentTurtle, null).getElement());
+    borderPane.setRight(new ElementFactory<TextArea>().getNode("RightView", controller, this, currentTurtle,  errorBox, historyBox).getElement());
+    borderPane.setBottom(new ElementFactory<TextArea>().getNode("BottomView", controller, this, currentTurtle, inputBox).getElement());
+    borderPane.setCenter(new ElementFactory<Pane>().getNode("CanvasView", controller, this, currentTurtle, canvas).getElement());
+    borderPane.setLeft(new ElementFactory().getNode("CommandView", controller, this, currentTurtle, null).getElement());
     return borderPane;
   }
-
-  private Pane createMiddleCanvas(){
-    canvas = new Pane();
-    Rectangle edges = new Rectangle();
-    canvas.getChildren().add(edges);
-    edges.widthProperty().bind(canvas.widthProperty());
-    edges.heightProperty().bind(canvas.heightProperty());
-    edges.setFill(Color.WHITE);
-
-    return canvas;
-  }
-
-  private VBox createRightVBox(){
-    String colon = ":";
-    List<String> labels = new ArrayList<>(ResourceBundle.getBundle("slogo.view.labels").keySet());
-    VBox right = new VBox();
-    right.getStyleClass().add("vbox");
-    Label error = new Label(labels.get(0) + colon);
-    errorBox = new TextArea();
-    errorBox.setWrapText(true);
-
-    Label his = new Label(labels.get(1) + colon);
-    historyBox = new TextArea();
-
-
-    right.getChildren().addAll(his, historyBox, error, errorBox);
-
-    return right;
-  }
-
-  private VBox createLeftVbox(){
-    VBox left = new VBox();
-    left.getStyleClass().add("vbox");
-    Label vars = new Label("Saved Variables:");
-    TextArea varBox = new TextArea();
-
-    Label coms = new Label("Saved Commands:");
-    TextArea ta2 = new TextArea();
-
-    left.getChildren().addAll(vars, varBox, coms, ta2);
-    return left;
-  }
-
 
   private HBox createBottomHBox(){
     //TODO: Use reflection to add run button
@@ -158,10 +119,6 @@ public class View implements ViewInterface {
     controller.executeCommand(inputBox.getText());
     boxHistory.add(inputBox.getText());
     inputBox.clear();
-  }
-
-  private HBox hboxfactory(){
-    return (HBox) new ElementFactory().getNode("SettingsBar", controller, this).getElement();
   }
 
   private void launchWindow(Application application){
