@@ -89,11 +89,11 @@ public class View implements ViewInterface {
 
   private BorderPane createBorderPane(){
     BorderPane borderPane = new BorderPane();
-    borderPane.setTop(hboxfactory());
+    borderPane.setTop(new ElementFactory().getNode("SettingsBar", controller, this).getElement());
     borderPane.setRight(createRightVBox());
     borderPane.setBottom(createBottomHBox());
     borderPane.setCenter(createMiddleCanvas());
-    borderPane.setLeft(createLeftVbox());
+    borderPane.setLeft(new ElementFactory().getNode("CommandView", controller, this).getElement());
     return borderPane;
   }
 

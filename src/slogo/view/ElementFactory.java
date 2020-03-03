@@ -7,6 +7,8 @@ public class ElementFactory {
     switch(nodeType){
       case "SettingsBar":
         return new SettingsBar(con, view);
+      case "CommandView":
+        return new CommandView();
       default:
         return null;
     }
