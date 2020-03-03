@@ -1,5 +1,6 @@
 package slogo;
 
+import slogo.commands.Command;
 import slogo.exceptions.InvalidParameterException;
 import slogo.exceptions.UnknownCommandException;
 import slogo.structs.CommandStruct;
@@ -31,6 +32,7 @@ public class Parser implements ParserInterface{
     private static final Object EXECUTE_PARAMS[] = new Object[] {DUMMY_TURTLE};
     private static final String LIST_BEGIN_SYMBOL = "[";
     private static final String LIST_END_SYMBOL = "]";
+    private static final String PACKAGE = Command.class.getPackageName();
 
     // TODO: Need to obtain correct resource file from user selection
     private String languageFile = "resources.languages/English";
@@ -122,7 +124,7 @@ public class Parser implements ParserInterface{
 
     private int getCommandNumArgs(String cmd) {
         try {
-            Class cls = forName("slogo.commands." + cmd);
+            Class cls = forName(PACKAGE + "." + cmd);
             Constructor cons = cls.getDeclaredConstructor(COMMAND_CLASS_PARAMS);
             Object obj = cons.newInstance(COMMAND_PARAMS);
             Method method = cls.getMethod("getNumArgs", NOPARAMS);
