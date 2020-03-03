@@ -161,41 +161,7 @@ public class View implements ViewInterface {
   }
 
   private HBox hboxfactory(){
-    SettingsBar sb = new SettingsBar(controller, this);
-    return (HBox) sb.getElement();
-  }
-  @Deprecated
-  private HBox makeTopHBox(){
-    HBox myBox = new HBox();
-    Properties props = new Properties();
-    HashMap<String, String> myButtonMap = new HashMap<>();
-    try {
-      props.load(View.class.getResourceAsStream("buttons.properties"));
-      for(String key : props.stringPropertyNames()){
-        myButtonMap.put(key, props.getProperty(key));
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    Class<?> thisView = View.class;
-    Object obj = this;
-    for(String key : myButtonMap.keySet()){
-      for(Method m : thisView.getDeclaredMethods()){
-        if(myButtonMap.get(key).equals(m.getName())){
-          Button b = new Button(key);
-          b.setOnAction(e -> {
-            try {
-              m.invoke(obj, null);
-            } catch (IllegalAccessException | InvocationTargetException ex) {
-              errorHelper.reflectionError(ex);
-            }
-          });
-          myBox.getChildren().add(b);
-        }
-      }
-    }
-    myBox.getChildren().addAll(setLanguageWindow(), setImageWindow());
-    return myBox;
+    return (HBox) new ElementFactory().getNode("SettingsBar", controller, this).getElement();
   }
 
   private void launchWindow(Application application){
@@ -206,14 +172,6 @@ public class View implements ViewInterface {
     }
   }
 
-  private ChoiceBox setLanguageWindow() {
-    return SelectLanguage.languageDropDown(controller);
-  }
-
-  private ChoiceBox setImageWindow() {
-   return ImageSelection.imageDropDown(this);
-  }
-
   @SuppressWarnings("Used in reflection")
   private void setBackGroundColorWindow() {
     BackgroundColor bc = new BackgroundColor(controller);
@@ -222,8 +180,8 @@ public class View implements ViewInterface {
 
   @SuppressWarnings("Used in reflection")
   private void setPenColorWindow() {
-    //PenColorWindow pcw = new PenColorWindow(controller);
-    //launchWindow(pcw);
+    PenColorWindow pcw = new PenColorWindow(controller);
+    launchWindow(pcw);
   }
 
   @SuppressWarnings("Used in reflection")

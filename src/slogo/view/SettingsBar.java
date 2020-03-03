@@ -49,8 +49,10 @@ public class SettingsBar implements BorderPaneElement{
           Button b = new Button(key);
           b.setOnAction(e -> {
             try {
+              m.setAccessible(true);
               m.invoke(obj);
             } catch (IllegalAccessException | InvocationTargetException ex) {
+              System.out.println(ex.getLocalizedMessage());
               ExceptionHelper errorHelper = new ExceptionHelper();
               errorHelper.reflectionError(ex);
 
