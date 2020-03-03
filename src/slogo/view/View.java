@@ -45,7 +45,6 @@ public class View implements ViewInterface {
     controller = cont;
 
     instantiateGUIElements();
-    makeScreen(primaryStage);
     scene = new Scene(createBorderPane() , WIDTH, HEIGHT);
     scene.getStylesheets().add(STYLESHEET);
 
@@ -123,10 +122,6 @@ public class View implements ViewInterface {
     drawer.addTurtleToCanvas(canvas, currentTurtle);
   }
 
-  private void makeScreen(Stage primaryStage){
-
-  }
-
   private void makeTurtle(){
     drawer.addTurtleToCanvas(canvas, currentTurtle);
   }
@@ -157,6 +152,13 @@ public class View implements ViewInterface {
       historyBox.appendText(s+"\n");
     }
 
+  }
+
+  @Override
+  public void updateView(List<String> history) {
+    //drawer.animate(animationSpeed.valueProperty(), animationSpeed.getMax())
+    drawer.animate();
+    printHistory(history);
   }
 
   private void changeInputBox(String replace){

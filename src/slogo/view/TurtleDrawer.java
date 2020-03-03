@@ -42,8 +42,6 @@ public class TurtleDrawer {
   private SimpleObjectProperty currentTurtleGif;
   private Node turtleNode;
   private LinkedList<Animation> currentTrans;
-  private double offsetX;
-  private double offsetY;
   private final Duration ANIMATION_DURATION = Duration.seconds(1);
   private SimpleDoubleProperty turtleXLoc;
   private SimpleDoubleProperty turtleYLoc;
@@ -65,10 +63,12 @@ public class TurtleDrawer {
   public void addTurtleToCanvas(Pane canvas, Turtle turtle) {
     this.canvas = canvas;
     this.turtle = turtle;
-    offsetX = canvas.getWidth() / 2;
-    offsetY = canvas.getHeight() / 2;
-    centerX = new SimpleDoubleProperty(offsetX);
-    centerY = new SimpleDoubleProperty(offsetY);
+
+    centerY = new SimpleDoubleProperty();
+    centerX = new SimpleDoubleProperty();
+
+    centerX.bind(Bindings.divide(canvas.widthProperty(), 2));
+    centerY.bind(Bindings.divide(canvas.heightProperty(), 2));
 
     if(!canvas.getChildren().contains(elements)){
       canvas.getChildren().add(elements);
@@ -120,6 +120,8 @@ public class TurtleDrawer {
     newTurt.setFitWidth(TURTLE_SIZE);
     newTurt.setFitHeight(TURTLE_SIZE);
     newTurt.setRotate(turtle.getAngle() + 90);
+
+
     lastX = turtle.getX();
     lastY = turtle.getY();
 
@@ -167,6 +169,16 @@ public class TurtleDrawer {
       }
       toPlay.setOnFinished(e -> animate(speed, maxSpeed));
     }
+  }
+
+  //Will not be used in final version
+  public void animate(){
+    if (!currentTrans.isEmpty()){
+      Animation toPlay = currentTrans.poll();
+      toPlay.play();
+      toPlay.setOnFinished(e -> animate());
+    }
+
   }
 
   private Transition createMoveAnimation(Duration duration, Node node, boolean penStatus, double xCord, double yCord, double startX, double startY) {

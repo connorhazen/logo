@@ -27,6 +27,7 @@ public class BottomView<T> implements BorderPaneElement {
   @Override
   public Node getElement() {
     HBox myBox = new HBox();
+    myBox.getStyleClass().add("hbox-bot");
     myBox.getChildren().add(inputText);
     Properties props = new Properties();
     HashMap<String, String> myButtonMap = new HashMap<>();
