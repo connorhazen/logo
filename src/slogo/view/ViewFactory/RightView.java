@@ -29,7 +29,6 @@ public class RightView<T> implements BorderPaneElement {
     myErrorBox.setWrapText(true);
 
     Label his = new Label(labels.get(1) + colon);
-    myHistoryBox = new TextArea();
 
 
     right.getChildren().addAll(his, myHistoryBox, error, myErrorBox);

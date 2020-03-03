@@ -7,12 +7,24 @@ import slogo.view.Turtle;
 import slogo.view.ViewInterface;
 
 public class ElementFactory<T> {
-  public BorderPaneElement getNode(String nodeType, ControllerInterface con, ViewInterface view,
-      Turtle turtle, T ... node){
-    Class<TextArea> textAreaType;
+  private Turtle turtle;
+  private ControllerInterface controllerInterface;
+  private ViewInterface viewInterface;
+
+  public static ElementFactory startFactory(ControllerInterface c, ViewInterface v, Turtle t){
+    return new ElementFactory(c, v, t);
+  }
+
+  private ElementFactory(ControllerInterface c, ViewInterface v, Turtle t){
+    this.turtle = t;
+    this.controllerInterface = c;
+    this.viewInterface = v;
+  }
+
+  public BorderPaneElement getNode(String nodeType, T ... node){
     switch(nodeType){
       case "SettingsBar":
-        return new SettingsBar(con, view);
+        return new SettingsBar(controllerInterface, viewInterface);
       case "CommandView":
         return new CommandView();
       case "RightView":
@@ -20,7 +32,7 @@ public class ElementFactory<T> {
       case "CanvasView":
         if(node[0] instanceof Pane) return new CanvasView<>(node[0]);
       case "BottomView":
-        return new BottomView<TextArea>((TextArea)node[0], turtle, view);
+        return new BottomView<TextArea>((TextArea)node[0], this.turtle, viewInterface);
       default:
         return null;
     }

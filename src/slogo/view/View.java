@@ -72,11 +72,12 @@ public class View implements ViewInterface {
 
   private BorderPane createBorderPane(){
     BorderPane borderPane = new BorderPane();
-    borderPane.setTop(new ElementFactory().getNode("SettingsBar", controller, this, currentTurtle, null).getElement());
-    borderPane.setRight(new ElementFactory<TextArea>().getNode("RightView", controller, this, currentTurtle,  errorBox, historyBox).getElement());
-    borderPane.setBottom(new ElementFactory<TextArea>().getNode("BottomView", controller, this, currentTurtle, inputBox).getElement());
-    borderPane.setCenter(new ElementFactory<Pane>().getNode("CanvasView", controller, this, currentTurtle, canvas).getElement());
-    borderPane.setLeft(new ElementFactory().getNode("CommandView", controller, this, currentTurtle, null).getElement());
+    ElementFactory factory = ElementFactory.startFactory(controller, this, currentTurtle);
+    borderPane.setTop(factory.getNode("SettingsBar").getElement());
+    borderPane.setRight(factory.getNode("RightView", errorBox, historyBox).getElement());
+    borderPane.setBottom(factory.getNode("BottomView", inputBox).getElement());
+    borderPane.setCenter(factory.getNode("CanvasView", canvas).getElement());
+    borderPane.setLeft(factory.getNode("CommandView").getElement());
     return borderPane;
   }
 
