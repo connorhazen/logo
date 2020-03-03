@@ -1,17 +1,38 @@
 package slogo.view;
 
 
+import java.awt.Canvas;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import javafx.animation.Animation;
+import javafx.animation.PathTransition;
+import javafx.animation.RotateTransition;
+import javafx.animation.SequentialTransition;
+import javafx.animation.Transition;
+import javafx.beans.binding.Binding;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
+import javafx.util.Duration;
 import javafx.util.Pair;
 
 public class TurtleDrawer {
@@ -19,39 +40,78 @@ public class TurtleDrawer {
   private static final double TURTLE_SIZE = 75;
   private Group elements;
   private SimpleObjectProperty currentTurtleGif;
+  private Node turtleNode;
+  private LinkedList<Animation> currentTrans;
+  private double offsetX;
+  private double offsetY;
+  private final Duration ANIMATION_DURATION = Duration.seconds(1);
+  private SimpleDoubleProperty turtleXLoc;
+  private SimpleDoubleProperty turtleYLoc;
+  private SimpleDoubleProperty centerX;
+  private SimpleDoubleProperty centerY;
+  private double lastX;
+  private double lastY;
+  private Pane canvas;
+  private Turtle turtle;
+
 
   public TurtleDrawer() {
     currentTurtleGif = new SimpleObjectProperty();
     elements = new Group();
+    currentTrans = new LinkedList<>();
 
   }
 
   public void addTurtleToCanvas(Pane canvas, Turtle turtle) {
+    this.canvas = canvas;
+    this.turtle = turtle;
+    offsetX = canvas.getWidth() / 2;
+    offsetY = canvas.getHeight() / 2;
+    centerX = new SimpleDoubleProperty(offsetX);
+    centerY = new SimpleDoubleProperty(offsetY);
+
     if(!canvas.getChildren().contains(elements)){
       canvas.getChildren().add(elements);
     }
-    makeTurtleBind(canvas, turtle);
-    makeLineBind(canvas, turtle);
+    turtleNode = makeTurtle();
+    makeAnimation();
+    elements.getChildren().add(turtleNode);
+
   }
 
-  private void makeLineBind(Pane canvas, Turtle turtle) {
-    turtle.getHistory().addListener((ListChangeListener<Object>) c -> makeLine(canvas, turtle));
+  private void makeAnimation(){
+
+
+    //turtle.getVisibleProperty().addListener(e -> {trans.getChildren().add(visibleAnimation(turtle));});
+    turtle.getCordsProperty().addListener(e -> currentTrans.add(moveAnimation()));
+    turtle.getAngleProperty().addListener(e -> currentTrans.add(rotateAnimation()));
+
   }
 
-  private void makeLine(Pane canvas, Turtle turtle) {
-    if (turtle.getPenStatus() && turtle.getHistory().size() > 0) {
-      double offsetX = canvas.getWidth() / 2;
-      double offsetY = canvas.getHeight() / 2;
-
-      Pair<Double, Double> lastLoc = (Pair<Double, Double>) turtle.getHistory()
-          .get(turtle.getHistory().size() - 1);
-      Line l = new Line(offsetX + lastLoc.getKey(), offsetY + lastLoc.getValue(),
-          offsetX + turtle.getX(), offsetY + turtle.getY());
-      elements.getChildren().add(l);
-    }
+  private Animation rotateAnimation() {
+    RotateTransition ret = new RotateTransition();
+    ret.setToAngle(turtle.getAngle() + 90);
+    ret.setNode(turtleNode);
+    return ret;
   }
 
-  private void makeTurtleBind(Pane canvas, Turtle turtle) {
+  private Animation moveAnimation() {
+    Transition ret = createMoveAnimation(ANIMATION_DURATION, turtleNode, turtle.getPenStatus(), turtle.getX()-lastX, turtle.getY()-lastY, lastX, lastY);
+    lastX = turtle.getX();
+    lastY = turtle.getY();
+    return ret;
+  }
+
+  private Animation visibleAnimation() {
+    return null;
+  }
+  /*
+  private WrapableLine drawLine(double startX, double startY, double endX, double endY){
+    WrapableLine ret = new WrapableLine(startX, startY, endX, endY, canvas);
+  }*/
+
+
+  private Node makeTurtle() {
 
     ImageView newTurt = new ImageView();
 
@@ -59,23 +119,22 @@ public class TurtleDrawer {
 
     newTurt.setFitWidth(TURTLE_SIZE);
     newTurt.setFitHeight(TURTLE_SIZE);
+    newTurt.setRotate(turtle.getAngle() + 90);
+    lastX = turtle.getX();
+    lastY = turtle.getY();
 
-    newTurt.visibleProperty().bind(turtle.getVisibleProperty());
-
-    NumberBinding angle = Bindings.add(turtle.getAngleProperty(), 90);
-    newTurt.rotateProperty().bind(angle);
+    turtleXLoc = new SimpleDoubleProperty(lastX);
+    turtleYLoc = new SimpleDoubleProperty(lastY);
 
     NumberBinding xLoc =
-        Bindings.add(Bindings.divide(canvas.widthProperty(), 2), Bindings
-            .subtract(turtle.getXProperty(), Bindings.divide(newTurt.fitWidthProperty(), 2)));
-    newTurt.xProperty().bind(xLoc);
-
+        Bindings.add(turtleXLoc, Bindings.subtract(centerX, newTurt.getFitWidth()/2));
     NumberBinding yLoc =
-        Bindings.add(Bindings.divide(canvas.heightProperty(), 2), Bindings
-            .subtract(turtle.getYProperty(), Bindings.divide(newTurt.fitHeightProperty(), 2)));
-    newTurt.yProperty().bind(yLoc);
+        Bindings.add(turtleYLoc, Bindings.subtract(centerY, newTurt.getFitHeight()/2));
 
-    elements.getChildren().add(newTurt);
+    newTurt.layoutXProperty().bind(xLoc);
+    newTurt.layoutYProperty().bind(yLoc);
+
+    return newTurt;
 
   }
 
@@ -93,5 +152,73 @@ public class TurtleDrawer {
   private void setImage(String path) throws FileNotFoundException {
     FileInputStream inputStream = new FileInputStream(path);
     currentTurtleGif.set(new Image(inputStream));
+  }
+
+  public void animate(DoubleProperty speed, double maxSpeed) {
+    if (!currentTrans.isEmpty()){
+      Animation toPlay = currentTrans.poll();
+      if(speed.getValue()==maxSpeed){
+        toPlay.jumpTo(toPlay.getTotalDuration());
+        toPlay.play();
+      }
+      else{
+        toPlay.setRate(speed.getValue());
+        toPlay.play();
+      }
+      toPlay.setOnFinished(e -> animate(speed, maxSpeed));
+    }
+  }
+
+  private Transition createMoveAnimation(Duration duration, Node node, boolean penStatus, double xCord, double yCord, double startX, double startY) {
+    Group lines = new Group();
+    elements.getChildren().add(lines);
+
+
+    Transition a  = new Transition() {
+      {
+        setCycleDuration(ANIMATION_DURATION);
+      }
+      @Override
+      protected void interpolate(double frac) {
+        turtleXLoc.set(startX + xCord*frac);
+        turtleYLoc.set(startY+ yCord*frac);
+      }
+    };
+
+
+    a.currentTimeProperty().addListener( new ChangeListener<Duration>() {
+
+      Pair<Double, Double> oldLocation = null;
+
+      /**
+       * Draw a line from the old location to the new location
+       */
+      @Override
+      public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
+
+        // skip starting at 0/0
+        if( oldValue == Duration.ZERO)
+          return;
+
+        // get current location
+        double x = node.getBoundsInParent().getCenterX();
+        double y = node.getBoundsInParent().getCenterY();
+
+        // initialize the location
+        if( oldLocation == null) {
+          oldLocation = new Pair<>(x, y);
+          return;
+        }
+
+        if(penStatus){
+          Line l = new Line(oldLocation.getKey(),oldLocation.getValue(),x,y);
+          lines.getChildren().add(l);
+        }
+        oldLocation = new Pair<>(x,y);
+      }
+    });
+
+
+    return a;
   }
 }

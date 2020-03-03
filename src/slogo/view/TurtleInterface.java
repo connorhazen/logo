@@ -1,7 +1,8 @@
-package slogo;
+package slogo.view;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 
@@ -15,15 +16,7 @@ public interface TurtleInterface {
 
   double getY();
 
-  SimpleDoubleProperty getXProperty();
-
-  SimpleDoubleProperty getYProperty();
-
   SimpleDoubleProperty getAngleProperty();
-
-  void setX(double x);
-
-  void setY(double y);
 
   boolean setAngle(double newAngle);
 
@@ -44,5 +37,7 @@ public interface TurtleInterface {
   boolean setVisibilityStatus(boolean visibilityStatus);
 
   SimpleBooleanProperty getVisibleProperty();
+
+  SimpleObjectProperty<Coordinates> getCordsProperty();
 
 }

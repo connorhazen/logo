@@ -11,11 +11,13 @@ import java.util.ResourceBundle;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -52,6 +54,7 @@ public class View implements ViewInterface {
   private TextArea historyBox;
   private TextArea inputBox;
   private CommandHistoryView boxHistory;
+  private Slider animationSpeed;
 
 
 
@@ -150,7 +153,10 @@ public class View implements ViewInterface {
     Button reset = makeButton("Reset", e -> {reset(currentTurtle);});
     run.getStyleClass().add("run-bot");
     reset.getStyleClass().add("run-bot");
-    bottom.getChildren().addAll(inputBox, run, reset);
+
+    animationSpeed = new Slider(0, 1, .5);
+    animationSpeed.setOrientation(Orientation.VERTICAL);
+    bottom.getChildren().addAll(inputBox, run, reset, animationSpeed);
     return bottom;
   }
 
@@ -286,6 +292,13 @@ public class View implements ViewInterface {
       historyBox.appendText(s+"\n");
     }
 
+  }
+
+  @Override
+  public void updateView(List<String> history) {
+    printHistory(history);
+
+    drawer.animate(animationSpeed.valueProperty(), animationSpeed.getMax());
   }
 
   private void changeInputBox(String replace){
