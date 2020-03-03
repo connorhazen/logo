@@ -1,9 +1,10 @@
-package slogo.view;
+package slogo.view.ViewFactory;
 
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
+import slogo.view.ViewFactory.BorderPaneElement;
 
 public class CommandView implements BorderPaneElement {
 

@@ -1,10 +1,10 @@
-package slogo.view;
+package slogo.view.ViewFactory;
 
 import javafx.scene.Node;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import slogo.view.ViewFactory.BorderPaneElement;
 
 public class CanvasView<T> implements BorderPaneElement {
   private Pane myCanvas;

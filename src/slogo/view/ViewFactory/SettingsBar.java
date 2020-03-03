@@ -1,9 +1,8 @@
-package slogo.view;
+package slogo.view.ViewFactory;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Properties;
 import javafx.scene.Node;
@@ -12,10 +11,13 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.layout.HBox;
 import slogo.ControllerInterface;
 import slogo.ExceptionHelper;
+import slogo.view.View;
+import slogo.view.ViewFactory.BorderPaneElement;
+import slogo.view.ViewInterface;
 import slogo.windows.ImageSelection;
 import slogo.windows.SelectLanguage;
 
-public class SettingsBar implements BorderPaneElement{
+public class SettingsBar implements BorderPaneElement {
 
   private static final String PROPERTIES = "buttons.properties";
   ControllerInterface controller;

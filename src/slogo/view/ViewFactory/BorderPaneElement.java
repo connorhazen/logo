@@ -1,7 +1,6 @@
-package slogo.view;
+package slogo.view.ViewFactory;
 
 import javafx.scene.Node;
-import slogo.ControllerInterface;
 
 public interface BorderPaneElement {
   Node getElement();

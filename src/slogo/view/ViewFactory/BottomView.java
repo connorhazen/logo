@@ -1,4 +1,4 @@
-package slogo.view;
+package slogo.view.ViewFactory;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -10,6 +10,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import slogo.ExceptionHelper;
+import slogo.view.Turtle;
+import slogo.view.View;
+import slogo.view.ViewFactory.BorderPaneElement;
+import slogo.view.ViewInterface;
 
 public class BottomView<T> implements BorderPaneElement {
   TextArea inputText;

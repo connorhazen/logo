@@ -1,4 +1,4 @@
-package slogo.view;
+package slogo.view.ViewFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
+import slogo.view.ViewFactory.BorderPaneElement;
 
 
 public class RightView<T> implements BorderPaneElement {

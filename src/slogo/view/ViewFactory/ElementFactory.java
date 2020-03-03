@@ -1,10 +1,10 @@
-package slogo.view;
+package slogo.view.ViewFactory;
 
-import javafx.scene.Node;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
 import slogo.ControllerInterface;
+import slogo.view.Turtle;
+import slogo.view.ViewInterface;
 
 public class ElementFactory<T> {
   public BorderPaneElement getNode(String nodeType, ControllerInterface con, ViewInterface view,
