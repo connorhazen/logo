@@ -7,12 +7,14 @@ import slogo.view.Turtle;
 import slogo.view.ViewInterface;
 
 public class ElementFactory<T> {
+  static ElementFactory instance = null;
   private Turtle turtle;
   private ControllerInterface controllerInterface;
   private ViewInterface viewInterface;
 
   public static ElementFactory startFactory(ControllerInterface c, ViewInterface v, Turtle t){
-    return new ElementFactory(c, v, t);
+    if(instance == null) return new ElementFactory(c, v, t);
+    return instance;
   }
 
   private ElementFactory(ControllerInterface c, ViewInterface v, Turtle t){
