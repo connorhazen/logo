@@ -16,6 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import slogo.ExceptionHelper;
+import slogo.view.BorderPaneLocation;
 import slogo.view.Turtle;
 import slogo.view.View;
 import slogo.view.ViewFactory.BorderPaneElement;
@@ -26,12 +27,17 @@ public class RightView<T> implements BorderPaneElement {
   private TextArea myHistoryBox;
   private Turtle myTurtle;
   private ArrayList<String> myClickedCommands;
+  private BorderPaneLocation loc;
 
-  public RightView(Turtle turtle, ArrayList<String> clickedCommands, T errorBox, T historyBox){
+  public RightView(Turtle turtle, ArrayList<String> clickedCommands, BorderPaneLocation loc, T errorBox, T historyBox){
     myErrorBox = (TextArea)errorBox;
     myHistoryBox = (TextArea)historyBox;
     myTurtle = turtle;
     myClickedCommands = clickedCommands;
+    this.loc = loc;
+  }
+  public BorderPaneLocation getLoc(){
+    return loc;
   }
   @Override
   public Node getElement() {

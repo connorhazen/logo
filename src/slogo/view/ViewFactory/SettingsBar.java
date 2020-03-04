@@ -11,6 +11,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.layout.HBox;
 import slogo.ControllerInterface;
 import slogo.ExceptionHelper;
+import slogo.view.BorderPaneLocation;
 import slogo.view.View;
 import slogo.view.ViewFactory.BorderPaneElement;
 import slogo.view.ViewInterface;
@@ -22,12 +23,15 @@ public class SettingsBar implements BorderPaneElement {
   private static final String PROPERTIES = "buttons.properties";
   ControllerInterface controller;
   ViewInterface view;
-
-  public SettingsBar(ControllerInterface controllerInterface, ViewInterface viewInterface){
+  BorderPaneLocation loc;
+  public SettingsBar(ControllerInterface controllerInterface, ViewInterface viewInterface, BorderPaneLocation loc){
     controller = controllerInterface;
     view = viewInterface;
+    this.loc = loc;
   }
-
+  public BorderPaneLocation getLoc(){
+    return loc;
+  }
   @Override
   public Node getElement() {
     HBox myBox = new HBox();

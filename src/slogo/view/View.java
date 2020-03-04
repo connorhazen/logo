@@ -1,24 +1,33 @@
 package slogo.view;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
+import java.util.Set;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 
 import javafx.scene.control.TextArea;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import slogo.ControllerInterface;
 import slogo.ExceptionHelper;
+import slogo.view.ViewFactory.BorderPaneElement;
 import slogo.view.ViewFactory.ElementFactory;
+import slogo.view.ViewFactory.ElementMove;
 import slogo.windows.BackgroundColor;
 import slogo.windows.HelpWindow;
 import slogo.windows.PenColorWindow;
@@ -83,11 +92,30 @@ public class View implements ViewInterface {
   private BorderPane createBorderPane(){
     BorderPane borderPane = new BorderPane();
     ElementFactory factory = ElementFactory.startFactory(controller, this, currentTurtle, clickedCommands);
-    borderPane.setTop(factory.getNode("SettingsBar").getElement());
-    borderPane.setRight(factory.getNode("RightView", errorBox, historyBox).getElement());
-    borderPane.setBottom(factory.getNode("BottomView", inputBox).getElement());
-    borderPane.setCenter(factory.getNode("CanvasView", canvas).getElement());
-    borderPane.setLeft(factory.getNode("CommandView").getElement());
+
+    BorderPaneElement top = factory.getNode("SettingsBar", BorderPaneLocation.TOP);
+    BorderPaneElement right = factory.getNode("RightView", BorderPaneLocation.RIGHT, errorBox, historyBox);
+    BorderPaneElement bottom = factory.getNode("BottomView", BorderPaneLocation.BOTTOM, inputBox);
+    BorderPaneElement left = factory.getNode("CommandView", BorderPaneLocation.LEFT);
+    BorderPaneElement center = factory.getNode("CanvasView", BorderPaneLocation.CENTER, canvas);
+
+    List<BorderPaneElement> borderList = Arrays.asList(top, right, bottom, left, center);
+
+    borderPane.setTop(top.getElement());
+    borderPane.setRight(right.getElement());
+    borderPane.setBottom(bottom.getElement());
+    borderPane.setLeft(left.getElement());
+    borderPane.setCenter(center.getElement());
+
+    for(int i = 0; i < 4; i++){
+      Node n = borderPane.getChildren().get(i);
+      BorderPaneElement bpe = borderList.get(i);
+
+      n.setOnMouseReleased(new ElementMove(borderPane, borderList, n, bpe));
+
+
+
+    }
     return borderPane;
   }
 
@@ -121,7 +149,7 @@ public class View implements ViewInterface {
     }
     else new ExceptionHelper().getErrorMessage(new NullPointerException("Color is null"));
   }
-  
+
   @SuppressWarnings("Used in reflection")
   private void setPenColorWindow() {
     PenColorWindow pcw = new PenColorWindow(controller);

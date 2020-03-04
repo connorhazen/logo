@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import slogo.ExceptionHelper;
+import slogo.view.BorderPaneLocation;
 import slogo.view.Turtle;
 import slogo.view.View;
 import slogo.view.ViewFactory.BorderPaneElement;
@@ -19,10 +20,15 @@ public class BottomView<T> implements BorderPaneElement {
   TextArea inputText;
   Turtle turtle;
   ViewInterface view;
-  public BottomView(TextArea ta, Turtle turtle, ViewInterface view){
+  private BorderPaneLocation loc;
+  public BottomView(TextArea ta, Turtle turtle, ViewInterface view, BorderPaneLocation loc){
     inputText = ta;
     this.turtle = turtle;
     this.view = view;
+    this.loc = loc;
+  }
+  public BorderPaneLocation getLoc(){
+    return loc;
   }
   @Override
   public Node getElement() {
