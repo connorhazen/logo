@@ -40,7 +40,7 @@ public class SettingsBar implements BorderPaneElement {
 
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      new ExceptionHelper().fileNotFound(e);
     }
     Class<?> thisView = View.class;
     Object obj = view;

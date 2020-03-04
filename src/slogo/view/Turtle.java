@@ -27,10 +27,13 @@ public class Turtle implements TurtleInterface {
     private SimpleBooleanProperty myVisibilityStatus; //visibile when true
     private ObservableList<Object> myHistory;
 
+    private boolean isActive;
+
     private static final double threeSixty = 360;
 
 
     public Turtle(int ID, double xCoor, double yCoor, double orientation){
+        isActive = true;
         myInitialX = xCoor;
         myInitialY = yCoor;
         cords = new SimpleObjectProperty<>(new Coordinates(xCoor, yCoor));
@@ -39,7 +42,6 @@ public class Turtle implements TurtleInterface {
         myAngle = new SimpleDoubleProperty(orientation);
         myVisibilityStatus = new SimpleBooleanProperty(true);
         myHistory =  FXCollections.observableArrayList();
-
         Pair<Double, Double> storeCurLoc = new Pair<>(cords.getValue().x, cords.getValue().y);
         myHistory.add(storeCurLoc);
     }
@@ -52,6 +54,7 @@ public class Turtle implements TurtleInterface {
 
     @Override
     public boolean setLocation(double xCord, double yCord) {
+        if(isActive == false) return false;
         Pair<Double, Double> storeCurLoc = new Pair<>(cords.getValue().x, cords.getValue().y);
 
         cords.set(new Coordinates(xCord, yCord));
@@ -77,6 +80,7 @@ public class Turtle implements TurtleInterface {
 
     @Override
     public boolean setAngle(double newAngle) {
+        if(isActive == false) return false;
         myAngle.set(newAngle);
         return true;
     }
@@ -141,4 +145,8 @@ public class Turtle implements TurtleInterface {
         return cords;
     }
 
+    public boolean switchActive(){
+        this.isActive = !this.isActive;
+        return this.isActive;
+    }
 }

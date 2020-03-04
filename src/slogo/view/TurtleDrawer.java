@@ -1,41 +1,22 @@
 package slogo.view;
 
 
-import java.awt.Canvas;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
-import javafx.animation.PathTransition;
 import javafx.animation.RotateTransition;
-import javafx.animation.SequentialTransition;
-import javafx.animation.Transition;
-import javafx.beans.binding.Binding;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ListChangeListener;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
 import javafx.util.Duration;
-import javafx.util.Pair;
+import slogo.ExceptionHelper;
 
 public class TurtleDrawer {
 
@@ -47,13 +28,18 @@ public class TurtleDrawer {
   private SimpleDoubleProperty centerX;
   private SimpleDoubleProperty centerY;
   private SimpleObjectProperty<Image> currentTurtleGif;
+  private boolean running;
 
 
   private Pane canvas;
   private Turtle turtle;
-
+  private String imgName;
+  private String prevImg;
 
   public TurtleDrawer() {
+    running = false;
+    prevImg = "";
+    imgName = "";
     currentTurtleGif = new SimpleObjectProperty<>();
     elements = new Group();
     currentTrans = new LinkedList<>();
@@ -67,8 +53,17 @@ public class TurtleDrawer {
     if(!canvas.getChildren().contains(elements)){
       canvas.getChildren().add(elements);
     }
-
     turtleNode = new WrappableTurtleImage(turtle, canvas, centerX, centerY, currentTurtleGif);
+    turtleNode.setOnMouseClicked(e -> {
+      System.out.println(currentTurtleGif.getValue().toString());
+      boolean activeState = turtle.switchActive();
+      System.out.println(activeState);
+      if(!activeState) this.changeImage("inactive_turtle");
+      else this.setImage(prevImg);
+    });
+
+
+
     elements.getChildren().add(turtleNode);
     makeAnimationBindings();
 
@@ -98,16 +93,35 @@ public class TurtleDrawer {
 
   //Will not be used in final version
   public void animate(){
-    if (!currentTrans.isEmpty()){
+    System.out.println();
+    if(running){
+      return;
+
+    }
+    running = true;
+    play();
+  }
+
+  private void play(){
+    while(!currentTrans.isEmpty()){
       Animation toPlay = currentTrans.poll();
       toPlay.setRate(.1);
       toPlay.play();
-      toPlay.setOnFinished(e -> animate());
+      toPlay.setOnFinished(e -> {
+        play();
+        checkDoneAnimating();
+      });
     }
-
   }
 
-  public void changeImage(String file) throws FileNotFoundException {
+  private void checkDoneAnimating() {
+    if(currentTrans.isEmpty()){
+      running = false;
+    }
+  }
+
+
+  public void changeImage(String file) {
     String path = "data/turtleImages/" + file + ".gif";
     setImage(path);
   }
@@ -119,9 +133,17 @@ public class TurtleDrawer {
     centerY.bind(Bindings.divide(canvas.heightProperty(), 2));
   }
 
-  private void setImage(String path) throws FileNotFoundException {
+  private void setImage(String path) {
+    prevImg = imgName;
+    imgName = path;
+    System.out.println(path);
+    try{
     FileInputStream inputStream = new FileInputStream(path);
     currentTurtleGif.set(new Image(inputStream));
+    } catch (FileNotFoundException fnfe){
+    new ExceptionHelper().fileNotFound(fnfe);
+
+    }
   }
 
   private void makeAnimationBindings(){

@@ -1,5 +1,6 @@
 package slogo.view;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.application.Application;
@@ -34,8 +35,10 @@ public class View implements ViewInterface {
   private TextArea historyBox;
   private TextArea inputBox;
   private CommandHistoryView boxHistory;
+  private ArrayList<String> clickedCommands;
 
   public View(ControllerInterface cont, Stage primaryStage, Turtle turtle){
+    clickedCommands = new ArrayList<>();
     drawer = new TurtleDrawer();
     currentTurtle = turtle;
     canvas = new Pane();
@@ -73,11 +76,12 @@ public class View implements ViewInterface {
 
   private BorderPane createBorderPane(){
     BorderPane borderPane = new BorderPane();
-    borderPane.setTop(new ElementFactory().getNode("SettingsBar", controller, this, currentTurtle, null).getElement());
-    borderPane.setRight(new ElementFactory<TextArea>().getNode("RightView", controller, this, currentTurtle,  errorBox, historyBox).getElement());
-    borderPane.setBottom(new ElementFactory<TextArea>().getNode("BottomView", controller, this, currentTurtle, inputBox).getElement());
-    borderPane.setCenter(new ElementFactory<Pane>().getNode("CanvasView", controller, this, currentTurtle, canvas).getElement());
-    borderPane.setLeft(new ElementFactory().getNode("CommandView", controller, this, currentTurtle, null).getElement());
+    ElementFactory factory = ElementFactory.startFactory(controller, this, currentTurtle, clickedCommands);
+    borderPane.setTop(factory.getNode("SettingsBar").getElement());
+    borderPane.setRight(factory.getNode("RightView", errorBox, historyBox).getElement());
+    borderPane.setBottom(factory.getNode("BottomView", inputBox).getElement());
+    borderPane.setCenter(factory.getNode("CanvasView", canvas).getElement());
+    borderPane.setLeft(factory.getNode("CommandView").getElement());
     return borderPane;
   }
 
@@ -142,8 +146,6 @@ public class View implements ViewInterface {
       drawer.changeImage(file);
     }
     catch (Exception e){
-      e.printStackTrace();
-      System.out.println("turtle not found");
       printError("TurtleFileNotFound");
     }
 
