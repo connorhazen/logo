@@ -4,11 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import slogo.ControllerInterface;
 import slogo.ExceptionHelper;
@@ -36,6 +42,7 @@ public class View implements ViewInterface {
   private TextArea inputBox;
   private CommandHistoryView boxHistory;
   private ArrayList<String> clickedCommands;
+  private Color myColor;
 
   public View(ControllerInterface cont, Stage primaryStage, Turtle turtle){
     clickedCommands = new ArrayList<>();
@@ -46,7 +53,6 @@ public class View implements ViewInterface {
     errorHelper = new ExceptionHelper();
     this.mainStage = primaryStage;
     controller = cont;
-
     instantiateGUIElements();
     scene = new Scene(createBorderPane() , WIDTH, HEIGHT);
     scene.getStylesheets().add(STYLESHEET);
@@ -102,10 +108,20 @@ public class View implements ViewInterface {
 
   @SuppressWarnings("Used in reflection")
   private void setBackGroundColorWindow() {
-    BackgroundColor bc = new BackgroundColor(controller);
+    BackgroundColor bc = new BackgroundColor(this);
     launchWindow(bc);
   }
 
+  public void setBackGroundColor(Color color){
+    if(color != null) {
+      myColor = color;
+      System.out.println(myColor.getBlue());
+      Rectangle rct = (Rectangle)canvas.getChildren().get(0);
+      rct.setFill(myColor);
+    }
+    else new ExceptionHelper().getErrorMessage(new NullPointerException("Color is null"));
+  }
+  
   @SuppressWarnings("Used in reflection")
   private void setPenColorWindow() {
     PenColorWindow pcw = new PenColorWindow(controller);
