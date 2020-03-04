@@ -39,7 +39,6 @@ public class Turtle implements TurtleInterface {
         myAngle = new SimpleDoubleProperty(orientation);
         myVisibilityStatus = new SimpleBooleanProperty(true);
         myHistory =  FXCollections.observableArrayList();
-
         Pair<Double, Double> storeCurLoc = new Pair<>(cords.getValue().x, cords.getValue().y);
         myHistory.add(storeCurLoc);
     }

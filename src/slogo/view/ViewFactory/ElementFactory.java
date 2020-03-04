@@ -30,7 +30,7 @@ public class ElementFactory<T> {
       case "CommandView":
         return new CommandView();
       case "RightView":
-        if(node[0] instanceof TextArea) return new RightView<>(node[0], node[1]);
+        if(node[0] instanceof TextArea) return new RightView<>(this.turtle, node[0], node[1]);
       case "CanvasView":
         if(node[0] instanceof Pane) return new CanvasView<>(node[0]);
       case "BottomView":
