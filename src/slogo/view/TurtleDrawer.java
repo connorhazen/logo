@@ -34,6 +34,7 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.util.Duration;
 import javafx.util.Pair;
+import slogo.ExceptionHelper;
 
 public class TurtleDrawer {
 
@@ -51,9 +52,12 @@ public class TurtleDrawer {
   private double lastY;
   private Pane canvas;
   private Turtle turtle;
-
+  private String imgName;
+  private String prevImg;
 
   public TurtleDrawer() {
+    prevImg = "";
+    imgName = "";
     currentTurtleGif = new SimpleObjectProperty();
     elements = new Group();
     currentTrans = new LinkedList<>();
@@ -74,6 +78,13 @@ public class TurtleDrawer {
       canvas.getChildren().add(elements);
     }
     turtleNode = makeTurtle();
+    turtleNode.setOnMouseClicked(e -> {
+      System.out.println(currentTurtleGif.getValue().toString());
+      boolean activeState = turtle.switchActive();
+      System.out.println(activeState);
+      if(activeState == false) this.changeImage("inactive_turtle");
+      else this.setImage(prevImg);
+    });
     makeAnimation();
     elements.getChildren().add(turtleNode);
 
@@ -146,15 +157,24 @@ public class TurtleDrawer {
   }
 
 
-  public void changeImage(String file) throws FileNotFoundException {
+  public void changeImage(String file) {
     String path = "src/resources/turtleImages/" + file + ".gif";
     setImage(path);
   }
 
-  private void setImage(String path) throws FileNotFoundException {
-    FileInputStream inputStream = new FileInputStream(path);
-    currentTurtleGif.set(new Image(inputStream));
+
+  private void setImage(String path) {
+    prevImg = imgName;
+    imgName = path;
+    System.out.println(path);
+    try{
+      FileInputStream inputStream = new FileInputStream(path);
+      currentTurtleGif.set(new Image(inputStream));
+    } catch (FileNotFoundException fnfe){
+      new ExceptionHelper().fileNotFound(fnfe);
+    }
   }
+
 
   public void animate(DoubleProperty speed, double maxSpeed) {
     if (!currentTrans.isEmpty()){
