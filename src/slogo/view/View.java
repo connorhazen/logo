@@ -37,10 +37,10 @@ public class View implements ViewInterface {
 
   public View(ControllerInterface cont, Stage primaryStage, Turtle turtle){
     drawer = new TurtleDrawer();
-    boxHistory = new CommandHistoryView();
-    canvas = new Pane();
-    errorHelper = new ExceptionHelper();
     currentTurtle = turtle;
+    canvas = new Pane();
+    boxHistory = new CommandHistoryView();
+    errorHelper = new ExceptionHelper();
     this.mainStage = primaryStage;
     controller = cont;
 
@@ -51,6 +51,7 @@ public class View implements ViewInterface {
     mainStage.setScene(scene);
     mainStage.show();
     makeKeyListens();
+
     makeTurtle();
 
   }
@@ -141,6 +142,8 @@ public class View implements ViewInterface {
       drawer.changeImage(file);
     }
     catch (Exception e){
+      e.printStackTrace();
+      System.out.println("turtle not found");
       printError("TurtleFileNotFound");
     }
 

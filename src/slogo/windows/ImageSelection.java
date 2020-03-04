@@ -12,7 +12,7 @@ public class ImageSelection {
 
   private static ChoiceBox getComboBox(ViewInterface vI){
 
-    File lang = new File("src/resources/turtleImages");
+    File lang = new File("data/turtleImages");
 
     ChoiceBox <String> cb = new ChoiceBox<>();
 

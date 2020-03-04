@@ -37,7 +37,7 @@ public class SettingsBar implements BorderPaneElement {
       props.load(View.class.getResourceAsStream("buttons.properties"));
       for(String key : props.stringPropertyNames()){
         myButtonMap.put(key, props.getProperty(key));
-        System.out.println(key);
+
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -47,7 +47,6 @@ public class SettingsBar implements BorderPaneElement {
     for(String key : myButtonMap.keySet()){
       for(Method m : thisView.getDeclaredMethods()){
         if(myButtonMap.get(key).equals(m.getName())){
-          System.out.println(myButtonMap.get(key));
           Button b = new Button(key);
           b.setOnAction(e -> {
             try {

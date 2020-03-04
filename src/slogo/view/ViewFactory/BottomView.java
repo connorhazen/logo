@@ -35,7 +35,6 @@ public class BottomView<T> implements BorderPaneElement {
       props.load(View.class.getResourceAsStream("bottom_view.properties"));
       for(String key : props.stringPropertyNames()){
         myButtonMap.put(key, props.getProperty(key));
-        System.out.println(key);
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -45,7 +44,6 @@ public class BottomView<T> implements BorderPaneElement {
     for(String key : myButtonMap.keySet()){
       for(Method m : thisView.getDeclaredMethods()){
         if(myButtonMap.get(key).equals(m.getName())){
-          System.out.println(myButtonMap.get(key));
           Button b = new Button(key);
           b.setOnAction(e -> {
             try {

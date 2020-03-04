@@ -49,7 +49,6 @@ public class ControllerInitial implements ControllerInterface {
     catch (UnknownCommandException | InvalidParameterException e){
       view.printErrorFromException(e);
     }
-    System.out.println(commandText);
   }
 
   @Override
