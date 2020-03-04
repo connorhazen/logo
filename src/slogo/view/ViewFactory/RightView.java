@@ -38,7 +38,6 @@ public class RightView<T> implements BorderPaneElement {
     VBox right = new VBox();
     right.getStyleClass().add("vbox");
     Label error = new Label(labels.get(0) + colon);
-    myErrorBox = new TextArea();
     myErrorBox.setWrapText(true);
 
     Label his = new Label(labels.get(1) + colon);
