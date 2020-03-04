@@ -1,5 +1,6 @@
 package slogo.view;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.application.Application;
@@ -34,8 +35,10 @@ public class View implements ViewInterface {
   private TextArea historyBox;
   private TextArea inputBox;
   private CommandHistoryView boxHistory;
+  private ArrayList<String> clickedCommands;
 
   public View(ControllerInterface cont, Stage primaryStage, Turtle turtle){
+    clickedCommands = new ArrayList<>();
     drawer = new TurtleDrawer();
     boxHistory = new CommandHistoryView();
     canvas = new Pane();
@@ -72,7 +75,7 @@ public class View implements ViewInterface {
 
   private BorderPane createBorderPane(){
     BorderPane borderPane = new BorderPane();
-    ElementFactory factory = ElementFactory.startFactory(controller, this, currentTurtle);
+    ElementFactory factory = ElementFactory.startFactory(controller, this, currentTurtle, clickedCommands);
     borderPane.setTop(factory.getNode("SettingsBar").getElement());
     borderPane.setRight(factory.getNode("RightView", errorBox, historyBox).getElement());
     borderPane.setBottom(factory.getNode("BottomView", inputBox).getElement());

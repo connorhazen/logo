@@ -25,11 +25,13 @@ public class RightView<T> implements BorderPaneElement {
   private TextArea myErrorBox;
   private TextArea myHistoryBox;
   private Turtle myTurtle;
+  private ArrayList<String> myClickedCommands;
 
-  public RightView(Turtle turtle, T errorBox, T historyBox){
+  public RightView(Turtle turtle, ArrayList<String> clickedCommands, T errorBox, T historyBox){
     myErrorBox = (TextArea)errorBox;
     myHistoryBox = (TextArea)historyBox;
     myTurtle = turtle;
+    myClickedCommands = clickedCommands;
   }
   @Override
   public Node getElement() {
@@ -39,7 +41,7 @@ public class RightView<T> implements BorderPaneElement {
     right.getStyleClass().add("vbox");
     Label error = new Label(labels.get(0) + colon);
     myErrorBox.setWrapText(true);
-
+    myHistoryBox.setOnMouseClicked(e -> getLineOnClick());
     Label his = new Label(labels.get(1) + colon);
 
     Properties properties = new Properties();
@@ -72,5 +74,16 @@ public class RightView<T> implements BorderPaneElement {
 
 
     return right;
+  }
+
+  private void getLineOnClick(){
+    //https://stackoverflow.com/questions/51414314/selecting-an-entire-line-from-textarea-on-mouse-click
+    String text = myHistoryBox.getText();
+    int caretPos = myHistoryBox.getCaretPosition();
+    int lineBreak1 = text.lastIndexOf('\n', caretPos - 1);
+    int lineBreak2 = text.indexOf('\n', caretPos);
+    if(lineBreak1 < 0) lineBreak1 = 0;
+    if(lineBreak2 < 0) lineBreak2 = text.length();
+    myClickedCommands.add(myHistoryBox.getText(lineBreak1, lineBreak2));
   }
 }
