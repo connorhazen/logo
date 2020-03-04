@@ -114,8 +114,8 @@ public class View implements ViewInterface {
 
   @SuppressWarnings("Used in reflection")
   private void helpWindow() {
-    HelpWindow hw = new HelpWindow(controller);
-    launchWindow(hw);
+    //TODO: Stylize help window so it doesn't look terrible
+    launchWindow(new HelpWindow());
   }
 
   @SuppressWarnings("Used in reflection")
