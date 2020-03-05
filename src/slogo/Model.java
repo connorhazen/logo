@@ -38,9 +38,8 @@ public class Model implements ModelInterface{
                 Constructor cons = cls.getDeclaredConstructor(Parser.COMMAND_CLASS_PARAMS);
                 Object params[] = new Object[]{commandStruct, basicCmd, args, turtle};
                 Object obj = cons.newInstance(params);
-                Method method = cls.getDeclaredMethod("execute", Parser.EXECUTE_CLASS_PARAMS);
-                method.setAccessible(true);
-                method.invoke(obj, turtle);
+                Method method = cls.getMethod("executeCommand", Parser.NOPARAMS);
+                method.invoke(obj);
             } catch (Exception e) { throw new UnknownCommandException(e, "Command not recognized: " + command); }
         }
         return parsedCommands;
