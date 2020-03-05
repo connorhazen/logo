@@ -121,7 +121,7 @@ public class Parser implements ParserInterface{
         commandList.add(basicCommand);
     }
 
-    private int getCommandNumArgs(String cmd) {
+    private int getCommandNumArgs(String cmd) throws UnknownCommandException {
         try {
             Class cls = forName(PACKAGE + "." + cmd);
             Constructor cons = cls.getDeclaredConstructor(COMMAND_CLASS_PARAMS);
@@ -129,8 +129,7 @@ public class Parser implements ParserInterface{
             Method method = cls.getMethod("getNumArgs", NOPARAMS);
             return (int) method.invoke(obj);
         } catch (Exception e) {
-            e.printStackTrace(); // TODO: Throw error
-            return Integer.MAX_VALUE;
+            throw new UnknownCommandException("Command not recognized: " + cmd); // TODO: Put message in properties files
         }
     }
 
