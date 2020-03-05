@@ -57,7 +57,7 @@ public class Turtle implements TurtleInterface {
 
     @Override
     public boolean setLocation(double xCord, double yCord) {
-        if(isActive == false) return false;
+        if(isActive == false) return isActive;
         Pair<Double, Double> storeCurLoc = new Pair<>(cords.getValue().x, cords.getValue().y);
 
         cords.set(new Coordinates(xCord, yCord));

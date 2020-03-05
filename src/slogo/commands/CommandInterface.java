@@ -6,5 +6,4 @@ import slogo.exceptions.UnknownCommandException;
 public interface CommandInterface {
 
     double executeCommand() throws UnknownCommandException, InvalidParameterException;
-
 }
