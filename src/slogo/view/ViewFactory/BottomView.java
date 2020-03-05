@@ -43,7 +43,7 @@ public class BottomView<T> implements BorderPaneElement {
         myButtonMap.put(key, props.getProperty(key));
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      new ExceptionHelper().fileNotFound(e);
     }
     Class<?> thisView = View.class;
     Object obj = view;
