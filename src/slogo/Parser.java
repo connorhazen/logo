@@ -1,5 +1,6 @@
 package slogo;
 
+import slogo.commands.Command;
 import slogo.exceptions.InvalidParameterException;
 import slogo.exceptions.UnknownCommandException;
 import slogo.structs.CommandStruct;
@@ -19,6 +20,7 @@ public class Parser implements ParserInterface{
     private Stack commandStack;
     private Map<String, String> commandMap;
     private ResourceBundle languageResource;
+
     private static final String SAVE_SYMBOL = "=";
     public static final int COMMAND_INDEX = 0;
     private static final int SAVE_SYMBOL_INDEX = 1;
@@ -31,15 +33,15 @@ public class Parser implements ParserInterface{
     private static final Object EXECUTE_PARAMS[] = new Object[] {DUMMY_TURTLE};
     private static final String LIST_BEGIN_SYMBOL = "[";
     private static final String LIST_END_SYMBOL = "]";
-
-    // TODO: Need to obtain correct resource file from user selection
-    private String languageFile = "resources.languages/English";
+    private static final String PACKAGE = Command.class.getPackageName();
+    private static final String LANGUAGE_PACKAGE = "resources.languages/";
+    private static final String LANGUAGE_DEFAULT = "English";
 
     public Parser() {
         savedCommands = new HashMap<>();
         commandMap = new HashMap<>();
         integerPattern = Pattern.compile(DOUBLE_PATTERN_REGEX);
-        languageResource = ResourceBundle.getBundle(languageFile);
+        languageResource = ResourceBundle.getBundle(LANGUAGE_PACKAGE + LANGUAGE_DEFAULT);
         getCommandMap();
         argumentStack = new Stack();
         commandStack = new Stack();
@@ -57,8 +59,7 @@ public class Parser implements ParserInterface{
 
     public List<String> convertToBasicCommands(String[] originalCmd) throws UnknownCommandException, InvalidParameterException {
         clearStacks();
-        List<String> basicCommandList = new ArrayList<>();
-        boolean isSlogoList = false; String listCommand = ""; int beginCount = 0; int endCount = 0;
+        List<String> basicCommandList = new ArrayList<>(); boolean isSlogoList = false; String listCommand = ""; int beginCount = 0; int endCount = 0;
         for(String s : originalCmd) {
             if(s.equals(LIST_BEGIN_SYMBOL)){ isSlogoList = true;}
             if(isSlogoList){
@@ -122,7 +123,7 @@ public class Parser implements ParserInterface{
 
     private int getCommandNumArgs(String cmd) {
         try {
-            Class cls = forName("slogo.commands." + cmd);
+            Class cls = forName(PACKAGE + "." + cmd);
             Constructor cons = cls.getDeclaredConstructor(COMMAND_CLASS_PARAMS);
             Object obj = cons.newInstance(COMMAND_PARAMS);
             Method method = cls.getMethod("getNumArgs", NOPARAMS);
@@ -180,6 +181,12 @@ public class Parser implements ParserInterface{
             }
         }
         return commandMap;
+    }
+
+    public void changeLanguage(String language){
+        commandMap.clear();
+        languageResource = ResourceBundle.getBundle(LANGUAGE_PACKAGE + language);
+        getCommandMap();
     }
 
     /**
