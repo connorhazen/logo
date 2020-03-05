@@ -42,14 +42,13 @@ public class ControllerInitial implements ControllerInterface {
   public void executeCommand(String commandText) {
     try{
       List<String> history = model.runCommand(commandText, myTurtle);
-      view.printHistory(history);
-      //view.updateView(model.runCommand(commandText, myTurtle));
+      //view.printHistory(history);
+      view.updateView(history);
     }
 
     catch (UnknownCommandException | InvalidParameterException e){
       view.printErrorFromException(e);
     }
-    System.out.println(commandText);
   }
 
   @Override

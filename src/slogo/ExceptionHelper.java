@@ -11,6 +11,7 @@ public class ExceptionHelper {
   private static final String EXCEPTION_MESSAGES = "src/slogo/exception_messages.txt";
   public ExceptionHelper(){
     alert = new Alert(AlertType.ERROR);
+    alert.setResizable(true);
   }
 
   public ExceptionHelper(AlertType at){

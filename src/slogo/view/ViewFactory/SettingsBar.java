@@ -11,6 +11,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.layout.HBox;
 import slogo.ControllerInterface;
 import slogo.ExceptionHelper;
+import slogo.view.BorderPaneLocation;
 import slogo.view.View;
 import slogo.view.ViewFactory.BorderPaneElement;
 import slogo.view.ViewInterface;
@@ -22,12 +23,15 @@ public class SettingsBar implements BorderPaneElement {
   private static final String PROPERTIES = "buttons.properties";
   ControllerInterface controller;
   ViewInterface view;
-
-  public SettingsBar(ControllerInterface controllerInterface, ViewInterface viewInterface){
+  BorderPaneLocation loc;
+  public SettingsBar(ControllerInterface controllerInterface, ViewInterface viewInterface, BorderPaneLocation loc){
     controller = controllerInterface;
     view = viewInterface;
+    this.loc = loc;
   }
-
+  public BorderPaneLocation getLoc(){
+    return loc;
+  }
   @Override
   public Node getElement() {
     HBox myBox = new HBox();
@@ -37,17 +41,16 @@ public class SettingsBar implements BorderPaneElement {
       props.load(View.class.getResourceAsStream("buttons.properties"));
       for(String key : props.stringPropertyNames()){
         myButtonMap.put(key, props.getProperty(key));
-        System.out.println(key);
+
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      new ExceptionHelper().fileNotFound(e);
     }
     Class<?> thisView = View.class;
     Object obj = view;
     for(String key : myButtonMap.keySet()){
       for(Method m : thisView.getDeclaredMethods()){
         if(myButtonMap.get(key).equals(m.getName())){
-          System.out.println(myButtonMap.get(key));
           Button b = new Button(key);
           b.setOnAction(e -> {
             try {

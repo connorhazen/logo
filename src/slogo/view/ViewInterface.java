@@ -13,4 +13,6 @@ public interface ViewInterface {
   void setImage(String value);
 
   void printHistory(List<String> history);
+
+  void updateView(List<String> history);
 }

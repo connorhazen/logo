@@ -3,95 +3,182 @@ package slogo.view;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.LinkedList;
+import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
+import javafx.animation.RotateTransition;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.NumberBinding;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.ListChangeListener;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Line;
-import javafx.util.Pair;
+import javafx.util.Duration;
+import slogo.ExceptionHelper;
 
 public class TurtleDrawer {
 
-  private static final double TURTLE_SIZE = 75;
+
   private Group elements;
-  private SimpleObjectProperty currentTurtleGif;
+  private WrappableTurtleImage turtleNode;
+  private LinkedList<Animation> currentTrans;
+  private final Duration ANIMATION_DURATION = Duration.seconds(1);
+  private SimpleDoubleProperty centerX;
+  private SimpleDoubleProperty centerY;
+  private SimpleObjectProperty<Image> currentTurtleGif;
+  private boolean running;
+
+
+  private Pane canvas;
+  private Turtle turtle;
+  private String imgName;
+  private String prevImg;
 
   public TurtleDrawer() {
-    currentTurtleGif = new SimpleObjectProperty();
+    running = false;
+    prevImg = "";
+    imgName = "";
+    currentTurtleGif = new SimpleObjectProperty<>();
     elements = new Group();
+    currentTrans = new LinkedList<>();
 
   }
 
   public void addTurtleToCanvas(Pane canvas, Turtle turtle) {
+    this.canvas = canvas;
+    this.turtle = turtle;
+    makeCenterBindings();
     if(!canvas.getChildren().contains(elements)){
       canvas.getChildren().add(elements);
     }
-    makeTurtleBind(canvas, turtle);
-    makeLineBind(canvas, turtle);
+    turtleNode = new WrappableTurtleImage(turtle, canvas, centerX, centerY, currentTurtleGif);
+    turtleNode.setOnMouseClicked(e -> {
+      System.out.println(currentTurtleGif.getValue().toString());
+      boolean activeState = turtle.switchActive();
+      System.out.println(activeState);
+      if(!activeState) this.changeImage("inactive_turtle");
+      else this.setImage(prevImg);
+    });
+
+
+
+    elements.getChildren().add(turtleNode);
+    makeAnimationBindings();
+
+    canvas.widthProperty().addListener(e->{
+      System.out.println(turtleNode.getBoundsInParent().getCenterX());
+    });
   }
-
-  private void makeLineBind(Pane canvas, Turtle turtle) {
-    turtle.getHistory().addListener((ListChangeListener<Object>) c -> makeLine(canvas, turtle));
-  }
-
-  private void makeLine(Pane canvas, Turtle turtle) {
-    if (turtle.getPenStatus() && turtle.getHistory().size() > 0) {
-      double offsetX = canvas.getWidth() / 2;
-      double offsetY = canvas.getHeight() / 2;
-
-      Pair<Double, Double> lastLoc = (Pair<Double, Double>) turtle.getHistory()
-          .get(turtle.getHistory().size() - 1);
-      Line l = new Line(offsetX + lastLoc.getKey(), offsetY + lastLoc.getValue(),
-          offsetX + turtle.getX(), offsetY + turtle.getY());
-      elements.getChildren().add(l);
-    }
-  }
-
-  private void makeTurtleBind(Pane canvas, Turtle turtle) {
-
-    ImageView newTurt = new ImageView();
-
-    newTurt.imageProperty().bind(currentTurtleGif);
-
-    newTurt.setFitWidth(TURTLE_SIZE);
-    newTurt.setFitHeight(TURTLE_SIZE);
-
-    newTurt.visibleProperty().bind(turtle.getVisibleProperty());
-
-    NumberBinding angle = Bindings.add(turtle.getAngleProperty(), 90);
-    newTurt.rotateProperty().bind(angle);
-
-    NumberBinding xLoc =
-        Bindings.add(Bindings.divide(canvas.widthProperty(), 2), Bindings
-            .subtract(turtle.getXProperty(), Bindings.divide(newTurt.fitWidthProperty(), 2)));
-    newTurt.xProperty().bind(xLoc);
-
-    NumberBinding yLoc =
-        Bindings.add(Bindings.divide(canvas.heightProperty(), 2), Bindings
-            .subtract(turtle.getYProperty(), Bindings.divide(newTurt.fitHeightProperty(), 2)));
-    newTurt.yProperty().bind(yLoc);
-
-    elements.getChildren().add(newTurt);
-
-  }
-
 
   public void reset() {
     elements.getChildren().clear();
   }
 
+  public void animate(DoubleProperty speed, double maxSpeed) {
+    if (!currentTrans.isEmpty()){
+      Animation toPlay = currentTrans.poll();
+      if(speed.getValue()==maxSpeed){
+        toPlay.jumpTo(toPlay.getTotalDuration());
+        toPlay.play();
+      }
+      else{
+        toPlay.setRate(speed.getValue());
+        toPlay.play();
+      }
+      toPlay.setOnFinished(e -> animate(speed, maxSpeed));
+    }
+  }
 
-  public void changeImage(String file) throws FileNotFoundException {
-    String path = "src/resources/turtleImages/" + file + ".gif";
+  //Will not be used in final version
+  public void animate(){
+    System.out.println();
+    if(running){
+      return;
+
+    }
+    running = true;
+    play();
+  }
+
+  private void play(){
+    while(!currentTrans.isEmpty()){
+      Animation toPlay = currentTrans.poll();
+      toPlay.setRate(.1);
+      toPlay.play();
+      toPlay.setOnFinished(e -> {
+        play();
+        checkDoneAnimating();
+      });
+    }
+  }
+
+  private void checkDoneAnimating() {
+    if(currentTrans.isEmpty()){
+      running = false;
+    }
+  }
+
+
+  public void changeImage(String file) {
+    String path = "data/turtleImages/" + file + ".gif";
     setImage(path);
   }
 
-  private void setImage(String path) throws FileNotFoundException {
+  private void makeCenterBindings() {
+    centerY = new SimpleDoubleProperty();
+    centerX = new SimpleDoubleProperty();
+    centerX.bind(Bindings.divide(canvas.widthProperty(), 2));
+    centerY.bind(Bindings.divide(canvas.heightProperty(), 2));
+  }
+
+  private void setImage(String path) {
+    prevImg = imgName;
+    imgName = path;
+    System.out.println(path);
+    try{
     FileInputStream inputStream = new FileInputStream(path);
     currentTurtleGif.set(new Image(inputStream));
+    } catch (FileNotFoundException fnfe){
+    new ExceptionHelper().fileNotFound(fnfe);
+
+    }
   }
+
+  private void makeAnimationBindings(){
+    turtle.getVisibleProperty().addListener(e -> currentTrans.add(visibleAnimation(
+        (SimpleBooleanProperty) e)));
+    turtle.getCordsProperty().addListener(e -> currentTrans.add(moveAnimation()));
+    turtle.getAngleProperty().addListener(e -> currentTrans.add(rotateAnimation()));
+  }
+
+  private Animation rotateAnimation() {
+    RotateTransition ret = new RotateTransition();
+    ret.setToAngle(turtle.getAngle() + 90);
+    ret.setNode(turtleNode);
+    return ret;
+  }
+
+  private Animation moveAnimation() {
+    return turtleNode.moveAnimation(ANIMATION_DURATION);
+  }
+
+  private Animation visibleAnimation(SimpleBooleanProperty visible) {
+    FadeTransition fade = new FadeTransition();
+    if (visible.getValue()){
+      fade.setToValue(1);
+    }
+    else{
+      fade.setToValue(0);
+    }
+    fade.setNode(turtleNode);
+    return fade;
+  }
+
+  /*
+  private WrapableLine drawLine(double startX, double startY, double endX, double endY){
+    WrapableLine ret = new WrapableLine(startX, startY, endX, endY, canvas);
+  }*/
+
 }
