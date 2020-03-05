@@ -42,7 +42,6 @@ public interface TurtleInterface {
 
   boolean setShape(int index);
 
-
-
+  int getShape();
 
 }

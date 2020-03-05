@@ -29,7 +29,7 @@ public class Turtle implements TurtleInterface {
     private ObservableList<Object> myHistory;
 
     private boolean isActive;
-    private SimpleIntegerProperty myShapeIndex;
+    private SimpleIntegerProperty myShapeIndex = new SimpleIntegerProperty();
 
     private static final double threeSixty = 360;
 
