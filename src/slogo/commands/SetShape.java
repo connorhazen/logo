@@ -15,7 +15,8 @@ public class SetShape extends TurtleCommand {
 
     @Override
     protected double execute(Turtle executeOnTurtle) throws UnknownCommandException, InvalidParameterException {
-        double shapeIndex = (int) getArgsDouble().get(0);
+        int shapeIndex = (int) Math.round(getArgsDouble().get(0));
         executeOnTurtle.setShape(shapeIndex);
+        return shapeIndex;
     }
 }
