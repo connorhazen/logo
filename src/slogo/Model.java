@@ -1,5 +1,6 @@
 package slogo;
 
+import slogo.commands.Command;
 import slogo.exceptions.InvalidParameterException;
 import slogo.exceptions.UnknownCommandException;
 import slogo.structs.CommandStruct;
@@ -16,6 +17,7 @@ import static java.lang.Class.forName;
 public class Model implements ModelInterface{
     private Parser parser;
     private CommandStruct commandStruct;
+    private static final String PACKAGE = Command.class.getPackageName();
 
     public Model(){
         parser = new Parser();
@@ -32,7 +34,7 @@ public class Model implements ModelInterface{
             List<String> args = new ArrayList<>();
             for (int i = 1; i < parsedCommand.length; i++) { args.add(parsedCommand[i]); }
             try {
-                Class cls = forName("slogo.commands." + command);
+                Class cls = forName(PACKAGE + "." + command);
                 Constructor cons = cls.getDeclaredConstructor(Parser.COMMAND_CLASS_PARAMS);
                 Object params[] = new Object[]{commandStruct, basicCmd, args, turtle};
                 Object obj = cons.newInstance(params);

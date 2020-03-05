@@ -33,15 +33,14 @@ public class Parser implements ParserInterface{
     private static final String LIST_BEGIN_SYMBOL = "[";
     private static final String LIST_END_SYMBOL = "]";
     private static final String PACKAGE = Command.class.getPackageName();
-
-    // TODO: Need to obtain correct resource file from user selection
-    private String languageFile = "resources.languages/English";
+    private static final String LANGUAGE_PACKAGE = "resources.languages/";
+    private String languageDefault = "English";
 
     public Parser() {
         savedCommands = new HashMap<>();
         commandMap = new HashMap<>();
         integerPattern = Pattern.compile(DOUBLE_PATTERN_REGEX);
-        languageResource = ResourceBundle.getBundle(languageFile);
+        languageResource = ResourceBundle.getBundle(LANGUAGE_PACKAGE + languageDefault);
         getCommandMap();
         argumentStack = new Stack();
         commandStack = new Stack();
@@ -182,6 +181,12 @@ public class Parser implements ParserInterface{
             }
         }
         return commandMap;
+    }
+
+    public void changeLanguage(String language){
+        commandMap.clear();
+        languageResource = ResourceBundle.getBundle(LANGUAGE_PACKAGE + language);
+        getCommandMap();
     }
 
     /**
