@@ -3,6 +3,7 @@ package slogo.view;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,6 +29,7 @@ public class Turtle implements TurtleInterface {
     private ObservableList<Object> myHistory;
 
     private boolean isActive;
+    private SimpleIntegerProperty myShapeIndex;
 
     private static final double threeSixty = 360;
 
@@ -39,6 +41,7 @@ public class Turtle implements TurtleInterface {
         cords = new SimpleObjectProperty<>(new Coordinates(xCoor, yCoor));
         myInitialAngle = orientation;
         myID = ID;
+        myShapeIndex.set(0);
         myAngle = new SimpleDoubleProperty(orientation);
         myVisibilityStatus = new SimpleBooleanProperty(true);
         myHistory =  FXCollections.observableArrayList();
@@ -143,6 +146,16 @@ public class Turtle implements TurtleInterface {
     @Override
     public SimpleObjectProperty<Coordinates> getCordsProperty() {
         return cords;
+    }
+
+    @Override
+    public boolean setShape(int index) {
+        myShapeIndex.set(index);
+        return true;
+    }
+
+    public int getShape(){
+        return myShapeIndex.getValue();
     }
 
     public boolean switchActive(){

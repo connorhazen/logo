@@ -23,6 +23,7 @@ public abstract class Command implements CommandInterface {
         myCommandStruct = commandStruct;
         myTurtle = toldTurtle;
         //myTurtles = toldTurtles;
+        //TODO: pass around updated commandStruct object
     }
 
 //    public double executeAllToldTurtles() {

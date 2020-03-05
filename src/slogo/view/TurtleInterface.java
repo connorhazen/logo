@@ -40,4 +40,9 @@ public interface TurtleInterface {
 
   SimpleObjectProperty<Coordinates> getCordsProperty();
 
+  boolean setShape(int index);
+
+
+
+
 }
