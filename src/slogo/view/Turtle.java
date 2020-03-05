@@ -83,7 +83,7 @@ public class Turtle implements TurtleInterface {
 
     @Override
     public boolean setAngle(double newAngle) {
-        if(isActive == false) return false;
+        if(isActive == false) return isActive;
         myAngle.set(newAngle);
         return true;
     }

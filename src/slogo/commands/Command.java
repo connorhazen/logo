@@ -15,7 +15,7 @@ public abstract class Command implements CommandInterface {
     //private List<Turtle> myTurtles;
     private Turtle myTurtle;
 
-    private static int myNumArgs;
+    private int myNumArgs;
 
     public Command(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle){
         myText = text;
