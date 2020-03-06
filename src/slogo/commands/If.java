@@ -10,7 +10,6 @@ import java.util.List;
 public class If extends Misc{
     public If(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
         super(commandStruct, text, args, toldTurtle);
-        setMyNumArgs(1);
     }
 
     @Override
@@ -20,7 +19,7 @@ public class If extends Misc{
         if(getArgsDouble().get(0) != 0){
             getCommandStruct().getModel().runCommand(getListString1(), executeOnTurtle);
             if(getListString1().length() > 1){  // TODO: change to not hardcode
-                ret = retVal(getListString1());
+                ret = lastRetVal(getListString1());
             }
         }
 

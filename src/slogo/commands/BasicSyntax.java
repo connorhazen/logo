@@ -5,7 +5,6 @@ import slogo.exceptions.InvalidParameterException;
 import slogo.structs.CommandStruct;
 import slogo.view.Turtle;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BasicSyntax extends Command {

@@ -7,7 +7,6 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.paint.Color;
 import javafx.util.Pair;
 
 //todo: add checking for if updating turtle location is valid
@@ -31,14 +30,11 @@ public class Turtle implements TurtleInterface {
 
     private boolean isActive;
     private SimpleIntegerProperty myShapeIndex = new SimpleIntegerProperty();
-    private Pen myPen = new Pen();
-    private Color myBackgroundColor = Color.WHITE;
 
     private static final double threeSixty = 360;
 
 
     public Turtle(int ID, double xCoor, double yCoor, double orientation){
-
         isActive = true;
         myInitialX = xCoor;
         myInitialY = yCoor;
@@ -153,12 +149,6 @@ public class Turtle implements TurtleInterface {
     }
 
     @Override
-    public Pen getPen() {
-        return myPen;
-    }
-
-    //TODO: catch out of bounds
-    @Override
     public boolean setShape(int index) {
         myShapeIndex.set(index);
         return true;
@@ -166,15 +156,6 @@ public class Turtle implements TurtleInterface {
 
     public int getShape(){
         return myShapeIndex.getValue();
-    }
-
-    public Color getBackgroundColor(){
-        return myBackgroundColor;
-    }
-
-    public boolean setBackgroundColor(Color color){
-        myBackgroundColor = color;
-        return true;
     }
 
     public boolean switchActive(){
