@@ -1,6 +1,5 @@
 package slogo.view;
 
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.LinkedList;
@@ -8,6 +7,7 @@ import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -20,17 +20,14 @@ import slogo.ExceptionHelper;
 
 public class TurtleDrawer {
 
-
   private Group elements;
-  private WrappableTurtleImage turtleNode;
+  private WrapableTurtleImage turtleNode;
   private LinkedList<Animation> currentTrans;
   private final Duration ANIMATION_DURATION = Duration.seconds(1);
   private SimpleDoubleProperty centerX;
   private SimpleDoubleProperty centerY;
   private SimpleObjectProperty<Image> currentTurtleGif;
   private boolean running;
-
-
   private Pane canvas;
   private Turtle turtle;
   private String imgName;
@@ -53,22 +50,22 @@ public class TurtleDrawer {
     if(!canvas.getChildren().contains(elements)){
       canvas.getChildren().add(elements);
     }
-    turtleNode = new WrappableTurtleImage(turtle, canvas, centerX, centerY, currentTurtleGif);
+    turtleNode = new WrapableTurtleImage(turtle, canvas, centerX, centerY, currentTurtleGif);
+    setMouseClick();
+    elements.getChildren().add(turtleNode);
+    makeAnimationBindings();
+    canvas.widthProperty().addListener(e->{
+      System.out.println(turtleNode.getBoundsInParent().getCenterX());
+    });
+  }
+
+  private void setMouseClick() {
     turtleNode.setOnMouseClicked(e -> {
       System.out.println(currentTurtleGif.getValue().toString());
       boolean activeState = turtle.switchActive();
       System.out.println(activeState);
       if(!activeState) this.changeImage("inactive_turtle");
       else this.setImage(prevImg);
-    });
-
-
-
-    elements.getChildren().add(turtleNode);
-    makeAnimationBindings();
-
-    canvas.widthProperty().addListener(e->{
-      System.out.println(turtleNode.getBoundsInParent().getCenterX());
     });
   }
 
@@ -96,21 +93,37 @@ public class TurtleDrawer {
     System.out.println();
     if(running){
       return;
-
     }
     running = true;
     play();
   }
 
+  public void changeImage(String file) {
+    String path = "data/turtleImages/" + file + ".gif";
+    setImage(path);
+  }
+
   private void play(){
-    while(!currentTrans.isEmpty()){
+    Group lines = new Group();
+    elements.getChildren().add(lines);
+    NumberBinding turtleX = turtleNode.getXLocLines();
+    NumberBinding turtleY = turtleNode.getYLocLines();
+
+    double startLocX = turtleX.doubleValue();
+    double startLocY = turtleY.doubleValue();
+    turtleX.addListener(e -> {
+      lines.getChildren().clear();
+      lines.getChildren().add(new WrapableLine(startLocX, startLocY, turtleX.doubleValue(), turtleY.doubleValue(), canvas));
+    });
+
+    if(!currentTrans.isEmpty()){
       Animation toPlay = currentTrans.poll();
       toPlay.setRate(.1);
-      toPlay.play();
       toPlay.setOnFinished(e -> {
         play();
         checkDoneAnimating();
       });
+      toPlay.play();
     }
   }
 
@@ -118,12 +131,6 @@ public class TurtleDrawer {
     if(currentTrans.isEmpty()){
       running = false;
     }
-  }
-
-
-  public void changeImage(String file) {
-    String path = "data/turtleImages/" + file + ".gif";
-    setImage(path);
   }
 
   private void makeCenterBindings() {
