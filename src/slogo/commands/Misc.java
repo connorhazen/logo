@@ -1,6 +1,7 @@
 package slogo.commands;
 
 
+import slogo.Parser;
 import slogo.exceptions.UnknownCommandException;
 import slogo.view.Turtle;
 import slogo.exceptions.InvalidParameterException;
@@ -142,7 +143,9 @@ public abstract class Misc extends Command {
     }
 
     protected double retVal(String basicCmd) throws InvalidParameterException {
-        return getCommandStruct().getModel().getParser().getCommandRetValue(basicCmd);
+        Parser p = new Parser(getCommandStruct().getModel().getLanguage(), getCommandStruct());
+        return p.getCommandRetValue(basicCmd);
+
     }
 
     protected List<Double> getLoopConstants(){ //TODO: rename
