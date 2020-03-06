@@ -42,13 +42,6 @@ public class WrapableTurtleImage extends ImageView{
     makeLocBinding(centerX, centerY);
   }
 
-  public Animation moveAnimation(Duration duration) {
-    Transition ret = createMoveAnimation(duration, turtle.getPenStatus(), turtle.getX()-lastX, turtle.getY()-lastY, lastX, lastY);
-    lastX = turtle.getX();
-    lastY = turtle.getY();
-    return ret;
-  }
-
   private void makeLocBinding(SimpleDoubleProperty centerX, SimpleDoubleProperty centerY) {
     NumberBinding xLoc = Bindings.add(turtleXRelative, centerX);
     NumberBinding yLoc = Bindings.add(turtleYRelative, centerY);
@@ -101,25 +94,24 @@ public class WrapableTurtleImage extends ImageView{
     this.setRotate(turtle.getAngle() + 90);
   }
 
-  private Transition createMoveAnimation(Duration duration, boolean penStatus, double xCord, double yCord, double startX, double startY) {
-    Transition a  = new Transition() {
-      {
-        setCycleDuration(duration);
-      }
-      @Override
-      protected void interpolate(double frac) {
-        turtleXRelative.set(startX + xCord*frac);
-        turtleYRelative.set(startY+ yCord*frac);
-      }
-    };
-    return a;
+  public void setTurtleXRelative(double val){
+    turtleXRelative.set(val);
+  }
+  public void setTurtleYRelative(double val){
+    turtleYRelative.set(val);
   }
 
-  public NumberBinding getXLocLines(){
-    return Bindings.add(turtleXRelative, centerX);
+  public SimpleDoubleProperty getXLocLines(){
+    return turtleXRelative;
   }
-  public NumberBinding getYLocLines(){
-    return Bindings.add(turtleYRelative, centerY);
+  public SimpleDoubleProperty getYLocLines(){
+    return turtleYRelative;
+  }
+  public double getLastX(){
+    return lastX;
+  }
+  public double getLastY(){
+    return  lastY;
   }
 
 }

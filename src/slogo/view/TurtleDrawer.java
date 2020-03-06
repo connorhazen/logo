@@ -7,7 +7,6 @@ import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -23,7 +22,7 @@ public class TurtleDrawer {
 
   private Group elements;
   private WrapableTurtleImage turtleNode;
-  private LinkedList<Animation> currentTrans;
+  private LinkedList<TurtleAnimation> currentTrans;
   private final Duration ANIMATION_DURATION = Duration.seconds(.5);
   private SimpleDoubleProperty centerX;
   private SimpleDoubleProperty centerY;
@@ -33,6 +32,7 @@ public class TurtleDrawer {
   private Turtle turtle;
   private String imgName;
   private String prevImg;
+  private boolean animatePen = false;
 
   public TurtleDrawer() {
     running = false;
@@ -88,28 +88,44 @@ public class TurtleDrawer {
   private void play(DoubleProperty speed, double maxSpeed){
     Group lines = new Group();
     elements.getChildren().add(lines);
-    NumberBinding turtleX = turtleNode.getXLocLines();
-    NumberBinding turtleY = turtleNode.getYLocLines();
+    SimpleDoubleProperty turtleX = turtleNode.getXLocLines();
+    SimpleDoubleProperty turtleY = turtleNode.getYLocLines();
 
     double startLocX = turtleX.doubleValue();
     double startLocY = turtleY.doubleValue();
-    ChangeListener lis = (e,ee,eee) -> {
-      lines.getChildren().clear();
-      lines.getChildren().add(new WrapableLine(startLocX, startLocY, turtleX.doubleValue(), turtleY.doubleValue(), canvas));
-    };
-    turtleX.addListener(lis);
-    turtleY.addListener(lis);
+
+    ChangeListener<Number> lis = null;
+
+    if(animatePen){
+      lis = (e,ee,eee) -> {
+        lines.getChildren().clear();
+        lines.getChildren().add(new WrapableLine(startLocX, startLocY, turtleX.doubleValue(), turtleY.doubleValue(), canvas, centerX, centerY));
+      };
+      turtleX.addListener(lis);
+      turtleY.addListener(lis);
+    }
+
     if(!currentTrans.isEmpty()){
-      Animation toPlay = currentTrans.poll();
-     setRate(toPlay, speed, maxSpeed);
-      toPlay.setOnFinished(e -> {
-        turtleX.removeListener(lis);
-        turtleY.removeListener(lis);
-        lines.getChildren().add(new WrapableLine(startLocX, startLocY, turtleX.doubleValue(), turtleY.doubleValue(), canvas));
+      TurtleAnimation toPlay = currentTrans.poll();
+      if(speed.doubleValue() == maxSpeed){
+        toPlay.execute();
+        System.out.println("executed");
+        lines.getChildren().add(new WrapableLine(startLocX, startLocY, turtleX.doubleValue(), turtleY.doubleValue(), canvas, centerX, centerY));
         checkDoneAnimating();
-        play(speed, maxSpeed);
-      });
-      toPlay.play();
+        play(speed,maxSpeed);
+      }
+      else{
+        Animation ana = toPlay.getAnimation(ANIMATION_DURATION);
+        ana.setRate(speed.doubleValue());
+        ana.setOnFinished(e -> {
+          lines.getChildren().add(new WrapableLine(startLocX, startLocY, turtleX.doubleValue(), turtleY.doubleValue(), canvas, centerX, centerY));
+          checkDoneAnimating();
+          play(speed, maxSpeed);
+        });
+        ana.play();
+      }
+
+
     }
   }
 
@@ -148,33 +164,22 @@ public class TurtleDrawer {
   }
 
   private void makeAnimationBindings(){
-    turtle.getVisibleProperty().addListener(e -> currentTrans.add(visibleAnimation(
-        (SimpleBooleanProperty) e)));
+    turtle.getVisibleProperty().addListener(e -> currentTrans.add(visibleAnimation()));
     turtle.getCordsProperty().addListener(e -> currentTrans.add(moveAnimation()));
     turtle.getAngleProperty().addListener(e -> currentTrans.add(rotateAnimation()));
   }
 
-  private Animation rotateAnimation() {
-    RotateTransition ret = new RotateTransition();
-    ret.setToAngle(turtle.getAngle() + 90);
-    ret.setNode(turtleNode);
-    return ret;
+  private TurtleAnimation rotateAnimation() {
+    return new RotateAnimation(turtle, turtleNode);
   }
 
-  private Animation moveAnimation() {
-    return turtleNode.moveAnimation(ANIMATION_DURATION);
+  private TurtleAnimation moveAnimation() {
+    return new MoveAnimation(turtle, turtleNode);
   }
 
-  private Animation visibleAnimation(SimpleBooleanProperty visible) {
-    FadeTransition fade = new FadeTransition();
-    if (visible.getValue()){
-      fade.setToValue(1);
-    }
-    else{
-      fade.setToValue(0);
-    }
-    fade.setNode(turtleNode);
-    return fade;
+  private TurtleAnimation visibleAnimation() {
+    return new VisibleAnimation(turtle, turtleNode);
+
   }
 
   /*

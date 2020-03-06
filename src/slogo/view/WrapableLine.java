@@ -2,6 +2,7 @@ package slogo.view;
 
 import java.util.Map;
 import java.util.TreeMap;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -16,27 +17,33 @@ public class WrapableLine extends Group {
   private double endY;
   private Pane canvas;
 
-  public WrapableLine(double startX, double startY, double endX, double endY, Pane canvas) {
+  public WrapableLine(double startX, double startY, double endX, double endY, Pane canvas, SimpleDoubleProperty centerX, SimpleDoubleProperty centerY) {
     super();
 
     if(startX  == endX && startY == endY){
       return;
     }
 
-    setEndPoints(startX, startY, endX, endY);
+    setEndPoints(startX, startY, endX, endY, centerX.doubleValue(), centerY.doubleValue());
     this.canvas = canvas;
 
-    canvas.heightProperty().addListener(e -> {makeLines();});
-    canvas.widthProperty().addListener(e -> {makeLines();});
+    centerX.addListener(e -> {
+      makeLines();
+      setEndPoints(startX, startY, endX, endY, centerX.doubleValue(), centerY.doubleValue());
+    });
+    centerY.addListener(e -> {
+      makeLines();
+      setEndPoints(startX, startY, endX, endY, centerX.doubleValue(), centerY.doubleValue());
+    });
     makeLines();
 
   }
 
-  private void setEndPoints(double startX, double startY, double endX, double endY) {
-    this.startX = startX;
-    this.endX = endX;
-    this.startY = startY;
-    this.endY = endY;
+  private void setEndPoints(double startX, double startY, double endX, double endY, double centerX, double centerY) {
+    this.startX = startX + centerX;
+    this.endX = endX + centerX;
+    this.startY = startY+ centerY;
+    this.endY = endY+ centerY;
     /*if (startX < endX) {
       this.startX = startX;
       this.endX = endX;
