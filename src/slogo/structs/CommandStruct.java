@@ -1,5 +1,6 @@
 package slogo.structs;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
 import slogo.Model;
@@ -8,24 +9,85 @@ import slogo.view.Turtle;
 import java.util.*;
 
 public class CommandStruct {
-    List<VariableStruct> myVariables;
+    private List<VariableStruct> myVariables;
     private List<UserCommandStruct> myUserCommands;
-    private String myLanguage;
     private Model myModel;
-    private Map<Integer, Color> myColorMap = new HashMap<>();
+    private Map<Integer,Color> myColorMap = new HashMap<>();
     private Map<Integer, Turtle> myTurtleMap = new HashMap<>();
     private Set<Turtle> myTurtleSet = new HashSet<>();
-    private SimpleObjectProperty<Turtle> myActiveTurtle = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<Turtle> myActiveTurtle;
 
-    public CommandStruct(String language, Model inputModel) {
+    public CommandStruct(Model inputModel) {
         myVariables = new ArrayList<VariableStruct>();
         myUserCommands = new ArrayList<UserCommandStruct>();
-        myLanguage = language;
         myModel = inputModel;
+
+    }
+
+    public Turtle getActiveTurtle(){
+        return myActiveTurtle.getValue();
+    }
+
+    public void setActiveTurtle(Turtle curTurt){
+        myActiveTurtle.setValue(curTurt);
     }
 
     public Model getModel(){
         return myModel;
+    }
+
+
+    public Turtle getTurtle(int index){ return myTurtleMap.get(index);}
+
+    public boolean turtleExists(int index){
+        return myTurtleMap.containsKey(index);
+    }
+
+    public int totalTurtles(){
+        return myTurtleMap.size();
+    }
+
+    public Set<Turtle> getTurtleSet() { return myTurtleSet;}
+
+    public void setTurtleSet(Set<Turtle> turtleSet){
+        myTurtleSet = turtleSet;
+    }
+
+    public void setTurtleSetDefault(){
+        myTurtleSet = (HashSet) myTurtleMap.values();
+    }
+
+    public boolean addTurtle(Turtle newTurtle){
+        myTurtleSet.add(newTurtle);
+        myTurtleMap.putIfAbsent(newTurtle.getID(), newTurtle);
+        return true;
+    }
+
+    public Color getColor(int index){
+        return myColorMap.get(index);
+    }
+
+    public boolean colorKeyExists(int index){
+        return myColorMap.containsKey(index);
+    }
+
+    public boolean setColor(int index, int r, int g, int b){
+        r = castIntInRange(r);
+        g = castIntInRange(g);
+        b = castIntInRange(b);
+        myColorMap.put(index, Color.rgb(r, g, b));
+
+        return true;
+    }
+
+    private int castIntInRange(int val){
+        if(val < 0){
+            return 0;
+        }
+        if(val > 255){
+            return 255;
+        }
+        return val;
     }
 
     public List<VariableStruct> getVariables() {
@@ -88,10 +150,6 @@ public class CommandStruct {
             }
         }
         myUserCommands.add(usrC);
-    }
-
-    public String getLanguage() {
-        return myLanguage;
     }
 
 }
