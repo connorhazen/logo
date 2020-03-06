@@ -174,6 +174,7 @@ public class Turtle implements TurtleInterface {
 
     public boolean setBackgroundColor(Color color){
         myBackgroundColor = color;
+        return true;
     }
 
     public boolean switchActive(){
