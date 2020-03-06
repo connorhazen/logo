@@ -24,7 +24,7 @@ public class Model implements ModelInterface{
 
     public Model(){
         parser = new Parser();
-        commandStruct = new CommandStruct("", this); // TODO: Get language from view
+        commandStruct = new CommandStruct(this);
     }
 
     @Override

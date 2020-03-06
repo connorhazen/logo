@@ -145,7 +145,7 @@ public abstract class Misc extends Command {
         return getCommandStruct().getModel().getParser().getCommandRetValue(basicCmd);
     }
 
-    protected List<Double> getLoopConstants(){
+    protected List<Double> getLoopConstants(){ //TODO: rename
         List<Double> returnList = new ArrayList<>();
 
         Pattern p = Pattern.compile("\\d+");
