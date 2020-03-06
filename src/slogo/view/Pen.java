@@ -47,5 +47,4 @@ public class Pen implements PenInterface {
         return true;
     }
 
-
 }
