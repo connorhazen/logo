@@ -42,9 +42,10 @@ public abstract class Command implements CommandInterface {
     public double executeCommand() throws UnknownCommandException, InvalidParameterException {
         double retValue = -1.0;
 
-        if (this instanceof TurtleSpecificCommand) {
+        if (this instanceof TurtleSpecificCommand || this instanceof Repeat) {
             retValue = execute(myTurtle);
-        } else {
+        }
+        else {
             retValue = execute(null);
         }
         return retValue;

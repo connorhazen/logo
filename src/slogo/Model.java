@@ -7,33 +7,32 @@ import slogo.structs.CommandStruct;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import slogo.view.Turtle;
 
 import static java.lang.Class.forName;
 
 public class Model implements ModelInterface{
-    private Parser parser;
     private CommandStruct commandStruct;
+    private String language;
     private static final String PACKAGE = Command.class.getPackageName();
     private static final ResourceBundle ERROR_MESSAGES = ResourceBundle.getBundle("slogo/exceptions/exception_messages");
+    private static final String LANGUAGE_DEFAULT = "English";
 
     public Model(){
-        parser = new Parser();
         commandStruct = new CommandStruct("", this); // TODO: Get language from view
+        language = LANGUAGE_DEFAULT;
     }
 
     @Override
     public List<String> runCommand(String input, Turtle turtle) throws UnknownCommandException, InvalidParameterException {
         if(input.trim().equals("")) { throw new UnknownCommandException(ERROR_MESSAGES.getString("NoCommand")); }
+        Parser parser = new Parser(language, commandStruct);
         List<String> parsedCommands = parser.parseCommand(input);
         Map<String, String> commandMap = parser.getCommandMap();
         for (String basicCmd : parsedCommands) {
-            String[] parsedCommand = basicCmd.split(" ");
+            String[] parsedCommand = parser.parseList(basicCmd);
             String command = commandMap.get(parsedCommand[Parser.COMMAND_INDEX]);
             List<String> args = new ArrayList<>();
             for (int i = 1; i < parsedCommand.length; i++) { args.add(parsedCommand[i]); }
@@ -49,7 +48,11 @@ public class Model implements ModelInterface{
         return parsedCommands;
     }
 
-    public Parser getParser(){
-        return parser;
+    public void changeLanguage(String lang){
+        language = lang;
+    }
+
+    public String getLanguage(){
+        return language;
     }
 }

@@ -1,6 +1,7 @@
 package slogo.commands;
 
 
+import slogo.Parser;
 import slogo.view.Turtle;
 import slogo.commands.Command;
 import slogo.exceptions.InvalidParameterException;
@@ -8,6 +9,7 @@ import slogo.exceptions.InvalidParameterException;
 import slogo.structs.CommandStruct;
 import slogo.structs.VariableStruct;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
@@ -102,7 +104,8 @@ public abstract class Misc extends Command {
     }
 
     protected double lastRetVal(String basicCmd) throws InvalidParameterException {
-        return getCommandStruct().getModel().getParser().getCommandRetValue(lastCommandInString(getListString1()));
+        Parser p = new Parser(getCommandStruct().getModel().getLanguage(), getCommandStruct());
+        return p.getCommandRetValue(basicCmd);
     }
 
 

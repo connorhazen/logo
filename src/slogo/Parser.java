@@ -19,6 +19,8 @@ public class Parser implements ParserInterface{
     private Stack commandStack;
     private Map<String, String> commandMap;
     private ResourceBundle languageResource;
+    private String currentLanguage;
+    private CommandStruct commandStruct;
 
     private static final Pattern CONSTANT_PATTERN = Pattern.compile("-?[0-9]+\\.?[0-9]*");
     private static final Pattern COMMENT_PATTERN = Pattern.compile("^#.*");
@@ -35,22 +37,23 @@ public class Parser implements ParserInterface{
     private static final String LIST_END_SYMBOL = "]";
     private static final String PACKAGE = Command.class.getPackageName();
     private static final String LANGUAGE_PACKAGE = "resources.languages/";
-    private static final String LANGUAGE_DEFAULT = "English";
     private static final ResourceBundle ERROR_MESSAGES = ResourceBundle.getBundle("slogo/exceptions/exception_messages");
 
-    public Parser() {
+    public Parser(String language, CommandStruct cs) {
         savedCommands = new HashMap<>();
         commandMap = new HashMap<>();
-        languageResource = ResourceBundle.getBundle(LANGUAGE_PACKAGE + LANGUAGE_DEFAULT);
+        currentLanguage = language;
+        languageResource = ResourceBundle.getBundle(LANGUAGE_PACKAGE + language);
         getCommandMap();
         argumentStack = new Stack();
         commandStack = new Stack();
+        commandStruct = cs;
     }
 
 
     public List<String> parseCommand(String cmd) throws UnknownCommandException, InvalidParameterException {
         String cleanCommand = removeComments(cmd);
-        cleanCommand = cleanCommand.trim();
+        cleanCommand = cleanCommand.trim().replaceAll(" +", " ");
         String[] parsedCommand = cleanCommand.split(" ");
         if(parsedCommand.length > SAVE_SYMBOL_INDEX && parsedCommand[SAVE_SYMBOL_INDEX].equals(SAVE_SYMBOL)){
             saveCommand(parsedCommand);
@@ -146,7 +149,7 @@ public class Parser implements ParserInterface{
     }
 
     public double getCommandRetValue(String cmd) throws InvalidParameterException {
-        String[] parsedCommand = cmd.split(" ");
+        String[] parsedCommand = parseList(cmd);
         String command = commandMap.get(parsedCommand[COMMAND_INDEX]);
         List<String> args = new ArrayList<>();
         for (int i = 1; i < parsedCommand.length; i++) {
@@ -155,7 +158,7 @@ public class Parser implements ParserInterface{
         try {
             Class cls = forName("slogo.commands." + command);
             Constructor cons = cls.getDeclaredConstructor(COMMAND_CLASS_PARAMS);
-            Object params[] = new Object[] {new CommandStruct("", null), "", args, DUMMY_TURTLE};
+            Object params[] = new Object[] {commandStruct, "", args, DUMMY_TURTLE};
             Object obj = cons.newInstance(params);
             Method method = cls.getDeclaredMethod("execute", EXECUTE_CLASS_PARAMS);
             method.setAccessible(true);
@@ -163,6 +166,30 @@ public class Parser implements ParserInterface{
         } catch (Exception e) {
             throw new InvalidParameterException(e, ERROR_MESSAGES.getString("InvalidParameter") + cmd);
         }
+    }
+
+    public String[] parseList(String cmd){
+        String[] parsedCommand = cmd.split(" ");
+        ArrayList<String> cmdList = new ArrayList<>(); boolean isSlogoList = false; String listCommand = ""; int beginCount = 0; int endCount = 0;
+        for(String s : parsedCommand) {
+            if (s.equals(LIST_BEGIN_SYMBOL)) { isSlogoList = true; }
+            if (isSlogoList) {
+                if (s.equals(LIST_BEGIN_SYMBOL)) {
+                    beginCount += 1;
+                    listCommand += s + " ";
+                } else if (s.equals(LIST_END_SYMBOL)) {
+                    endCount += 1;
+                    if (beginCount == endCount) {
+                        listCommand += s; isSlogoList = false;
+                        cmdList.add(listCommand);
+                        listCommand = ""; beginCount = 0; endCount = 0;
+                    }
+                } else { listCommand += s + " "; }
+            } else { cmdList.add(s); }
+        }
+        String[] ret = new String[cmdList.size()];
+        for(int i = 0; i < ret.length; i++) { ret[i] = cmdList.get(i); }
+        return ret;
     }
 
     private void saveCommand(String[] parsedCommand) {
@@ -192,11 +219,5 @@ public class Parser implements ParserInterface{
             }
         }
         return commandMap;
-    }
-
-    public void changeLanguage(String language){
-        commandMap.clear();
-        languageResource = ResourceBundle.getBundle(LANGUAGE_PACKAGE + language);
-        getCommandMap();
     }
 }
