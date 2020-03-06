@@ -2,7 +2,6 @@ package slogo.commands;
 
 import slogo.exceptions.InvalidParameterException;
 import slogo.exceptions.UnknownCommandException;
-import slogo.structs.VariableStruct;
 import slogo.view.Turtle;
 import slogo.structs.CommandStruct;
 
@@ -29,21 +28,30 @@ public class For extends Misc{
 
         List<Double> loopConstants = getLoopConstants();
         double start = loopConstants.get(0);
-        double end = loopConstants.get(1);
-        double increment = loopConstants.get(2);
-        String varName = parseStringIntoVar(getListString1()).get(0);
+        double end = loopConstants.get(0);
+        double increment = loopConstants.get(0);
 
         for(double i = start; i < end; i += increment){
-            VariableStruct itterator = new VariableStruct(varName, i);
-            getCommandStruct().addVariable(itterator);
             getCommandStruct().getModel().runCommand(getListString1(), executeOnTurtle);
 
             if(i >= end - increment ){
-                ret = retVal(getListString1());
+                ret = lastRetVal(getListString1());
             }
         }
         return ret;
     }
+
+    private List<Double> getLoopConstants(){
+        List<Double> returnList = new ArrayList<>();
+
+        Pattern p = Pattern.compile("\\d+");
+        Matcher m = p.matcher(getListString1());
+        while(m.find()) {
+            returnList.add(Double.parseDouble(m.group()));
+        }
+        return returnList;
+    }
+
 
 
 }
