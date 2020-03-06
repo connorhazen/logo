@@ -36,6 +36,7 @@ public class Parser implements ParserInterface{
     private static final String PACKAGE = Command.class.getPackageName();
     private static final String LANGUAGE_PACKAGE = "resources.languages/";
     private static final String LANGUAGE_DEFAULT = "English";
+    private static final ResourceBundle ERROR_MESSAGES = ResourceBundle.getBundle("slogo/exceptions/exception_messages");
 
     public Parser() {
         savedCommands = new HashMap<>();
@@ -79,7 +80,7 @@ public class Parser implements ParserInterface{
                     endCount += 1;
                     if(beginCount == endCount) {
                         listCommand += s;
-                        argumentStack.push(listCommand); //
+                        argumentStack.push(listCommand);
                         isSlogoList = false; listCommand = ""; beginCount = 0; endCount = 0;
                     }
                 } else { listCommand += s + " "; }
@@ -87,7 +88,7 @@ public class Parser implements ParserInterface{
             else {
                 if (isConstant(s)) { argumentStack.push(s); }
                 else if (commandMap.containsKey(s)) { commandStack.push(s); }
-                else { throw new UnknownCommandException("Command not recognized: " + s); } // TODO: Error? OR if commandMap does not contain user-defined commands/variable, check if it's one of those
+                else { throw new UnknownCommandException(ERROR_MESSAGES.getString("UnknownCommand") + s); } // TODO: Error? OR if commandMap does not contain user-defined commands/variable, check if it's one of those
             }
             basicCommandList = buildTree(basicCommandList);
         }
@@ -110,7 +111,7 @@ public class Parser implements ParserInterface{
                 }
                 else{ break; }
             }
-            else { throw new UnknownCommandException("Command not recognized: " + command); } // TODO: Put message in properties files
+            else { throw new UnknownCommandException(ERROR_MESSAGES.getString("UnknownCommand") + command); }
         }
         if(commandStack.empty()) { argumentStack.clear(); }
         return commandList;
@@ -140,7 +141,7 @@ public class Parser implements ParserInterface{
             Method method = cls.getMethod("getNumArgs", NOPARAMS);
             return (int) method.invoke(obj);
         } catch (Exception e) {
-            throw new UnknownCommandException("Command not recognized: " + cmd); // TODO: Put message in properties files
+            throw new UnknownCommandException(ERROR_MESSAGES.getString("UnknownCommand") + cmd);
         }
     }
 
@@ -160,7 +161,7 @@ public class Parser implements ParserInterface{
             method.setAccessible(true);
             return (double) method.invoke(obj, EXECUTE_PARAMS);
         } catch (Exception e) {
-            throw new InvalidParameterException(e, "The following command could not be executed due to an invalid parameter: " + cmd); // TODO: Put message in properties file
+            throw new InvalidParameterException(e, ERROR_MESSAGES.getString("InvalidParameter") + cmd);
         }
     }
 
