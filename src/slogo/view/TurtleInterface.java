@@ -44,4 +44,6 @@ public interface TurtleInterface {
 
   int getShape();
 
+  Pen getPen();
+
 }
