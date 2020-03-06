@@ -12,6 +12,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
@@ -23,7 +24,7 @@ public class TurtleDrawer {
   private Group elements;
   private WrapableTurtleImage turtleNode;
   private LinkedList<Animation> currentTrans;
-  private final Duration ANIMATION_DURATION = Duration.seconds(1);
+  private final Duration ANIMATION_DURATION = Duration.seconds(.5);
   private SimpleDoubleProperty centerX;
   private SimpleDoubleProperty centerY;
   private SimpleObjectProperty<Image> currentTurtleGif;
@@ -54,9 +55,6 @@ public class TurtleDrawer {
     setMouseClick();
     elements.getChildren().add(turtleNode);
     makeAnimationBindings();
-    canvas.widthProperty().addListener(e->{
-      System.out.println(turtleNode.getBoundsInParent().getCenterX());
-    });
   }
 
   private void setMouseClick() {
@@ -90,7 +88,6 @@ public class TurtleDrawer {
 
   //Will not be used in final version
   public void animate(){
-    System.out.println();
     if(running){
       return;
     }
@@ -111,17 +108,21 @@ public class TurtleDrawer {
 
     double startLocX = turtleX.doubleValue();
     double startLocY = turtleY.doubleValue();
-    turtleX.addListener(e -> {
+    ChangeListener lis = (e,ee,eee) -> {
       lines.getChildren().clear();
       lines.getChildren().add(new WrapableLine(startLocX, startLocY, turtleX.doubleValue(), turtleY.doubleValue(), canvas));
-    });
-
+    };
+    turtleX.addListener(lis);
+    turtleY.addListener(lis);
     if(!currentTrans.isEmpty()){
       Animation toPlay = currentTrans.poll();
-      toPlay.setRate(.1);
+      toPlay.setRate(1);
       toPlay.setOnFinished(e -> {
-        play();
+        turtleX.removeListener(lis);
+        turtleY.removeListener(lis);
+        lines.getChildren().add(new WrapableLine(startLocX, startLocY, turtleX.doubleValue(), turtleY.doubleValue(), canvas));
         checkDoneAnimating();
+        play();
       });
       toPlay.play();
     }
@@ -143,7 +144,6 @@ public class TurtleDrawer {
   private void setImage(String path) {
     prevImg = imgName;
     imgName = path;
-    System.out.println(path);
     try{
     FileInputStream inputStream = new FileInputStream(path);
     currentTurtleGif.set(new Image(inputStream));

@@ -7,7 +7,6 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
-import javafx.util.Pair;
 
 public class WrapableLine extends Group {
 
@@ -16,22 +15,29 @@ public class WrapableLine extends Group {
   private double endX;
   private double endY;
   private Pane canvas;
-  private ChangeListener listener;
-  private double length;
 
   public WrapableLine(double startX, double startY, double endX, double endY, Pane canvas) {
     super();
 
+    if(startX  == endX && startY == endY){
+      return;
+    }
+
     setEndPoints(startX, startY, endX, endY);
     this.canvas = canvas;
-    makeLines();
 
-    canvas.boundsInParentProperty().addListener(e -> {makeLines();});
+    canvas.heightProperty().addListener(e -> {makeLines();});
+    canvas.widthProperty().addListener(e -> {makeLines();});
+    makeLines();
 
   }
 
   private void setEndPoints(double startX, double startY, double endX, double endY) {
-    if (startX < endX) {
+    this.startX = startX;
+    this.endX = endX;
+    this.startY = startY;
+    this.endY = endY;
+    /*if (startX < endX) {
       this.startX = startX;
       this.endX = endX;
     } else {
@@ -45,64 +51,114 @@ public class WrapableLine extends Group {
     } else {
       this.startY = endY;
       this.endY = startY;
-    }
+    }*/
   }
 
   private void makeLines() {
 
     this.getChildren().clear();
 
-    Map<Double, Pair<Double, Double>> breakPoints = new TreeMap<>(
+    Map<Double, Coordinates> breakPoints = new TreeMap<>(
         Double::compareTo);
-
-    breakPoints.put(0.0, new Pair<>(startX, startY));
 
     getXBreaks(breakPoints);
     getYBreaks(breakPoints);
 
-    Pair<Double,Double> last = new Pair<>(startX, startY);
+    breakPoints.putIfAbsent(0.0, new Coordinates(startX, startY));
+    breakPoints.putIfAbsent(getLength(endX, endY), new Coordinates(endX,endY));
 
-    for(Pair<Double, Double> next : breakPoints.values()){
-      this.getChildren().add(drawLine(last.getKey(), last.getValue(), next.getKey(), next.getValue()));
-      last = next;
-
+    Coordinates last = null;
+    boolean start = true;
+    for(Coordinates next : breakPoints.values()){
+      if(start){
+        last = next;
+        start = false;
+        continue;
+      }
+      this.getChildren().add(drawLine(last.getX(), last.getY(), next.getX(), next.getY()));
+      start = true;
     }
   }
 
   private Node drawLine(double x1, double y1, double x2, double y2) {
-    return new Line(x1%canvas.getWidth(), y1%canvas.getHeight(), x2%canvas.getWidth(), y2%canvas.getHeight());
+    double xloc1 = x1%canvas.getWidth();
+    if(xloc1<0){
+      xloc1 = canvas.getWidth()+xloc1;
+    }
+    double yloc1 = y1%canvas.getHeight();
+    if(yloc1<0){
+      yloc1 = canvas.getHeight()+yloc1;
+    }
+    double xloc2 = x2%canvas.getWidth();
+    if(xloc2<0){
+      xloc2 = canvas.getWidth()+xloc2;
+    }
+    double yloc2 = y2%canvas.getHeight();
+    if(yloc2<0){
+      yloc2 = canvas.getHeight()+yloc2;
+    }
+
+    return new Line(xloc1, yloc1, xloc2, yloc2);
   }
 
-  private void getYBreaks(Map<Double, Pair<Double, Double>> breakPoints) {
+  private void getYBreaks(Map<Double, Coordinates> breakPoints) {
+    double minY;
+    double maxY;
+    if(startY<endY){
+      minY = startY;
+      maxY=endY;
+    }
+    else{
+      minY = endY;
+      maxY = startY;
+    }
     double diffToEdge;
-    double xIndex = startX;
-    double yIndex = startY;
+    double yIndex = minY;
     while (true) {
-      diffToEdge = canvas.getHeight() - yIndex % canvas.getHeight();
-      yIndex = yIndex + diffToEdge;
-      xIndex = findXval(yIndex);
-      if (yIndex > endY) {
-        breakPoints.put(getLength(startX, startY), new Pair<>(endX, endY));
+      diffToEdge = findDiff(yIndex, canvas.getHeight());
+      yIndex = yIndex + diffToEdge - .05;
+      if (yIndex > maxY) {
         break;
       }
-      breakPoints.put(getLength(xIndex, yIndex), new Pair<>(xIndex, yIndex));
+      breakPoints.putIfAbsent(getLength(findXval(yIndex), yIndex), new Coordinates(findXval(yIndex), yIndex));
+      yIndex += .1;
+      breakPoints.putIfAbsent(getLength(findXval(yIndex), yIndex), new Coordinates(findXval(yIndex), yIndex));
     }
 
   }
 
-  private void getXBreaks(Map<Double, Pair<Double, Double>> breakPoints) {
+  private void getXBreaks(Map<Double, Coordinates> breakPoints) {
+    double minX;
+    double maxX;
+    if(startX<endX){
+      minX = startX;
+      maxX=endX;
+    }
+    else{
+      minX = endX;
+      maxX = startX;
+    }
+
     double diffToEdge;
-    double xIndex = startX;
-    double yIndex = startY;
+    double xIndex = minX;
     while (true) {
-      diffToEdge = canvas.getWidth() - xIndex % canvas.getWidth();
-      xIndex = xIndex + diffToEdge;
-      yIndex = findYval(xIndex);
-      if (xIndex > endX) {
-        breakPoints.put(getLength(startX, startY), new Pair<>(endX, endY));
+      diffToEdge = findDiff(xIndex, canvas.getWidth());
+      xIndex = xIndex + diffToEdge - .05;
+      if (xIndex > maxX) {
         break;
       }
-      breakPoints.put(getLength(xIndex, yIndex), new Pair<>(xIndex, yIndex));
+      breakPoints.putIfAbsent(getLength(xIndex, findYval(xIndex)), new Coordinates(xIndex, findYval(xIndex)));
+      xIndex = xIndex + .1;
+      breakPoints.putIfAbsent(getLength(xIndex, findYval(xIndex)), new Coordinates(xIndex, findYval(xIndex)));
+    }
+  }
+
+  private double findDiff(double index, double size) {
+    if(index<0){
+      return  -1 * (index%size);
+    }
+    else{
+      return size - (index % size);
     }
   }
 

@@ -72,23 +72,23 @@ public class WrapableTurtleImage extends ImageView{
   }
 
   private void calcOffsetX(Double currentLoc, Double screenVal) {
-    if(visualXOffset.doubleValue() + currentLoc  + this.getFitWidth()/2 > screenVal){
-      visualXOffset.set(visualXOffset.doubleValue() - screenVal+this.getFitWidth());
+    if(visualXOffset.doubleValue() + currentLoc  > screenVal){
+      visualXOffset.set(visualXOffset.doubleValue() - screenVal);
       calcOffsetX(currentLoc, screenVal);
     }
-    if(visualXOffset.doubleValue() + currentLoc - this.getFitWidth()/2 <= 0){
-      visualXOffset.set(visualXOffset.doubleValue() + screenVal-this.getFitWidth());
+    if(visualXOffset.doubleValue() + currentLoc <= 0){
+      visualXOffset.set(visualXOffset.doubleValue() + screenVal);
       calcOffsetX(currentLoc, screenVal);
     }
   }
 
   private void calcOffsetY(Double currentLoc, Double screenVal) {
-    if(visualYOffset.doubleValue() + currentLoc + this.getFitHeight()/2 > screenVal){
-      visualYOffset.set(visualYOffset.doubleValue() -  screenVal+this.getFitHeight());
+    if(visualYOffset.doubleValue() + currentLoc > screenVal){
+      visualYOffset.set(visualYOffset.doubleValue() -  screenVal);
       calcOffsetY(currentLoc, screenVal);
     }
-    if(visualYOffset.doubleValue() + currentLoc - this.getFitHeight()/2 <= 0){
-      visualYOffset.set(visualYOffset.doubleValue() +  screenVal-this.getFitHeight());
+    if(visualYOffset.doubleValue() + currentLoc  <= 0){
+      visualYOffset.set(visualYOffset.doubleValue() +  screenVal);
       calcOffsetY(currentLoc, screenVal);
     };
   }

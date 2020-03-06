@@ -31,7 +31,6 @@ public class Turtle implements TurtleInterface {
     private boolean isActive;
     private SimpleIntegerProperty myShapeIndex = new SimpleIntegerProperty();
 
-    private static final double threeSixty = 360;
 
 
     public Turtle(int ID, double xCoor, double yCoor, double orientation){
@@ -57,7 +56,7 @@ public class Turtle implements TurtleInterface {
 
     @Override
     public boolean setLocation(double xCord, double yCord) {
-        if(isActive == false) return isActive;
+        if(!isActive) return isActive;
         Pair<Double, Double> storeCurLoc = new Pair<>(cords.getValue().getX(), cords.getValue().getY());
 
         cords.set(new Coordinates(xCord, yCord));
@@ -83,7 +82,7 @@ public class Turtle implements TurtleInterface {
 
     @Override
     public boolean setAngle(double newAngle) {
-        if(isActive == false) return isActive;
+        if(!isActive) return isActive;
         myAngle.set(newAngle);
         return true;
     }
