@@ -11,7 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
-public class WrappableTurtleImage  extends ImageView{
+public class WrapableTurtleImage extends ImageView{
 
   private static final double TURTLE_SIZE = 80;
   private double lastX;
@@ -21,11 +21,15 @@ public class WrappableTurtleImage  extends ImageView{
   private SimpleDoubleProperty turtleYRelative;
   private SimpleDoubleProperty visualXOffset;
   private SimpleDoubleProperty visualYOffset;
+  private SimpleDoubleProperty centerX;
+  private SimpleDoubleProperty centerY;
   private Pane canvas;
 
-  public WrappableTurtleImage(Turtle turtle, Pane canvas,  SimpleDoubleProperty centerX, SimpleDoubleProperty centerY, SimpleObjectProperty<Image> currentTurtleGif){
+  public WrapableTurtleImage(Turtle turtle, Pane canvas,  SimpleDoubleProperty centerX, SimpleDoubleProperty centerY, SimpleObjectProperty<Image> currentTurtleGif){
     super();
     this.canvas = canvas;
+    this.centerX = centerX;
+    this.centerY = centerY;
     turtleYRelative = new SimpleDoubleProperty(turtle.getY());
     turtleXRelative = new SimpleDoubleProperty(turtle.getX());
     visualXOffset = new SimpleDoubleProperty(0);
@@ -68,23 +72,23 @@ public class WrappableTurtleImage  extends ImageView{
   }
 
   private void calcOffsetX(Double currentLoc, Double screenVal) {
-    if(visualXOffset.doubleValue() + currentLoc  + this.getFitWidth()/2 > screenVal){
-      visualXOffset.set(visualXOffset.doubleValue() - screenVal+this.getFitWidth());
+    if(visualXOffset.doubleValue() + currentLoc  > screenVal){
+      visualXOffset.set(visualXOffset.doubleValue() - screenVal);
       calcOffsetX(currentLoc, screenVal);
     }
-    if(visualXOffset.doubleValue() + currentLoc - this.getFitWidth()/2 <= 0){
-      visualXOffset.set(visualXOffset.doubleValue() + screenVal-this.getFitWidth());
+    if(visualXOffset.doubleValue() + currentLoc <= 0){
+      visualXOffset.set(visualXOffset.doubleValue() + screenVal);
       calcOffsetX(currentLoc, screenVal);
     }
   }
 
   private void calcOffsetY(Double currentLoc, Double screenVal) {
-    if(visualYOffset.doubleValue() + currentLoc + this.getFitHeight()/2 > screenVal){
-      visualYOffset.set(visualYOffset.doubleValue() -  screenVal+this.getFitHeight());
+    if(visualYOffset.doubleValue() + currentLoc > screenVal){
+      visualYOffset.set(visualYOffset.doubleValue() -  screenVal);
       calcOffsetY(currentLoc, screenVal);
     }
-    if(visualYOffset.doubleValue() + currentLoc - this.getFitHeight()/2 <= 0){
-      visualYOffset.set(visualYOffset.doubleValue() +  screenVal-this.getFitHeight());
+    if(visualYOffset.doubleValue() + currentLoc  <= 0){
+      visualYOffset.set(visualYOffset.doubleValue() +  screenVal);
       calcOffsetY(currentLoc, screenVal);
     };
   }
@@ -109,6 +113,13 @@ public class WrappableTurtleImage  extends ImageView{
       }
     };
     return a;
+  }
+
+  public NumberBinding getXLocLines(){
+    return Bindings.add(turtleXRelative, centerX);
+  }
+  public NumberBinding getYLocLines(){
+    return Bindings.add(turtleYRelative, centerY);
   }
 
 }
