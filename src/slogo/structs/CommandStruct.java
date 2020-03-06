@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommandStruct {
-    List<VariableStruct> myVariables;
+    private List<VariableStruct> myVariables; //TODO: make ovservable list
     private List<UserCommandStruct> myUserCommands;
     private String myLanguage;
     private Model myModel;
