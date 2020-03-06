@@ -49,7 +49,7 @@ public class Turtle implements TurtleInterface {
         myAngle = new SimpleDoubleProperty(orientation);
         myVisibilityStatus = new SimpleBooleanProperty(true);
         myHistory =  FXCollections.observableArrayList();
-        Pair<Double, Double> storeCurLoc = new Pair<>(cords.getValue().x, cords.getValue().y);
+        Pair<Double, Double> storeCurLoc = new Pair<>(cords.getValue().getX(), cords.getValue().getY());
         myHistory.add(storeCurLoc);
     }
 
@@ -62,7 +62,7 @@ public class Turtle implements TurtleInterface {
     @Override
     public boolean setLocation(double xCord, double yCord) {
         if(isActive == false) return isActive;
-        Pair<Double, Double> storeCurLoc = new Pair<>(cords.getValue().x, cords.getValue().y);
+        Pair<Double, Double> storeCurLoc = new Pair<>(cords.getValue().getX(), cords.getValue().getY());
 
         cords.set(new Coordinates(xCord, yCord));
 
@@ -72,12 +72,12 @@ public class Turtle implements TurtleInterface {
 
     @Override
     public double getX() {
-        return cords.getValue().x;
+        return cords.getValue().getX();
     }
 
     @Override
     public double getY() {
-        return cords.getValue().y;
+        return cords.getValue().getY();
     }
 
     @Override
@@ -87,7 +87,7 @@ public class Turtle implements TurtleInterface {
 
     @Override
     public boolean setAngle(double newAngle) {
-        if(isActive == false) return false;
+        if(isActive == false) return isActive;
         myAngle.set(newAngle);
         return true;
     }
@@ -104,7 +104,7 @@ public class Turtle implements TurtleInterface {
         myVisibilityStatus.set(true);
         myHistory.clear();
 
-        Pair<Double, Double> storeCurLoc = new Pair<>(cords.getValue().x, cords.getValue().y);
+        Pair<Double, Double> storeCurLoc = new Pair<>(cords.getValue().getX(), cords.getValue().getY());
         myHistory.add(storeCurLoc);
         return true;
     }

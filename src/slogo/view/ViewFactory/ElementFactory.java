@@ -1,6 +1,7 @@
 package slogo.view.ViewFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
 import javax.print.DocFlavor.STRING;
@@ -15,8 +16,8 @@ public class ElementFactory<T> {
   private ViewInterface viewInterface;
   private ArrayList<String> clickedCommands;
 
-  public static ElementFactory startFactory(ControllerInterface c, ViewInterface v, Turtle t, ArrayList<String> cmds){
-    return new ElementFactory(c, v, t, cmds);
+  public static ElementFactory startFactory(ControllerInterface c, ViewInterface v, Turtle t, List<String> cmds){
+    return new ElementFactory(c, v, t, (ArrayList<String>) cmds);
   }
 
   private ElementFactory(ControllerInterface c, ViewInterface v, Turtle t, ArrayList<String> cmds){
