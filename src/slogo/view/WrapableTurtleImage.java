@@ -11,7 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
-public class WrappableTurtleImage  extends ImageView{
+public class WrapableTurtleImage extends ImageView{
 
   private static final double TURTLE_SIZE = 80;
   private double lastX;
@@ -25,7 +25,7 @@ public class WrappableTurtleImage  extends ImageView{
   private SimpleDoubleProperty centerY;
   private Pane canvas;
 
-  public WrappableTurtleImage(Turtle turtle, Pane canvas,  SimpleDoubleProperty centerX, SimpleDoubleProperty centerY, SimpleObjectProperty<Image> currentTurtleGif){
+  public WrapableTurtleImage(Turtle turtle, Pane canvas,  SimpleDoubleProperty centerX, SimpleDoubleProperty centerY, SimpleObjectProperty<Image> currentTurtleGif){
     super();
     this.canvas = canvas;
     this.centerX = centerX;
