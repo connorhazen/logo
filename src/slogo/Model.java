@@ -21,8 +21,13 @@ public class Model implements ModelInterface{
     private static final String LANGUAGE_DEFAULT = "English";
 
     public Model(){
-        commandStruct = new CommandStruct(this); // TODO: Get language from view
+        commandStruct = new CommandStruct(this);
         language = LANGUAGE_DEFAULT;
+    }
+
+    public Model(String lang){
+        commandStruct = new CommandStruct(this);
+        language = lang;
     }
 
     @Override
@@ -43,7 +48,7 @@ public class Model implements ModelInterface{
                 Object obj = cons.newInstance(params);
                 Method method = cls.getMethod("executeCommand", Parser.NOPARAMS);
                 method.invoke(obj);
-            } catch (Exception e) { e.printStackTrace(); throw new UnknownCommandException(e, ERROR_MESSAGES.getString("UnknownCommand") + command); }
+            } catch (Exception e) { throw new UnknownCommandException(e, ERROR_MESSAGES.getString("UnknownCommand") + command); }
         }
         return parsedCommands;
     }

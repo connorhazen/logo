@@ -21,6 +21,7 @@ public class Parser implements ParserInterface{
     private ResourceBundle languageResource;
     private String currentLanguage;
     private CommandStruct commandStruct;
+    private CommandStruct dummyCommandStruct;
 
     private static final Pattern CONSTANT_PATTERN = Pattern.compile("-?[0-9]+\\.?[0-9]*");
     private static final Pattern COMMENT_PATTERN = Pattern.compile("^#.*");
@@ -48,6 +49,7 @@ public class Parser implements ParserInterface{
         argumentStack = new Stack();
         commandStack = new Stack();
         commandStruct = cs;
+        dummyCommandStruct = new CommandStruct(new Model(currentLanguage));
     }
 
 
@@ -85,7 +87,7 @@ public class Parser implements ParserInterface{
                         listCommand += s;
                         argumentStack.push(listCommand);
                         isSlogoList = false; listCommand = ""; beginCount = 0; endCount = 0;
-                    }
+                    } else { listCommand += s + " "; }
                 } else { listCommand += s + " "; }
             }
             else {
@@ -158,7 +160,7 @@ public class Parser implements ParserInterface{
         try {
             Class cls = forName("slogo.commands." + command);
             Constructor cons = cls.getDeclaredConstructor(COMMAND_CLASS_PARAMS);
-            Object params[] = new Object[] {commandStruct, "[ ]", args, DUMMY_TURTLE};
+            Object params[] = new Object[] {dummyCommandStruct, "[ ]", args, DUMMY_TURTLE};
             Object obj = cons.newInstance(params);
             Method method = cls.getDeclaredMethod("execute", EXECUTE_CLASS_PARAMS);
             method.setAccessible(true);
@@ -184,7 +186,7 @@ public class Parser implements ParserInterface{
                         listCommand += s; isSlogoList = false;
                         cmdList.add(listCommand);
                         listCommand = ""; beginCount = 0; endCount = 0;
-                    }
+                    } else { listCommand += s + " "; }
                 } else { listCommand += s + " "; }
             } else { cmdList.add(s); }
         }
