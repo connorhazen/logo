@@ -21,10 +21,11 @@ public class Repeat extends Misc {
     protected double execute(Turtle executeOnTurtle) throws UnknownCommandException, InvalidParameterException {
         double ret = 0;
         double runNumTimes = Double.parseDouble(getArgString(0));
-        String cleanArg = getArgString(1).replace("[","").replace("]","").trim();
+        String cleanArg = getArgString(1).replaceFirst("\\[","").trim();
+        cleanArg = replaceLast(cleanArg, "]", "");
         CommandStruct s = getCommandStruct();
         Model m = s.getModel();
-        Parser p = new Parser("English", s);
+        Parser p = new Parser(m.getLanguage(), s);
 
         for(int i = 0; i < runNumTimes; i++){
             getCommandStruct().getModel().runCommand(cleanArg, executeOnTurtle);
@@ -38,5 +39,10 @@ public class Repeat extends Misc {
         return ret;
     }
 
+    private static String replaceLast(String text, String source, String target) {
+        StringBuilder b = new StringBuilder(text);
+        b.replace(text.lastIndexOf(source), text.lastIndexOf(source) + source.length(), target);
+        return b.toString();
+    }
 
 }

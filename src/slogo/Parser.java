@@ -85,7 +85,7 @@ public class Parser implements ParserInterface{
                         listCommand += s;
                         argumentStack.push(listCommand);
                         isSlogoList = false; listCommand = ""; beginCount = 0; endCount = 0;
-                    }
+                    } else { listCommand += s + " "; }
                 } else { listCommand += s + " "; }
             }
             else {
@@ -164,7 +164,6 @@ public class Parser implements ParserInterface{
             method.setAccessible(true);
             return (double) method.invoke(obj, EXECUTE_PARAMS);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new InvalidParameterException(e, ERROR_MESSAGES.getString("InvalidParameter") + cmd);
         }
     }
@@ -184,7 +183,7 @@ public class Parser implements ParserInterface{
                         listCommand += s; isSlogoList = false;
                         cmdList.add(listCommand);
                         listCommand = ""; beginCount = 0; endCount = 0;
-                    }
+                    } else { listCommand += s + " "; }
                 } else { listCommand += s + " "; }
             } else { cmdList.add(s); }
         }
