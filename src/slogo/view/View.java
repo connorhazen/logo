@@ -208,7 +208,6 @@ public class View implements ViewInterface {
     //drawer.animate(animationSpeed.valueProperty(), animationSpeed.getMax())
     drawer.animate();
     printHistory(history);
-    setBackGroundColor(currentTurtle.getBackgroundColor());
   }
 
   private void changeInputBox(String replace){
