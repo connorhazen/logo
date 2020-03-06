@@ -35,7 +35,7 @@ public class For extends Misc{
             getCommandStruct().getModel().runCommand(getListString1(), executeOnTurtle);
 
             if(i >= end - increment ){
-                ret = lastRetVal(getListString1());
+                ret = retVal(getListString1());
             }
         }
         return ret;

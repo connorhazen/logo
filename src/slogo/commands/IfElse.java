@@ -20,12 +20,12 @@ public class IfElse extends Misc {
         if(getArgsDouble().get(0) != 0){ //TODO: refactor
             getCommandStruct().getModel().runCommand(getListString1(), executeOnTurtle);
             if(getListString1().length() > 1){  // TODO: change to not hardcode
-                ret = lastRetVal(getListString1());
+                ret = retVal(getListString1());
             }
         }else{
             getCommandStruct().getModel().runCommand(getListString2(), executeOnTurtle);
             if(getListString2().length() > 1){  // TODO: change to not hardcode
-                ret = lastRetVal(getListString2());
+                ret = retVal(getListString2());
             }
         }
 
