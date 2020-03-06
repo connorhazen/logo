@@ -53,7 +53,7 @@ public class ControllerInitial implements ControllerInterface {
 
   @Override
   public void setLanguage(String title) {
-    model.changeLanguage(title);
+    model.getParser().changeLanguage(title);
     System.out.println("Language: " + title);
   }
 }

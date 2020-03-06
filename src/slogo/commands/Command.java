@@ -12,8 +12,6 @@ public abstract class Command implements CommandInterface {
     private static String myText;
     private List<String> myArgs;
     private CommandStruct myCommandStruct;
-    //private List<Turtle> myTurtles;
-    private Turtle myTurtle;
 
     private int myNumArgs;
 
@@ -21,31 +19,21 @@ public abstract class Command implements CommandInterface {
         myText = text;
         myArgs = args;
         myCommandStruct = commandStruct;
-        myTurtle = toldTurtle;
-        //myTurtles = toldTurtles;
+        myCommandStruct.addTurtle(toldTurtle);
         //TODO: pass around updated commandStruct object
     }
 
-//    public double executeAllToldTurtles() {
-//        double retValue = -1.0;
-//
-//        if (this instanceof TurtleSpecificCommand) {
-//            for (Turtle currentTurtle : myTurtles) {
-//                retValue = execute(currentTurtle);
-//            }
-//        } else {
-//            retValue = execute(null);
-//        }
-//        return retValue;
-//    }
 
     public double executeCommand() throws UnknownCommandException, InvalidParameterException {
         double retValue = -1.0;
 
-        if (this instanceof TurtleSpecificCommand || this instanceof Repeat) {
-            retValue = execute(myTurtle);
-        }
-        else {
+        if (this instanceof TurtleSpecificCommand) {
+            for(Turtle toldTurtle : getCommandStruct().getTurtleSet()){
+                getCommandStruct().setActiveTurtle(toldTurtle);
+                retValue = execute(toldTurtle);
+            }
+
+        } else {
             retValue = execute(null);
         }
         return retValue;
