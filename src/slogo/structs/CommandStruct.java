@@ -1,16 +1,18 @@
 package slogo.structs;
 
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.paint.Color;
 import slogo.Model;
+import slogo.view.Turtle;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class CommandStruct {
     List<VariableStruct> myVariables;
     private List<UserCommandStruct> myUserCommands;
     private String myLanguage;
     private Model myModel;
-    private Map<Integer,Color> myColorMap = new HashMap<>();
+    private Map<Integer, Color> myColorMap = new HashMap<>();
     private Map<Integer, Turtle> myTurtleMap = new HashMap<>();
     private Set<Turtle> myTurtleSet = new HashSet<>();
     private SimpleObjectProperty<Turtle> myActiveTurtle = new SimpleObjectProperty<>();

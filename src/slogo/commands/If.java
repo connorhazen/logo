@@ -19,7 +19,7 @@ public class If extends Misc{
         if(getArgsDouble().get(0) != 0){
             getCommandStruct().getModel().runCommand(getListString1(), executeOnTurtle);
             if(getListString1().length() > 1){  // TODO: change to not hardcode
-                ret = lastRetVal(getListString1());
+                ret = retVal(getListString1());
             }
         }
 
