@@ -1,5 +1,6 @@
 package slogo.commands;
 
+import slogo.Parser;
 import slogo.exceptions.InvalidParameterException;
 import slogo.structs.CommandStruct;
 import slogo.view.Turtle;
@@ -33,8 +34,11 @@ public abstract class BasicSyntax extends Command {
         return null; // unreachable statement
     }
 
+
     protected double retVal(String basicCmd) throws InvalidParameterException {
-        return getCommandStruct().getModel().getParser().getCommandRetValue(basicCmd);
+        Parser p = new Parser(getCommandStruct().getModel().getLanguage(), getCommandStruct());
+        return p.getCommandRetValue(basicCmd);
+
     }
 
 
