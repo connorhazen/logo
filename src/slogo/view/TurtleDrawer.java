@@ -72,35 +72,20 @@ public class TurtleDrawer {
   }
 
   public void animate(DoubleProperty speed, double maxSpeed) {
-    if (!currentTrans.isEmpty()){
-      Animation toPlay = currentTrans.poll();
-      if(speed.getValue()==maxSpeed){
-        toPlay.jumpTo(toPlay.getTotalDuration());
-        toPlay.play();
-      }
-      else{
-        toPlay.setRate(speed.getValue());
-        toPlay.play();
-      }
-      toPlay.setOnFinished(e -> animate(speed, maxSpeed));
-    }
-  }
-
-  //Will not be used in final version
-  public void animate(){
     if(running){
       return;
     }
     running = true;
-    play();
+    play(speed, maxSpeed);
   }
+
 
   public void changeImage(String file) {
     String path = "data/turtleImages/" + file + ".gif";
     setImage(path);
   }
 
-  private void play(){
+  private void play(DoubleProperty speed, double maxSpeed){
     Group lines = new Group();
     elements.getChildren().add(lines);
     NumberBinding turtleX = turtleNode.getXLocLines();
@@ -116,15 +101,24 @@ public class TurtleDrawer {
     turtleY.addListener(lis);
     if(!currentTrans.isEmpty()){
       Animation toPlay = currentTrans.poll();
-      toPlay.setRate(1);
+     setRate(toPlay, speed, maxSpeed);
       toPlay.setOnFinished(e -> {
         turtleX.removeListener(lis);
         turtleY.removeListener(lis);
         lines.getChildren().add(new WrapableLine(startLocX, startLocY, turtleX.doubleValue(), turtleY.doubleValue(), canvas));
         checkDoneAnimating();
-        play();
+        play(speed, maxSpeed);
       });
       toPlay.play();
+    }
+  }
+
+  private void setRate(Animation toPlay, DoubleProperty speed, double maxSpeed) {
+    if(speed.getValue() == maxSpeed){
+      toPlay.jumpTo(ANIMATION_DURATION);
+    }
+    else{
+      toPlay.setRate(speed.getValue());
     }
   }
 

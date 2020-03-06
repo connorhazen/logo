@@ -7,6 +7,7 @@ import java.util.List;
 
 import java.util.Set;
 import javafx.application.Application;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -205,8 +206,9 @@ public class View implements ViewInterface {
 
   @Override
   public void updateView(List<String> history) {
-    //drawer.animate(animationSpeed.valueProperty(), animationSpeed.getMax())
-    drawer.animate();
+    SimpleDoubleProperty tempVal = new SimpleDoubleProperty(4);
+
+    drawer.animate(tempVal, 4);
     printHistory(history);
     setBackGroundColor(currentTurtle.getBackgroundColor());
   }
