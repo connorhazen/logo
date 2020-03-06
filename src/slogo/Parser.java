@@ -30,7 +30,7 @@ public class Parser implements ParserInterface{
     private static final Turtle DUMMY_TURTLE = new Turtle(0,0,0,0);
     public static final Class<?> NOPARAMS[] = {};
     public static final Class<?> COMMAND_CLASS_PARAMS[] = new Class<?>[] {CommandStruct.class, String.class, List.class, Turtle.class};
-    private static final Object COMMAND_PARAMS[] = new Object[] {new CommandStruct(null), "", new ArrayList<>(), DUMMY_TURTLE};
+    private static final Object COMMAND_PARAMS[] = new Object[] {new CommandStruct("", null), "", new ArrayList<>(), DUMMY_TURTLE};
     private static final Class<?> EXECUTE_CLASS_PARAMS[] = new Class<?>[] {Turtle.class};
     private static final Object EXECUTE_PARAMS[] = new Object[] {DUMMY_TURTLE};
     private static final String LIST_BEGIN_SYMBOL = "[";
