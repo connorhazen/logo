@@ -15,16 +15,16 @@ import static java.lang.Class.forName;
 
 public class Parser implements ParserInterface{
     private Map<String, String> savedCommands;
-    private Pattern integerPattern;
     private Stack argumentStack;
     private Stack commandStack;
     private Map<String, String> commandMap;
     private ResourceBundle languageResource;
 
+    private static final Pattern CONSTANT_PATTERN = Pattern.compile("-?[0-9]+\\.?[0-9]*");
+    private static final Pattern COMMENT_PATTERN = Pattern.compile("^#.*");
     private static final String SAVE_SYMBOL = "=";
     public static final int COMMAND_INDEX = 0;
     private static final int SAVE_SYMBOL_INDEX = 1;
-    private static final String DOUBLE_PATTERN_REGEX = "-?[0-9]*(\\.[0-9]*)?";
     private static final Turtle DUMMY_TURTLE = new Turtle(0,0,0,0);
     public static final Class<?> NOPARAMS[] = {};
     public static final Class<?> COMMAND_CLASS_PARAMS[] = new Class<?>[] {CommandStruct.class, String.class, List.class, Turtle.class};
@@ -40,7 +40,6 @@ public class Parser implements ParserInterface{
     public Parser() {
         savedCommands = new HashMap<>();
         commandMap = new HashMap<>();
-        integerPattern = Pattern.compile(DOUBLE_PATTERN_REGEX);
         languageResource = ResourceBundle.getBundle(LANGUAGE_PACKAGE + LANGUAGE_DEFAULT);
         getCommandMap();
         argumentStack = new Stack();
@@ -49,12 +48,24 @@ public class Parser implements ParserInterface{
 
 
     public List<String> parseCommand(String cmd) throws UnknownCommandException, InvalidParameterException {
-        String cleanCommand = cmd.replace(System.getProperty("line.separator"), " ");
+        String cleanCommand = removeComments(cmd);
+        cleanCommand = cleanCommand.trim();
         String[] parsedCommand = cleanCommand.split(" ");
         if(parsedCommand.length > SAVE_SYMBOL_INDEX && parsedCommand[SAVE_SYMBOL_INDEX].equals(SAVE_SYMBOL)){
             saveCommand(parsedCommand);
         }
         return convertToBasicCommands(parsedCommand);
+    }
+
+    private String removeComments(String cmd){
+        String noComments = "";
+        String[] cmdByLine = cmd.split(System.getProperty("line.separator"));
+        for(String line : cmdByLine){
+            if(line.equals("")) { continue; }
+            if(COMMENT_PATTERN.matcher(String.valueOf(line.charAt(0))).matches()){ continue; }
+            else { noComments += (line + " "); }
+        }
+        return noComments;
     }
 
     public List<String> convertToBasicCommands(String[] originalCmd) throws UnknownCommandException, InvalidParameterException {
@@ -74,7 +85,7 @@ public class Parser implements ParserInterface{
                 } else { listCommand += s + " "; }
             }
             else {
-                if (isInteger(s)) { argumentStack.push(s); }
+                if (isConstant(s)) { argumentStack.push(s); }
                 else if (commandMap.containsKey(s)) { commandStack.push(s); }
                 else { throw new UnknownCommandException("Command not recognized: " + s); } // TODO: Error? OR if commandMap does not contain user-defined commands/variable, check if it's one of those
             }
@@ -164,9 +175,9 @@ public class Parser implements ParserInterface{
         savedCommands.put(parsedCommand[COMMAND_INDEX], commandToSave);
     }
 
-    private boolean isInteger(String s){
+    private boolean isConstant(String s){
         if(s == null) {return false;}
-        return integerPattern.matcher(s).matches();
+        return CONSTANT_PATTERN.matcher(s).matches();
     }
 
     public Map<String, String> getCommandMap(){
@@ -187,12 +198,5 @@ public class Parser implements ParserInterface{
         commandMap.clear();
         languageResource = ResourceBundle.getBundle(LANGUAGE_PACKAGE + language);
         getCommandMap();
-    }
-
-    /**
-     * Returns an immutable map containing the saved commands which can be displayed in the view.
-     */
-    public Map<String, String> getSavedCommands(){
-        return Collections.unmodifiableMap(savedCommands);
     }
 }
