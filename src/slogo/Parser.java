@@ -30,7 +30,7 @@ public class Parser implements ParserInterface{
     private static final Turtle DUMMY_TURTLE = new Turtle(0,0,0,0);
     public static final Class<?> NOPARAMS[] = {};
     public static final Class<?> COMMAND_CLASS_PARAMS[] = new Class<?>[] {CommandStruct.class, String.class, List.class, Turtle.class};
-    private static final Object COMMAND_PARAMS[] = new Object[] {new CommandStruct(null), "", new ArrayList<>(), DUMMY_TURTLE};
+    private static final Object COMMAND_PARAMS[] = new Object[] {new CommandStruct(null), "[ ]", new ArrayList<>(), DUMMY_TURTLE};
     private static final Class<?> EXECUTE_CLASS_PARAMS[] = new Class<?>[] {Turtle.class};
     private static final Object EXECUTE_PARAMS[] = new Object[] {DUMMY_TURTLE};
     private static final String LIST_BEGIN_SYMBOL = "[";
@@ -158,12 +158,13 @@ public class Parser implements ParserInterface{
         try {
             Class cls = forName("slogo.commands." + command);
             Constructor cons = cls.getDeclaredConstructor(COMMAND_CLASS_PARAMS);
-            Object params[] = new Object[] {commandStruct, "", args, DUMMY_TURTLE};
+            Object params[] = new Object[] {commandStruct, "[ ]", args, DUMMY_TURTLE};
             Object obj = cons.newInstance(params);
             Method method = cls.getDeclaredMethod("execute", EXECUTE_CLASS_PARAMS);
             method.setAccessible(true);
             return (double) method.invoke(obj, EXECUTE_PARAMS);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new InvalidParameterException(e, ERROR_MESSAGES.getString("InvalidParameter") + cmd);
         }
     }
