@@ -10,6 +10,10 @@ public class CommandStruct {
     private List<UserCommandStruct> myUserCommands;
     private String myLanguage;
     private Model myModel;
+    private Map<Integer,Color> myColorMap = new HashMap<>();
+    private Map<Integer, Turtle> myTurtleMap = new HashMap<>();
+    private Set<Turtle> myTurtleSet = new HashSet<>();
+    private SimpleObjectProperty<Turtle> myActiveTurtle = new SimpleObjectProperty<>();
 
     public CommandStruct(String language, Model inputModel) {
         myVariables = new ArrayList<VariableStruct>();

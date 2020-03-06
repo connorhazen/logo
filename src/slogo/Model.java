@@ -43,7 +43,7 @@ public class Model implements ModelInterface{
                 Object obj = cons.newInstance(params);
                 Method method = cls.getMethod("executeCommand", Parser.NOPARAMS);
                 method.invoke(obj);
-            } catch (Exception e) { throw new UnknownCommandException(e, ERROR_MESSAGES.getString("UnknownCommand") + command); }
+            } catch (Exception e) { e.printStackTrace(); throw new UnknownCommandException(e, ERROR_MESSAGES.getString("UnknownCommand") + command); }
         }
         return parsedCommands;
     }

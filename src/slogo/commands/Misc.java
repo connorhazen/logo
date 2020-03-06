@@ -103,7 +103,7 @@ public abstract class Misc extends Command {
         return input.substring(commandStartIndex);
     }
 
-    protected double lastRetVal(String basicCmd) throws InvalidParameterException {
+    protected double retVal(String basicCmd) throws InvalidParameterException {
         Parser p = new Parser(getCommandStruct().getModel().getLanguage(), getCommandStruct());
         return p.getCommandRetValue(basicCmd);
     }
