@@ -1,5 +1,9 @@
 package slogo.structs;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
+import javafx.scene.paint.Color;
 import slogo.Model;
 
 import java.util.ArrayList;
@@ -10,6 +14,7 @@ public class CommandStruct {
     private List<UserCommandStruct> myUserCommands;
     private String myLanguage;
     private Model myModel;
+    private ObservableMap<Integer,Color> myColorMap = FXCollections.observableHashMap();
 
     public CommandStruct(String language, Model inputModel) {
         myVariables = new ArrayList<VariableStruct>();
@@ -20,6 +25,33 @@ public class CommandStruct {
 
     public Model getModel(){
         return myModel;
+    }
+
+    public Color getColor(int index){
+        return myColorMap.get(index);
+    }
+
+    public boolean colorKeyExists(int index){
+        return myColorMap.containsKey(index);
+    }
+
+    public boolean setColor(int index, int r, int g, int b){
+        r = castIntInRange(r);
+        g = castIntInRange(g);
+        b = castIntInRange(b);
+        myColorMap.put(index, Color.rgb(r, g, b));
+
+        return true;
+    }
+
+    private int castIntInRange(int val){
+        if(val < 0){
+            return 0;
+        }
+        if(val > 255){
+            return 255;
+        }
+        return val;
     }
 
     public List<VariableStruct> getVariables() {
