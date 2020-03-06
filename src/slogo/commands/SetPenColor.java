@@ -1,5 +1,6 @@
 package slogo.commands;
 
+import javafx.scene.paint.Color;
 import slogo.exceptions.InvalidParameterException;
 import slogo.exceptions.UnknownCommandException;
 import slogo.structs.CommandStruct;
@@ -7,8 +8,8 @@ import slogo.view.Turtle;
 
 import java.util.List;
 
-public class SetBackgroundColor extends Misc {
-    public SetBackgroundColor(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
+public class SetPenColor extends TurtleCommand {
+    public SetPenColor(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
         super(commandStruct, text, args, toldTurtle);
         setMyNumArgs(1);
     }
@@ -18,9 +19,11 @@ public class SetBackgroundColor extends Misc {
         int index = (int) Math.round(getArgsDouble().get(0));
         boolean indexExists = this.getCommandStruct().colorKeyExists(index);
         if(indexExists){
-            executeOnTurtle.setBackgroundColor(this.getCommandStruct().getColor(index));
+            executeOnTurtle.getPen().setPenColorIndex(index);
+            executeOnTurtle.getPen().setColor(this.getCommandStruct().getColor(index));
             return index;
         }
         return 0;
+
     }
 }

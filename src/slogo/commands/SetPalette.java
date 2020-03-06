@@ -7,20 +7,22 @@ import slogo.view.Turtle;
 
 import java.util.List;
 
-public class SetBackgroundColor extends Misc {
-    public SetBackgroundColor(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
+public class SetPalette extends Misc {
+    public SetPalette(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
         super(commandStruct, text, args, toldTurtle);
-        setMyNumArgs(1);
+        setMyNumArgs(4);
     }
 
     @Override
     protected double execute(Turtle executeOnTurtle) throws UnknownCommandException, InvalidParameterException {
         int index = (int) Math.round(getArgsDouble().get(0));
-        boolean indexExists = this.getCommandStruct().colorKeyExists(index);
-        if(indexExists){
-            executeOnTurtle.setBackgroundColor(this.getCommandStruct().getColor(index));
-            return index;
-        }
-        return 0;
+        int r = (int) Math.round(getArgsDouble().get(1));
+        int g = (int) Math.round(getArgsDouble().get(2));
+        int b = (int) Math.round(getArgsDouble().get(3));
+
+        this.getCommandStruct().setColor(index, r, g, b);
+
+        return index;
+
     }
 }

@@ -21,8 +21,13 @@ public class Model implements ModelInterface{
     private static final String LANGUAGE_DEFAULT = "English";
 
     public Model(){
+        commandStruct = new CommandStruct(this);
         language = LANGUAGE_DEFAULT;
-        commandStruct = new CommandStruct(language, this);
+    }
+
+    public Model(String lang){
+        commandStruct = new CommandStruct(this);
+        language = lang;
     }
 
     @Override
