@@ -140,14 +140,9 @@ public abstract class Misc extends Command {
         return retList;
     }
 
-<<<<<<< src/slogo/commands/Misc.java
-    protected double lastRetVal(String basicCmd) throws InvalidParameterException {
+    protected double retVal(String basicCmd) throws InvalidParameterException {
         Parser p = new Parser(getCommandStruct().getModel().getLanguage(), getCommandStruct());
         return p.getCommandRetValue(basicCmd);
-=======
-    protected double retVal(String basicCmd) throws InvalidParameterException {
-        return getCommandStruct().getModel().getParser().getCommandRetValue(basicCmd);
->>>>>>> src/slogo/commands/Misc.java
     }
 
     protected List<Double> getLoopConstants(){ //TODO: rename
