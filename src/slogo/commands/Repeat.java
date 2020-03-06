@@ -12,13 +12,13 @@ public class Repeat extends Misc {
 
     public Repeat(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
         super(commandStruct, text, args, toldTurtle);
-        setMyNumArgs(0);
+        setMyNumArgs(1);
     }
 
     @Override
     protected double execute(Turtle executeOnTurtle) throws UnknownCommandException, InvalidParameterException {
         double ret = 0;
-        double runNumTimes = retVal(getExpression());
+        double runNumTimes = getArgsDouble().get(0);
         for(int i = 0; i < runNumTimes; i++){
             getCommandStruct().getModel().runCommand(getListString1(), executeOnTurtle);
 
