@@ -1,18 +1,17 @@
 package slogo.commands;
 
-
+import slogo.Parser;
 import slogo.exceptions.UnknownCommandException;
 import slogo.view.Turtle;
 import slogo.exceptions.InvalidParameterException;
 
 import slogo.structs.CommandStruct;
-
+import java.util.Collections;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-//TODO: implement looping mechanism
 public abstract class Misc extends Command {
     private static final String listBegin = "[";
     private static final String listEnd = "]";
@@ -141,8 +140,14 @@ public abstract class Misc extends Command {
         return retList;
     }
 
+<<<<<<< src/slogo/commands/Misc.java
+    protected double lastRetVal(String basicCmd) throws InvalidParameterException {
+        Parser p = new Parser(getCommandStruct().getModel().getLanguage(), getCommandStruct());
+        return p.getCommandRetValue(basicCmd);
+=======
     protected double retVal(String basicCmd) throws InvalidParameterException {
         return getCommandStruct().getModel().getParser().getCommandRetValue(basicCmd);
+>>>>>>> src/slogo/commands/Misc.java
     }
 
     protected List<Double> getLoopConstants(){ //TODO: rename
