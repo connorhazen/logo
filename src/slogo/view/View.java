@@ -43,7 +43,7 @@ public class View implements ViewInterface {
   private TextArea inputBox;
   private CommandHistoryView boxHistory;
   private ArrayList<String> clickedCommands;
-  private Color myColor;
+  protected Color myColor;
 
   public View(ControllerInterface cont, Stage primaryStage, Turtle turtle){
     clickedCommands = new ArrayList<>();
@@ -91,23 +91,12 @@ public class View implements ViewInterface {
     BorderPaneElement left = factory.getNode("CommandView", BorderPaneLocation.LEFT);
     BorderPaneElement center = factory.getNode("CanvasView", BorderPaneLocation.CENTER, canvas);
 
-    List<BorderPaneElement> borderList = Arrays.asList(top, right, bottom, left, center);
-
     borderPane.setTop(top.getElement());
     borderPane.setRight(right.getElement());
     borderPane.setBottom(bottom.getElement());
     borderPane.setLeft(left.getElement());
     borderPane.setCenter(center.getElement());
 
-    for(int i = 0; i < 4; i++){
-      Node n = borderPane.getChildren().get(i);
-      BorderPaneElement bpe = borderList.get(i);
-
-      n.setOnMouseReleased(new ElementMove(borderPane, borderList, n, bpe));
-
-
-
-    }
     return borderPane;
   }
 
