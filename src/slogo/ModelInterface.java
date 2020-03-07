@@ -35,7 +35,16 @@ public interface ModelInterface{
    */
   String getLanguage();
 
+  /**
+   * This method makes a properties file containing variables and commands from the current Slogo run
+   * that can be loaded in a future run
+   * @param name String containing the path and name of file to be saved to
+   */
   void saveUserDefined(String name) throws IOException;
 
+  /**
+   * This method loads variables and commands from a properties file to be used in the current Slogo run
+   * @param propFileName String containing the name of the properties file to load from
+   */
   void loadUserDefined(String propFileName);
 }
