@@ -8,7 +8,7 @@ import slogo.view.Turtle;
 import slogo.view.wrapableObjects.WrapableTurtleImage;
 
 public class MoveAnimation implements TurtleAnimation {
-  private Turtle turtle;
+
   private WrapableTurtleImage viewTurtle;
   private double lastX;
   private double lastY;
@@ -16,7 +16,6 @@ public class MoveAnimation implements TurtleAnimation {
   private double endY;
   public MoveAnimation(Turtle turtle, WrapableTurtleImage viewTurtle){
     this.viewTurtle = viewTurtle;
-    this.turtle = turtle;
     lastX = viewTurtle.getLastX();
     lastY = viewTurtle.getLastY();
     endX = turtle.getX();
@@ -36,7 +35,7 @@ public class MoveAnimation implements TurtleAnimation {
   }
 
   private Transition createMoveAnimation(Duration duration, double startX, double startY, double xCord, double yCord) {
-    Transition a  = new Transition() {
+    return new Transition() {
       {
         setCycleDuration(duration);
       }
@@ -46,7 +45,6 @@ public class MoveAnimation implements TurtleAnimation {
         viewTurtle.setTurtleYRelative(startY+ yCord*frac);
       }
     };
-    return a;
   }
 
 }

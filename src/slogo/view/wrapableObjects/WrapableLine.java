@@ -3,11 +3,9 @@ package slogo.view.wrapableObjects;
 import java.util.Map;
 import java.util.TreeMap;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Line;
 import slogo.view.Coordinates;
 import slogo.view.PenInterface;
 

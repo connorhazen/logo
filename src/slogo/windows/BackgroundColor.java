@@ -2,10 +2,8 @@ package slogo.windows;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.stage.Stage;
-import slogo.ControllerInterface;
 import slogo.view.View;
 import slogo.view.ViewInterface;
 

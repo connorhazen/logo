@@ -2,10 +2,7 @@ package slogo.windows;
 
 import java.io.File;
 
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
 
 import slogo.ControllerInterface;
 

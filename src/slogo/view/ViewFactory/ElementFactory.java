@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
-import javax.print.DocFlavor.STRING;
 import slogo.ControllerInterface;
 import slogo.view.BorderPaneLocation;
 import slogo.view.Turtle;

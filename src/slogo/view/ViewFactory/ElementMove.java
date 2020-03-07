@@ -5,7 +5,6 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import slogo.view.BorderPaneLocation;
 
 public class ElementMove implements EventHandler<MouseEvent> {
   private BorderPane borderPane;

@@ -7,13 +7,12 @@ import slogo.view.Turtle;
 import slogo.view.wrapableObjects.WrapableTurtleImage;
 
 public class RotateAnimation implements TurtleAnimation {
-  private Turtle turtle;
+
   private WrapableTurtleImage viewTurtle;
   private double angle;
 
   public RotateAnimation(Turtle turtle, WrapableTurtleImage viewTurtle){
     this.viewTurtle = viewTurtle;
-    this.turtle = turtle;
     angle = turtle.getAngle() + 90;
   }
 

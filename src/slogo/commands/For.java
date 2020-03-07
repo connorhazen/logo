@@ -6,10 +6,7 @@ import slogo.structs.VariableStruct;
 import slogo.view.Turtle;
 import slogo.structs.CommandStruct;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 //TODO: implement execute
