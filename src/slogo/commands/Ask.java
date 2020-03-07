@@ -28,7 +28,8 @@ public class Ask extends Misc{
 
         for(double id : idList){
             int intID = (int) Math.round(id);
-            executeOnTurtlesSet.add(getCommandStruct().getTurtle(intID));
+            Turtle currentTurtle = getCommandStruct().getTurtle(intID);
+            executeOnTurtlesSet.add(currentTurtle);
         }
 
         getCommandStruct().setTurtleSet(executeOnTurtlesSet);

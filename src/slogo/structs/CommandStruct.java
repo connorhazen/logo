@@ -15,11 +15,15 @@ public class CommandStruct {
     private Map<Integer, Turtle> myTurtleMap = new HashMap<>();
     private Set<Turtle> myTurtleSet = new HashSet<>();
     private SimpleObjectProperty<Turtle> myActiveTurtle = new SimpleObjectProperty<>();
+    private int myPenColor = 1;
+    private int myPenSize = 3;
+    private int myShape = 1;
 
     public CommandStruct(Model inputModel) {
         myVariables = new ArrayList<VariableStruct>();
         myUserCommands = new ArrayList<UserCommandStruct>();
         myModel = inputModel;
+        setColor(1, 0, 0, 0);
 
     }
 
@@ -35,10 +39,19 @@ public class CommandStruct {
         return myModel;
     }
 
+    public boolean turtleExists(int index){
+        return myTurtleMap.containsKey(index);
+    }
+
+
 
     public Turtle getTurtle(int index){
         if(!myTurtleMap.containsKey(index)){
-            myTurtleMap.put(index, new Turtle(index,0,0,-90));
+            Turtle newTurtle = new Turtle(index, 0, 0, -90);
+            newTurtle.getPen().setColor(myColorMap.get(myPenColor));
+            newTurtle.getPen().setSize(myPenSize);
+            newTurtle.setShape(myShape);
+            myTurtleMap.put(index, newTurtle);
         }
         return myTurtleMap.get(index);
     }
@@ -81,6 +94,18 @@ public class CommandStruct {
         myColorMap.put(index, Color.rgb(r, g, b));
 
         return true;
+    }
+
+    public void setPenColor(int index){
+        myPenColor = index;
+    }
+
+    public void setPenSize(int size){
+        myPenSize = size;
+    }
+
+    public void setPenShape(int index){
+        myShape = index;
     }
 
     private int castIntInRange(int val){
