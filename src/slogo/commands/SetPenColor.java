@@ -1,6 +1,5 @@
 package slogo.commands;
 
-import javafx.scene.paint.Color;
 import slogo.exceptions.InvalidParameterException;
 import slogo.exceptions.UnknownCommandException;
 import slogo.structs.CommandStruct;

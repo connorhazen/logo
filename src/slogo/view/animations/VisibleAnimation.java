@@ -1,18 +1,18 @@
-package slogo.view;
+package slogo.view.animations;
 
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
-import javafx.animation.RotateTransition;
 import javafx.util.Duration;
+import slogo.view.Turtle;
+import slogo.view.wrapableObjects.WrapableTurtleImage;
 
 public class VisibleAnimation implements TurtleAnimation {
-  private Turtle turtle;
+
   private WrapableTurtleImage viewTurtle;
   private boolean visible;
 
   public VisibleAnimation(Turtle turtle, WrapableTurtleImage viewTurtle){
     this.viewTurtle = viewTurtle;
-    this.turtle = turtle;
     visible = turtle.getVisibilityStatus();
 
   }

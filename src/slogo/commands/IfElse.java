@@ -1,5 +1,7 @@
 package slogo.commands;
 
+import slogo.Model;
+import slogo.Parser;
 import slogo.view.Turtle;
 import slogo.exceptions.InvalidParameterException;
 import slogo.exceptions.UnknownCommandException;
@@ -16,16 +18,21 @@ public class IfElse extends Misc {
     @Override
     protected double execute(Turtle executeOnTurtle) throws UnknownCommandException, InvalidParameterException {
         double ret = 0;
+        CommandStruct s = getCommandStruct();
+        Model m = s.getModel();
+        Parser p = new Parser(m.getLanguage(), s);
 
         if(getArgsDouble().get(0) != 0){ //TODO: refactor
             getCommandStruct().getModel().runCommand(getListString1(), executeOnTurtle);
-            if(getListString1().length() > 1){  // TODO: change to not hardcode
-                ret = retVal(getListString1());
+            if(getListString1().length() > 1){
+                List<String> parsed = p.parseCommand(getListString1());
+                ret = p.getCommandRetValue(parsed.get(parsed.size()-1));
             }
         }else{
             getCommandStruct().getModel().runCommand(getListString2(), executeOnTurtle);
-            if(getListString2().length() > 1){  // TODO: change to not hardcode
-                ret = retVal(getListString2());
+            if(getListString2().length() > 1){
+                List<String> parsed = p.parseCommand(getListString2());
+                ret = p.getCommandRetValue(parsed.get(parsed.size()-1));
             }
         }
 

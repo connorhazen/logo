@@ -1,7 +1,5 @@
-package slogo.view;
+package slogo.view.wrapableObjects;
 
-import javafx.animation.Animation;
-import javafx.animation.Transition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -9,7 +7,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.util.Duration;
+import slogo.view.Turtle;
 
 public class WrapableTurtleImage extends ImageView{
 
@@ -21,15 +19,11 @@ public class WrapableTurtleImage extends ImageView{
   private SimpleDoubleProperty turtleYRelative;
   private SimpleDoubleProperty visualXOffset;
   private SimpleDoubleProperty visualYOffset;
-  private SimpleDoubleProperty centerX;
-  private SimpleDoubleProperty centerY;
   private Pane canvas;
 
   public WrapableTurtleImage(Turtle turtle, Pane canvas,  SimpleDoubleProperty centerX, SimpleDoubleProperty centerY, SimpleObjectProperty<Image> currentTurtleGif){
     super();
     this.canvas = canvas;
-    this.centerX = centerX;
-    this.centerY = centerY;
     turtleYRelative = new SimpleDoubleProperty(turtle.getY());
     turtleXRelative = new SimpleDoubleProperty(turtle.getX());
     visualXOffset = new SimpleDoubleProperty(0);
@@ -83,7 +77,7 @@ public class WrapableTurtleImage extends ImageView{
     if(visualYOffset.doubleValue() + currentLoc  <= 0){
       visualYOffset.set(visualYOffset.doubleValue() +  screenVal);
       calcOffsetY(currentLoc, screenVal);
-    };
+    }
   }
 
   private void makeInitialTurtle(

@@ -85,36 +85,6 @@ public abstract class Misc extends Command {
         return text.substring(listBeginIndex + 1, listEndIndex);
     }
 
-//    protected void populateBasicCommands(){
-//        myBasicCommands = getCommandStruct().getModel().runCommand()
-//    }
-
-//    protected String lastCommandInString(String input){ // find last "[" and then find the begining of a char substring
-//        //TODO: THIS IS SOME BrOKEN SHEIT, NEED TO FIX
-//        int commandStartIndex = 0;
-//        int listBeginIndex = input.indexOf(listEnd);
-//        if(listBeginIndex < 0){
-//            listBeginIndex = 0;
-//        }
-//        for(int i = listBeginIndex; i < input.length(); i++){
-//            if(input.charAt(i) == listEnd.charAt(0)){
-//                listBeginIndex = i;
-//            }
-//        }
-//        // now listBeginIndex points to the last occurance of "]" in the string
-//        // itterate backwards through the string now to find the beginning of the char substring that indicates a command
-//        for(int i = listBeginIndex; i >= 0; i--){
-//            if(commandStartIndex != 0){
-//                if(input.charAt(i) == ' '){
-//                    break;
-//                }
-//            }
-//            if(input.charAt(i) == listBegin.charAt(0)){
-//                commandStartIndex = i;
-//            }
-//        }
-//        return input.substring(commandStartIndex);
-//    }
 
     protected List<String> parseStringIntoVar(String string){
         List<String> retList = new ArrayList<>();
@@ -146,6 +116,12 @@ public abstract class Misc extends Command {
         Parser p = new Parser(getCommandStruct().getModel().getLanguage(), getCommandStruct());
         return p.getCommandRetValue(basicCmd);
 
+    }
+
+    protected static String replaceLast(String text, String source, String target) {
+        StringBuilder b = new StringBuilder(text);
+        b.replace(text.lastIndexOf(source), text.lastIndexOf(source) + source.length(), target);
+        return b.toString();
     }
 
     protected List<Double> getLoopConstants(){ //TODO: rename

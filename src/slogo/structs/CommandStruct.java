@@ -1,6 +1,5 @@
 package slogo.structs;
 
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
 import slogo.Model;
@@ -56,6 +55,8 @@ public class CommandStruct {
     public void setTurtleSetDefault(){
         myTurtleSet = (HashSet) myTurtleMap.values();
     }
+
+    public Set<Turtle> getFullTurtleSet(){return (HashSet) myTurtleMap.values();}
 
     public boolean addTurtle(Turtle newTurtle){
         myTurtleSet.add(newTurtle);

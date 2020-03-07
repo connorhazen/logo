@@ -2,7 +2,10 @@ package slogo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
 import javafx.stage.Stage;
+import slogo.structs.CommandStruct;
 import slogo.view.Turtle;
 import slogo.view.View;
 import slogo.view.ViewInterface;
@@ -28,6 +31,7 @@ public class ControllerInitial implements ControllerInterface {
 
   private ViewInterface generateView(ControllerInterface cont, Stage primaryStage,
       Turtle turtle) {
+    CommandStruct workSpaceInfo = model.getCommandStruct();
     ViewInterface view = new View(this, primaryStage, turtle);
     addViewListener(view);
     return view;

@@ -3,7 +3,6 @@ package slogo.commands;
 import slogo.exceptions.InvalidParameterException;
 import slogo.exceptions.UnknownCommandException;
 import slogo.structs.CommandStruct;
-import slogo.structs.Struct;
 import slogo.structs.VariableStruct;
 import slogo.view.Turtle;
 

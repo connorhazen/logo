@@ -4,19 +4,23 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import javafx.animation.Animation;
-import javafx.animation.FadeTransition;
-import javafx.animation.RotateTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import slogo.ExceptionHelper;
+import slogo.view.animations.MoveAnimation;
+import slogo.view.animations.RotateAnimation;
+import slogo.view.animations.TurtleAnimation;
+import slogo.view.animations.VisibleAnimation;
+import slogo.view.wrapableObjects.WrapableLine;
+import slogo.view.wrapableObjects.WrapableTurtleImage;
 
 public class TurtleDrawer {
 
@@ -32,7 +36,6 @@ public class TurtleDrawer {
   private Turtle turtle;
   private String imgName;
   private String prevImg;
-  private boolean animatePen = false;
 
   public TurtleDrawer() {
     running = false;
@@ -48,7 +51,7 @@ public class TurtleDrawer {
     this.canvas = canvas;
     this.turtle = turtle;
     makeCenterBindings();
-    if(!canvas.getChildren().contains(elements)){
+    if (!canvas.getChildren().contains(elements)) {
       canvas.getChildren().add(elements);
     }
     turtleNode = new WrapableTurtleImage(turtle, canvas, centerX, centerY, currentTurtleGif);
@@ -62,8 +65,11 @@ public class TurtleDrawer {
       System.out.println(currentTurtleGif.getValue().toString());
       boolean activeState = turtle.switchActive();
       System.out.println(activeState);
-      if(!activeState) this.changeImage("inactive_turtle");
-      else this.setImage(prevImg);
+      if (!activeState) {
+        this.changeImage("inactive_turtle");
+      } else {
+        this.setImage(prevImg);
+      }
     });
   }
 
@@ -71,21 +77,20 @@ public class TurtleDrawer {
     elements.getChildren().clear();
   }
 
-  public void animate(DoubleProperty speed, double maxSpeed) {
-    if(running){
+  public void run(DoubleProperty speed, double maxSpeed) {
+    if (running) {
       return;
     }
     running = true;
     play(speed, maxSpeed);
   }
 
-
   public void changeImage(String file) {
     String path = "data/turtleImages/" + file + ".gif";
     setImage(path);
   }
 
-  private void play(DoubleProperty speed, double maxSpeed){
+  private void play(DoubleProperty speed, double maxSpeed) {
     Group lines = new Group();
     elements.getChildren().add(lines);
     SimpleDoubleProperty turtleX = turtleNode.getXLocLines();
@@ -94,52 +99,52 @@ public class TurtleDrawer {
     double startLocX = turtleX.doubleValue();
     double startLocY = turtleY.doubleValue();
 
-    ChangeListener<Number> lis = null;
-
-    if(animatePen){
-      lis = (e,ee,eee) -> {
-        lines.getChildren().clear();
-        lines.getChildren().add(new WrapableLine(startLocX, startLocY, turtleX.doubleValue(), turtleY.doubleValue(), canvas, centerX, centerY));
-      };
-      turtleX.addListener(lis);
-      turtleY.addListener(lis);
-    }
-
-    if(!currentTrans.isEmpty()){
+    if (!currentTrans.isEmpty()) {
       TurtleAnimation toPlay = currentTrans.poll();
-      if(speed.doubleValue() == maxSpeed){
-        toPlay.execute();
-        System.out.println("executed");
-        lines.getChildren().add(new WrapableLine(startLocX, startLocY, turtleX.doubleValue(), turtleY.doubleValue(), canvas, centerX, centerY));
-        checkDoneAnimating();
-        play(speed,maxSpeed);
+      if (speed.doubleValue() == maxSpeed) {
+        normalExecute(toPlay, lines, startLocX, startLocY);
+        play(speed, maxSpeed);
+      } else {
+        animateExecute(toPlay, lines, turtleX, turtleY, startLocX, startLocY, speed, maxSpeed);
       }
-      else{
-        Animation ana = toPlay.getAnimation(ANIMATION_DURATION);
-        ana.setRate(speed.doubleValue());
-        ana.setOnFinished(e -> {
-          lines.getChildren().add(new WrapableLine(startLocX, startLocY, turtleX.doubleValue(), turtleY.doubleValue(), canvas, centerX, centerY));
-          checkDoneAnimating();
-          play(speed, maxSpeed);
-        });
-        ana.play();
-      }
-
-
     }
   }
 
-  private void setRate(Animation toPlay, DoubleProperty speed, double maxSpeed) {
-    if(speed.getValue() == maxSpeed){
-      toPlay.jumpTo(ANIMATION_DURATION);
-    }
-    else{
-      toPlay.setRate(speed.getValue());
-    }
+  private void animateExecute(TurtleAnimation toPlay, Group lines, SimpleDoubleProperty turtleX, SimpleDoubleProperty turtleY, double startLocX, double startLocY, DoubleProperty speed,
+      double maxSpeed) {
+    ChangeListener<Number> lis = (e, ee, eee) -> {
+      lines.getChildren().clear();
+      lines.getChildren().add(makeLines(startLocX, startLocY));
+    };
+    turtleX.addListener(lis);
+    turtleY.addListener(lis);
+    Animation ana = toPlay.getAnimation(ANIMATION_DURATION);
+    ana.setRate(speed.doubleValue());
+    ana.setOnFinished(e -> {
+      turtleX.removeListener(lis);
+      turtleY.removeListener(lis);
+      lines.getChildren().add(makeLines(startLocX, startLocY));
+      checkDoneAnimating();
+      play(speed, maxSpeed);
+    });
+    ana.play();
+  }
+
+  private void normalExecute(TurtleAnimation toPlay, Group lines, double startLocX, double startLocY) {
+    toPlay.execute();
+    System.out.println("executed");
+    lines.getChildren().add(makeLines(startLocX, startLocY));
+    checkDoneAnimating();
+  }
+
+
+  private Node makeLines(double startLocX, double startLocY) {
+    return new WrapableLine(startLocX, startLocY, turtleNode.getXLocLines().doubleValue(),
+        turtleNode.getYLocLines().doubleValue(), canvas, centerX, centerY, turtle.getPen());
   }
 
   private void checkDoneAnimating() {
-    if(currentTrans.isEmpty()){
+    if (currentTrans.isEmpty()) {
       running = false;
     }
   }
@@ -154,16 +159,16 @@ public class TurtleDrawer {
   private void setImage(String path) {
     prevImg = imgName;
     imgName = path;
-    try{
-    FileInputStream inputStream = new FileInputStream(path);
-    currentTurtleGif.set(new Image(inputStream));
-    } catch (FileNotFoundException fnfe){
-    new ExceptionHelper().fileNotFound(fnfe);
+    try {
+      FileInputStream inputStream = new FileInputStream(path);
+      currentTurtleGif.set(new Image(inputStream));
+    } catch (FileNotFoundException fnfe) {
+      new ExceptionHelper().fileNotFound(fnfe);
 
     }
   }
 
-  private void makeAnimationBindings(){
+  private void makeAnimationBindings() {
     turtle.getVisibleProperty().addListener(e -> currentTrans.add(visibleAnimation()));
     turtle.getCordsProperty().addListener(e -> currentTrans.add(moveAnimation()));
     turtle.getAngleProperty().addListener(e -> currentTrans.add(rotateAnimation()));

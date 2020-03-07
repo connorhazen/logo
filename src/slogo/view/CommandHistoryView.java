@@ -1,8 +1,6 @@
 package slogo.view;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import javafx.scene.control.ComboBox;
 
 public class CommandHistoryView {
   private int currentIndex;

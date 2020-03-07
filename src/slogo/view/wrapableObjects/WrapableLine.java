@@ -1,13 +1,13 @@
-package slogo.view;
+package slogo.view.wrapableObjects;
 
 import java.util.Map;
 import java.util.TreeMap;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Line;
+import slogo.view.Coordinates;
+import slogo.view.PenInterface;
 
 public class WrapableLine extends Group {
 
@@ -16,8 +16,9 @@ public class WrapableLine extends Group {
   private double endX;
   private double endY;
   private Pane canvas;
+  private PenInterface pen;
 
-  public WrapableLine(double startX, double startY, double endX, double endY, Pane canvas, SimpleDoubleProperty centerX, SimpleDoubleProperty centerY) {
+  public WrapableLine(double startX, double startY, double endX, double endY, Pane canvas, SimpleDoubleProperty centerX, SimpleDoubleProperty centerY, PenInterface pen) {
     super();
 
     if(startX  == endX && startY == endY){
@@ -26,6 +27,7 @@ public class WrapableLine extends Group {
 
     setEndPoints(startX, startY, endX, endY, centerX.doubleValue(), centerY.doubleValue());
     this.canvas = canvas;
+    this.pen = pen;
 
     centerX.addListener(e -> {
       makeLines();
@@ -44,21 +46,6 @@ public class WrapableLine extends Group {
     this.endX = endX + centerX;
     this.startY = startY+ centerY;
     this.endY = endY+ centerY;
-    /*if (startX < endX) {
-      this.startX = startX;
-      this.endX = endX;
-    } else {
-      this.startX = endX;
-      this.endX = startX;
-    }
-
-    if (startY < endY) {
-      this.startY = startY;
-      this.endY = endY;
-    } else {
-      this.startY = endY;
-      this.endY = startY;
-    }*/
   }
 
   private void makeLines() {
@@ -105,7 +92,7 @@ public class WrapableLine extends Group {
       yloc2 = canvas.getHeight()+yloc2;
     }
 
-    return new Line(xloc1, yloc1, xloc2, yloc2);
+    return new slogoLine(xloc1, yloc1, xloc2, yloc2, pen);
   }
 
   private void getYBreaks(Map<Double, Coordinates> breakPoints) {

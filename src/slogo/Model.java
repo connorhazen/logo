@@ -25,6 +25,10 @@ public class Model implements ModelInterface{
         language = LANGUAGE_DEFAULT;
     }
 
+    public CommandStruct getCommandStruct(){
+        return commandStruct;
+    }
+
     public Model(String lang){
         commandStruct = new CommandStruct(this);
         language = lang;

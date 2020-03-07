@@ -1,7 +1,5 @@
 package slogo;
 
-import javafx.scene.control.TextArea;
-
 public interface ControllerInterface{
 
 
