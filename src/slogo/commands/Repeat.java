@@ -39,10 +39,6 @@ public class Repeat extends Misc {
         return ret;
     }
 
-    private static String replaceLast(String text, String source, String target) {
-        StringBuilder b = new StringBuilder(text);
-        b.replace(text.lastIndexOf(source), text.lastIndexOf(source) + source.length(), target);
-        return b.toString();
-    }
+
 
 }

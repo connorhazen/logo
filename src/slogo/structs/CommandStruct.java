@@ -57,6 +57,8 @@ public class CommandStruct {
         myTurtleSet = (HashSet) myTurtleMap.values();
     }
 
+    public Set<Turtle> getFullTurtleSet(){return (HashSet) myTurtleMap.values();}
+
     public boolean addTurtle(Turtle newTurtle){
         myTurtleSet.add(newTurtle);
         myTurtleMap.putIfAbsent(newTurtle.getID(), newTurtle);
