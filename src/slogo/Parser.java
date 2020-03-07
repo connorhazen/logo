@@ -76,7 +76,7 @@ public class Parser implements ParserInterface{
 
     public List<String> convertToBasicCommands(String[] originalCmd) throws UnknownCommandException, InvalidParameterException {
         clearStacks();
-        List<String> basicCommandList = new ArrayList<>(); boolean isSlogoList = false; String listCommand = ""; int beginCount = 0; int endCount = 0;
+        List<String> basicCommandList = new ArrayList<>(); boolean isSlogoList = false; String listCommand = ""; int beginCount = 0; int endCount = 0; boolean userDef = false;
         for(String s : originalCmd) {
             if(s.equals(LIST_BEGIN_SYMBOL)){ isSlogoList = true;}
             if(isSlogoList){
@@ -91,8 +91,9 @@ public class Parser implements ParserInterface{
                 } else { listCommand += s + " "; }
             }
             else {
-                if (isConstant(s)) { argumentStack.push(s); }
-                else if (commandMap.containsKey(s)) { commandStack.push(s); }
+                if (isConstant(s) || userDef == true) { argumentStack.push(s); userDef = false; }
+                else if (commandMap.containsKey(s)) { if(commandMap.get(s).equals("MakeVariable")) {userDef = true;} commandStack.push(s); }
+                else if (commandStruct.containsVariable(s)) { argumentStack.push(commandStruct.getVariable(s).getValue()); }
                 else { throw new UnknownCommandException(ERROR_MESSAGES.getString("UnknownCommand") + s); } // TODO: Error? OR if commandMap does not contain user-defined commands/variable, check if it's one of those
             }
             basicCommandList = buildTree(basicCommandList);
@@ -151,7 +152,7 @@ public class Parser implements ParserInterface{
     }
 
     public double getCommandRetValue(String cmd) throws InvalidParameterException {
-        String[] parsedCommand = parseList(cmd);
+        String[] parsedCommand = parseList(cmd);;
         String command = commandMap.get(parsedCommand[COMMAND_INDEX]);
         List<String> args = new ArrayList<>();
         for (int i = 1; i < parsedCommand.length; i++) {
@@ -166,7 +167,6 @@ public class Parser implements ParserInterface{
             method.setAccessible(true);
             return (double) method.invoke(obj, EXECUTE_PARAMS);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new InvalidParameterException(e, ERROR_MESSAGES.getString("InvalidParameter") + cmd);
         }
     }
