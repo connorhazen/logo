@@ -1,7 +1,6 @@
-package slogo.view;
+package slogo.view.ViewFactory;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Properties;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -12,7 +11,9 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import slogo.ControllerInitial;
 import slogo.ExceptionHelper;
+import slogo.view.View;
 
 public class HomeView extends Application {
   private Stage primaryStage;
@@ -27,7 +28,7 @@ public class HomeView extends Application {
   private Scene generateScene(){
     Properties myProperties = new Properties();
     try{
-      myProperties.load(View.class.getResourceAsStream(PROPERTIES));
+      myProperties.load(View.class.getResourceAsStream("home.properties"));
     } catch (IOException e){
       new ExceptionHelper().fileNotFound(e);
     }
@@ -52,7 +53,7 @@ public class HomeView extends Application {
   }
 
   private void loadDefaultWorkspace(){
-
+    new ControllerInitial(new Stage());
   }
 
   private void loadCustomWorkspace(){
