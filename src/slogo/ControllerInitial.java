@@ -2,6 +2,8 @@ package slogo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
 import javafx.stage.Stage;
 import slogo.view.Turtle;
 import slogo.view.View;
@@ -28,6 +30,7 @@ public class ControllerInitial implements ControllerInterface {
 
   private ViewInterface generateView(ControllerInterface cont, Stage primaryStage,
       Turtle turtle) {
+    Set<Turtle> allTurtles = model.getAllTurtles();
     ViewInterface view = new View(this, primaryStage, turtle);
     addViewListener(view);
     return view;
