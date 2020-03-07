@@ -1,13 +1,18 @@
 package slogo.view;
 
+import java.io.File;
 import javafx.stage.Stage;
 import slogo.ControllerInterface;
 
 public class CustomView extends View {
-
+  private File myPropertiesPath;
   public CustomView(ControllerInterface cont, Stage primaryStage,
-      Turtle turtle, String path) {
+      Turtle turtle, File path) {
     super(cont, primaryStage, turtle);
-    System.out.println("Path");
+    myPropertiesPath = path;
+  }
+
+  private void loadDataFromProperties(){
+
   }
 }
