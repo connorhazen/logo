@@ -8,8 +8,8 @@ import slogo.view.Turtle;
 
 import java.util.List;
 
-public class Make extends Misc {
-    public Make(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
+public class MakeVariable extends Misc {
+    public MakeVariable(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
         super(commandStruct, text, args, toldTurtle);
         setMyNumArgs(2);
     }
@@ -17,7 +17,7 @@ public class Make extends Misc {
     @Override
     protected double execute(Turtle executeOnTurtle) throws UnknownCommandException, InvalidParameterException {
         String var = getArgString(0);
-        double val = getArgsDouble().get(1);  //verify
+        double val = Double.parseDouble(getArgString(1));
 
         //accessing the variable map
         CommandStruct commandStruct = getCommandStruct();

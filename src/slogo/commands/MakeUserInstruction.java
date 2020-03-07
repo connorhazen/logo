@@ -8,8 +8,8 @@ import slogo.view.Turtle;
 
 import java.util.List;
 
-public class To extends Misc{
-    public To(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
+public class MakeUserInstruction extends Misc{
+    public MakeUserInstruction(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
         super(commandStruct, text, args, toldTurtle);
         setMyNumArgs(1);
     }

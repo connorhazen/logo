@@ -48,20 +48,21 @@ public abstract class Misc extends Command {
         int listBeginIndex = textInput.indexOf(listBegin);
         int listEndIndex = textInput.indexOf(listEnd);
 
+        if(listBeginIndex >= 0){
         myExpression = textInput.substring(0,listBeginIndex);
 
-        if(listBeginIndex >= 0 && listEndIndex >= 0){
+            if(listEndIndex >= 0) {
 
-            myListString1 = stringIterator(textInput, listBeginIndex, listEndIndex);
+                myListString1 = stringIterator(textInput, listBeginIndex, listEndIndex);
 
-            textInput = textInput.substring(listBeginIndex + 1);
-            listBeginIndex = textInput.indexOf(listBegin);
-            listEndIndex = textInput.indexOf(listEnd);
+                textInput = textInput.substring(listBeginIndex + 1);
+                listBeginIndex = textInput.indexOf(listBegin);
+                listEndIndex = textInput.indexOf(listEnd);
 
-            if(listBeginIndex >= 0 && listEndIndex >= 0){
-                myListString2 = stringIterator(textInput, listBeginIndex, listEndIndex);
+                if (listBeginIndex >= 0 && listEndIndex >= 0) {
+                    myListString2 = stringIterator(textInput, listBeginIndex, listEndIndex);
+                }
             }
-
         }
     }
     private String stringIterator(String text, int listBeginIndex, int listEndIndex){
