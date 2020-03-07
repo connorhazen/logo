@@ -6,6 +6,7 @@ import java.util.Properties;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -17,13 +18,13 @@ public class HomeView extends Application {
   private Stage primaryStage;
   private static final String PROPERTIES = "src/slogo/view/home.properties";
   @Override
-  public void start(Stage primaryStage) throws Exception {
+  public void start(Stage primaryStage){
     this.primaryStage = primaryStage;
-    this.primaryStage.setScene();
+    this.primaryStage.setScene(generateScene());
     this.primaryStage.show();
   }
 
-  private VBox generateScene(){
+  private Scene generateScene(){
     Properties myProperties = new Properties();
     try{
       myProperties.load(View.class.getResourceAsStream(PROPERTIES));
@@ -35,12 +36,27 @@ public class HomeView extends Application {
     for(String key : myProperties.keySet().toArray(new String[0])){
       myHBox.getChildren().add(new Label(myProperties.getProperty(key)));
     }
+    myBox.getChildren().add(myHBox);
     HBox buttonBox = new HBox();
-    buttonBox.getChildren().add()
+    buttonBox.getChildren().add(makeButton("Load default", e -> loadDefaultWorkspace()));
+    buttonBox.getChildren().add(makeButton("Load custom workspace", e -> loadCustomWorkspace()));
+    myBox.getChildren().add(buttonBox);
+    return new Scene(myBox);
+
   }
 
   private Button makeButton(String title, EventHandler<ActionEvent> myEvent){
-    
+    Button myButton = new Button(title);
+    myButton.setOnAction(myEvent);
+    return myButton;
+  }
+
+  private void loadDefaultWorkspace(){
+
+  }
+
+  private void loadCustomWorkspace(){
+
   }
 
 }
