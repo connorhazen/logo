@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import javafx.animation.Animation;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
@@ -32,7 +33,7 @@ import slogo.view.wrapableObjects.WrapableTurtleImage;
 public class ElementDrawer {
   private CommandStruct commandStruct;
   private Pane canvas;
-  private SimpleMapProperty<Integer, Turtle> turtles;
+  private Map<Integer, Turtle> turtles;
   private List<Turtle> drawnTurtles;
   private List<TurtleDrawer> turtleDrawers;
   private Group elements;
@@ -49,6 +50,7 @@ public class ElementDrawer {
     elements = new Group();
     currentImage = "";
     running = false;
+    currentTrans = new LinkedList<>();
 
   }
 
@@ -58,17 +60,18 @@ public class ElementDrawer {
   }
 
   public void makeTurtles(){
-    System.out.println("here");
+    turtles = commandStruct.getTurtleMapProperty();
     System.out.println(turtles.size());
     for (Turtle t : turtles.values()){
-
       if(!drawnTurtles.contains(t)){
+        drawnTurtles.add(t);
         TurtleDrawer toAdd = new TurtleDrawer(t, canvas, elements);
         turtleDrawers.add(toAdd);
         setImage(toAdd);
         toAdd.setAnimationListener((e,ee,eee) -> getAnimations(toAdd));
       }
     }
+    System.out.println(turtleDrawers.size());
   }
 
   private void getAnimations(TurtleDrawer toAdd) {

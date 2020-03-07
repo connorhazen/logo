@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 import slogo.ControllerInterface;
 import slogo.ExceptionHelper;
 import slogo.structs.CommandStruct;
-
+/*
 public class CustomView extends View {
   private File myPropertiesPath;
   public CustomView(ControllerInterface cont, Stage primaryStage,
@@ -33,4 +33,4 @@ public class CustomView extends View {
       System.out.println(super.myColor.toString());
     }
   }
-}
+}*/

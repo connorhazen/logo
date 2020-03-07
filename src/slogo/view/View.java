@@ -51,7 +51,6 @@ public class View implements ViewInterface {
 
     canvas = new Pane();
     drawer = new ElementDrawer(workSpaceInfo);
-    drawer.setCanvas(canvas);
 
     boxHistory = new CommandHistoryView();
     errorHelper = new ExceptionHelper();
@@ -64,6 +63,7 @@ public class View implements ViewInterface {
     mainStage.setScene(scene);
     mainStage.show();
     makeKeyListens();
+    drawer.setCanvas(canvas);
 
     makeTurtle();
 
@@ -116,6 +116,7 @@ public class View implements ViewInterface {
     controller.executeCommand(inputBox.getText());
     boxHistory.add(inputBox.getText());
     inputBox.clear();
+    drawer.makeTurtles();
   }
 
   @SuppressWarnings("Used in reflection")

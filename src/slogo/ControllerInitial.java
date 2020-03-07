@@ -31,6 +31,7 @@ public class ControllerInitial implements ControllerInterface {
   private ViewInterface generateView(ControllerInterface cont, Stage primaryStage,
       Turtle turtle) {
     CommandStruct workSpaceInfo = model.getCommandStruct();
+    workSpaceInfo.addTurtle(myTurtle);
     ViewInterface view = new View(this, primaryStage, workSpaceInfo);
     addViewListener(view);
     return view;

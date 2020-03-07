@@ -12,7 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import slogo.ControllerCustom;
+
 import slogo.ControllerInitial;
 import slogo.ExceptionHelper;
 import slogo.view.View;
@@ -59,7 +59,7 @@ public class HomeView extends Application {
   }
 
   private void loadCustomWorkspace(){
-    new ControllerCustom(new Stage(), new FileChooser().showOpenDialog(new Stage()));
+   // new ControllerCustom(new Stage(), new FileChooser().showOpenDialog(new Stage()));
   }
 
 }
