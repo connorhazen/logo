@@ -1,12 +1,10 @@
 package slogo.view;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javafx.application.Application;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 
 import javafx.scene.control.TextArea;
@@ -17,9 +15,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import slogo.ControllerInterface;
 import slogo.ExceptionHelper;
+import slogo.view.MovableElements.BorderPaneLocation;
 import slogo.view.ViewFactory.BorderPaneElement;
 import slogo.view.ViewFactory.ElementFactory;
-import slogo.view.ViewFactory.ElementMove;
 import slogo.windows.BackgroundColor;
 import slogo.windows.HelpWindow;
 import slogo.windows.PenColorWindow;

@@ -10,7 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import slogo.ExceptionHelper;
-import slogo.view.BorderPaneLocation;
+import slogo.view.MovableElements.BorderPaneLocation;
 import slogo.view.Turtle;
 import slogo.view.View;
 import slogo.view.ViewInterface;

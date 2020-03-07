@@ -11,10 +11,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import slogo.ExceptionHelper;
-import slogo.view.BorderPaneLocation;
+import slogo.view.MovableElements.BorderPaneLocation;
 import slogo.view.Turtle;
 import slogo.view.View;
-import slogo.view.ViewFactory.BorderPaneElement;
 
 
 public class RightView<T> implements BorderPaneElement {

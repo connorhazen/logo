@@ -5,7 +5,7 @@ import java.util.List;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
 import slogo.ControllerInterface;
-import slogo.view.BorderPaneLocation;
+import slogo.view.MovableElements.BorderPaneLocation;
 import slogo.view.Turtle;
 import slogo.view.ViewInterface;
 
