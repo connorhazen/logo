@@ -1,8 +1,10 @@
-package slogo.view;
+package slogo.view.animations;
 
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
 import javafx.util.Duration;
+import slogo.view.Turtle;
+import slogo.view.wrapableObjects.WrapableTurtleImage;
 
 public class RotateAnimation implements TurtleAnimation {
   private Turtle turtle;

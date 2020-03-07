@@ -1,4 +1,4 @@
-package slogo.view;
+package slogo.view.wrapableObjects;
 
 import javafx.animation.Animation;
 import javafx.animation.Transition;
@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
+import slogo.view.Turtle;
 
 public class WrapableTurtleImage extends ImageView{
 

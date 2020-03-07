@@ -1,4 +1,4 @@
-package slogo.view;
+package slogo.view.animations;
 
 
 import javafx.animation.Animation;

@@ -208,7 +208,7 @@ public class View implements ViewInterface {
   public void updateView(List<String> history) {
     SimpleDoubleProperty tempVal = new SimpleDoubleProperty(4);
 
-    drawer.animate(tempVal, 4);
+    drawer.run(tempVal, 4);
     printHistory(history);
     setBackGroundColor(currentTurtle.getBackgroundColor());
   }
