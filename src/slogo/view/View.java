@@ -45,7 +45,7 @@ public class View implements ViewInterface {
   private CommandStruct commandStruct;
   private ElementDrawer drawer;
 
-  public View(ControllerInterface cont, Stage primaryStage, Turtle turtle, CommandStruct workSpaceInfo){
+  public View(ControllerInterface cont, Stage primaryStage, CommandStruct workSpaceInfo){
     commandStruct = workSpaceInfo;
     clickedCommands = new ArrayList<>();
 
@@ -148,7 +148,6 @@ public class View implements ViewInterface {
 
   @SuppressWarnings("Used in reflection")
   private void reset(){
-    commandStruct.
     drawer.reset();
     errorBox.clear();
     historyBox.clear();

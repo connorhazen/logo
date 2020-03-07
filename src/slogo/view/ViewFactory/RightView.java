@@ -42,7 +42,7 @@ public class RightView<T> implements BorderPaneElement {
     myHistoryBox.setOnMouseClicked(e -> getLineOnClick());
     Label his = new Label(labels.get(1) + colon);
 
-
+    right.getChildren().addAll(his, myHistoryBox, error, myErrorBox);
     return right;
   }
 

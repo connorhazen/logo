@@ -22,7 +22,6 @@ public class ControllerInitial implements ControllerInterface {
   public ControllerInitial(Stage primaryStage) {
 
     model = new Model();
-
     myTurtle = new Turtle(250,0,0,-90);
     listeners = new ArrayList<>();
     view = generateView(this, primaryStage, myTurtle);
@@ -32,7 +31,7 @@ public class ControllerInitial implements ControllerInterface {
   private ViewInterface generateView(ControllerInterface cont, Stage primaryStage,
       Turtle turtle) {
     CommandStruct workSpaceInfo = model.getCommandStruct();
-    ViewInterface view = new View(this, primaryStage, turtle, workSpaceInfo);
+    ViewInterface view = new View(this, primaryStage, workSpaceInfo);
     addViewListener(view);
     return view;
   }
@@ -45,6 +44,7 @@ public class ControllerInitial implements ControllerInterface {
   @Override
   public void executeCommand(String commandText) {
     try{
+      System.out.println("here");
       List<String> history = model.runCommand(commandText, myTurtle);
       //view.printHistory(history);
       view.updateView(history);

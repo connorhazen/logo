@@ -55,11 +55,13 @@ public class ElementDrawer {
   public void setCanvas(Pane canvas){
     this.canvas = canvas;
     canvas.getChildren().add(elements);
-
   }
 
   public void makeTurtles(){
+    System.out.println("here");
+    System.out.println(turtles.size());
     for (Turtle t : turtles.values()){
+
       if(!drawnTurtles.contains(t)){
         TurtleDrawer toAdd = new TurtleDrawer(t, canvas, elements);
         turtleDrawers.add(toAdd);

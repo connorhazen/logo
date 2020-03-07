@@ -21,8 +21,7 @@ public class Model implements ModelInterface{
     private static final String LANGUAGE_DEFAULT = "English";
 
     public Model(){
-        commandStruct = new CommandStruct(this);
-        language = LANGUAGE_DEFAULT;
+        this(LANGUAGE_DEFAULT);
     }
 
     public CommandStruct getCommandStruct(){
@@ -39,7 +38,9 @@ public class Model implements ModelInterface{
         if(input.trim().equals("")) { throw new UnknownCommandException(ERROR_MESSAGES.getString("NoCommand")); }
         Parser parser = new Parser(language, commandStruct);
         List<String> parsedCommands = parser.parseCommand(input);
+
         Map<String, String> commandMap = parser.getCommandMap();
+
         for (String basicCmd : parsedCommands) {
             String[] parsedCommand = parser.parseList(basicCmd);
             String command = commandMap.get(parsedCommand[Parser.COMMAND_INDEX]);
@@ -52,7 +53,8 @@ public class Model implements ModelInterface{
                 Object obj = cons.newInstance(params);
                 Method method = cls.getMethod("executeCommand", Parser.NOPARAMS);
                 method.invoke(obj);
-            } catch (Exception e) { throw new UnknownCommandException(e, ERROR_MESSAGES.getString("UnknownCommand") + command); }
+            } catch (Exception e) {
+                throw new UnknownCommandException(e, ERROR_MESSAGES.getString("UnknownCommand") + command); }
         }
         return parsedCommands;
     }
