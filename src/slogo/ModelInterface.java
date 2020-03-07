@@ -1,5 +1,6 @@
 package slogo;
 
+import java.io.IOException;
 import java.util.List;
 import slogo.exceptions.InvalidParameterException;
 import slogo.exceptions.UnknownCommandException;
@@ -33,4 +34,8 @@ public interface ModelInterface{
    * @return String containing language of current Slogo window
    */
   String getLanguage();
+
+  void saveUserDefined(String name) throws IOException;
+
+  void loadUserDefined(String propFileName);
 }
