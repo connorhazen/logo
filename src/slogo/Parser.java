@@ -35,7 +35,7 @@ public class Parser implements ParserInterface {
   private static final String SAVE_SYMBOL = "=";
   public static final int COMMAND_INDEX = 0;
   private static final int SAVE_SYMBOL_INDEX = 1;
-  private static final Turtle DUMMY_TURTLE = new Turtle(0, 0, 0, 0);
+  private static final Turtle DUMMY_TURTLE = new Turtle(0, 0, 0, -90);
   public static final Class<?> NOPARAMS[] = {};
   public static final Class<?> COMMAND_CLASS_PARAMS[] = new Class<?>[]{CommandStruct.class,
       String.class, List.class, Turtle.class};
@@ -72,6 +72,7 @@ public class Parser implements ParserInterface {
         .equals(SAVE_SYMBOL)) {
       saveCommand(parsedCommand);
     }
+
     return convertToBasicCommands(parsedCommand);
   }
 
@@ -186,9 +187,7 @@ public class Parser implements ParserInterface {
     try {
       Class cls = forName(PACKAGE + "." + cmd);
       Constructor cons = cls.getDeclaredConstructor(COMMAND_CLASS_PARAMS);
-        System.out.println(COMMAND_PARAMS);
       Object obj = cons.newInstance(COMMAND_PARAMS);
-
       Method method = cls.getMethod("getNumArgs", NOPARAMS);
       return (int) method.invoke(obj);
     } catch (Exception e) {

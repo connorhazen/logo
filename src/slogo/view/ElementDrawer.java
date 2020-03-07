@@ -11,6 +11,7 @@ import javafx.animation.Animation;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.Property;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleMapProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -33,7 +34,8 @@ import slogo.view.wrapableObjects.WrapableTurtleImage;
 public class ElementDrawer {
   private CommandStruct commandStruct;
   private Pane canvas;
-  private Map<Integer, Turtle> turtles;
+
+  private SimpleBooleanProperty mapChanged;
   private List<Turtle> drawnTurtles;
   private List<TurtleDrawer> turtleDrawers;
   private Group elements;
@@ -44,13 +46,19 @@ public class ElementDrawer {
 
   public ElementDrawer(CommandStruct commandStruct){
     this.commandStruct = commandStruct;
-    turtles =  commandStruct.getTurtleMapProperty();
+    mapChanged = commandStruct.getChangedMap();
     drawnTurtles = new ArrayList<>();
     turtleDrawers = new ArrayList<>();
     elements = new Group();
     currentImage = "";
     running = false;
     currentTrans = new LinkedList<>();
+
+    mapChanged.addListener(e -> {
+      makeTurtles();
+      commandStruct.resetChangedMap();
+    });
+
 
   }
 
@@ -60,8 +68,7 @@ public class ElementDrawer {
   }
 
   public void makeTurtles(){
-    turtles = commandStruct.getTurtleMapProperty();
-    System.out.println(turtles.size());
+    Map<Integer, Turtle> turtles = commandStruct.getMyTurtleMap();
     for (Turtle t : turtles.values()){
       if(!drawnTurtles.contains(t)){
         drawnTurtles.add(t);
@@ -71,7 +78,6 @@ public class ElementDrawer {
         toAdd.setAnimationListener((e,ee,eee) -> getAnimations(toAdd));
       }
     }
-    System.out.println(turtleDrawers.size());
   }
 
   private void getAnimations(TurtleDrawer toAdd) {
@@ -108,6 +114,7 @@ public class ElementDrawer {
   }
   public void reset(){
     elements.getChildren().clear();
+    commandStruct.reset();
     drawnTurtles.clear();
     turtleDrawers.clear();
   }

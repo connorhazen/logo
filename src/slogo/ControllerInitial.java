@@ -22,7 +22,7 @@ public class ControllerInitial implements ControllerInterface {
   public ControllerInitial(Stage primaryStage) {
 
     model = new Model();
-    myTurtle = new Turtle(250,0,0,-90);
+    myTurtle = new Turtle(0,0,0,-90);
     listeners = new ArrayList<>();
     view = generateView(this, primaryStage, myTurtle);
 
@@ -45,7 +45,6 @@ public class ControllerInitial implements ControllerInterface {
   @Override
   public void executeCommand(String commandText) {
     try{
-      System.out.println("here");
       List<String> history = model.runCommand(commandText, myTurtle);
       //view.printHistory(history);
       view.updateView(history);

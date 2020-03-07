@@ -116,7 +116,6 @@ public class View implements ViewInterface {
     controller.executeCommand(inputBox.getText());
     boxHistory.add(inputBox.getText());
     inputBox.clear();
-    drawer.makeTurtles();
   }
 
   @SuppressWarnings("Used in reflection")

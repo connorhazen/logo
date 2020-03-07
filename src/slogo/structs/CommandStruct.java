@@ -1,5 +1,7 @@
 package slogo.structs;
 
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleMapProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
 import slogo.Model;
@@ -8,6 +10,7 @@ import slogo.view.Turtle;
 import java.util.*;
 
 public class CommandStruct {
+    private Turtle firstTurtle;
     private List<VariableStruct> myVariables;
     private List<UserCommandStruct> myUserCommands;
     private Model myModel;
@@ -15,11 +18,13 @@ public class CommandStruct {
     private Map<Integer, Turtle> myTurtleMap = new HashMap<>();
     private Set<Turtle> myTurtleSet = new HashSet<>();
     private SimpleObjectProperty<Turtle> myActiveTurtle = new SimpleObjectProperty<>();
+    private SimpleBooleanProperty changedMap = new SimpleBooleanProperty(false);
 
     public CommandStruct(Model inputModel) {
         myVariables = new ArrayList<VariableStruct>();
         myUserCommands = new ArrayList<UserCommandStruct>();
         myModel = inputModel;
+        firstTurtle = null;
 
     }
 
@@ -34,7 +39,6 @@ public class CommandStruct {
     public Model getModel(){
         return myModel;
     }
-
 
     public Turtle getTurtle(int index){ return myTurtleMap.get(index);}
 
@@ -58,11 +62,25 @@ public class CommandStruct {
 
     public Set<Turtle> getFullTurtleSet(){return (HashSet) myTurtleMap.values();}
 
-    public Map<Integer, Turtle> getTurtleMapProperty(){
+    public Map<Integer, Turtle> getMyTurtleMap(){
         return myTurtleMap;
     }
 
+    public SimpleBooleanProperty getChangedMap(){
+        return changedMap;
+    }
+
+    public void resetChangedMap(){
+        if(changedMap.getValue()){
+            changedMap.set(false);
+        }
+    }
+
     public boolean addTurtle(Turtle newTurtle){
+        if (firstTurtle==null){
+            firstTurtle = newTurtle;
+        }
+        changedMap.set(true);
         myTurtleSet.add(newTurtle);
         myTurtleMap.putIfAbsent(newTurtle.getID(), newTurtle);
         return true;
@@ -157,4 +175,13 @@ public class CommandStruct {
         myUserCommands.add(usrC);
     }
 
+    public void reset() {
+        System.out.println(firstTurtle.getID());
+        firstTurtle.reset();
+        myTurtleMap.clear();
+        myTurtleSet.clear();
+        myTurtleMap.put(firstTurtle.getID(), firstTurtle);
+        setActiveTurtle(firstTurtle);
+        changedMap.set(true);
+    }
 }
