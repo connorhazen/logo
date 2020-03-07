@@ -7,15 +7,15 @@ import java.io.InputStream;
 import java.util.Properties;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javax.imageio.IIOException;
 import slogo.ControllerInterface;
 import slogo.ExceptionHelper;
+import slogo.structs.CommandStruct;
 
 public class CustomView extends View {
   private File myPropertiesPath;
   public CustomView(ControllerInterface cont, Stage primaryStage,
-      Turtle turtle, File path) {
-    super(cont, primaryStage, turtle);
+      Turtle turtle, File path, CommandStruct workSpaceInfo) {
+    super(cont, primaryStage, turtle, workSpaceInfo);
     myPropertiesPath = path;
     loadDataFromProperties();
   }

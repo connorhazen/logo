@@ -1,5 +1,6 @@
 package slogo.structs;
 
+import javafx.beans.property.SimpleMapProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
 import slogo.Model;
@@ -12,7 +13,7 @@ public class CommandStruct {
     private List<UserCommandStruct> myUserCommands;
     private Model myModel;
     private Map<Integer,Color> myColorMap = new HashMap<>();
-    private Map<Integer, Turtle> myTurtleMap = new HashMap<>();
+    private SimpleMapProperty<Integer, Turtle> myTurtleMap = new SimpleMapProperty<>();
     private Set<Turtle> myTurtleSet = new HashSet<>();
     private SimpleObjectProperty<Turtle> myActiveTurtle = new SimpleObjectProperty<>();
 
@@ -56,7 +57,7 @@ public class CommandStruct {
         myTurtleSet = (HashSet) myTurtleMap.values();
     }
 
-    public Set<Turtle> getFullTurtleSet(){return (HashSet) myTurtleMap.values();}
+    public SimpleMapProperty<Integer, Turtle> getTurtleMapProperty(){return myTurtleMap;}
 
     public boolean addTurtle(Turtle newTurtle){
         myTurtleSet.add(newTurtle);

@@ -33,27 +33,25 @@ public class TurtleDrawer {
   private SimpleObjectProperty<Image> currentTurtleGif;
   private boolean running;
   private Pane canvas;
-  private Turtle turtle;
+  public Turtle turtle;
   private String imgName;
   private String prevImg;
 
-  public TurtleDrawer() {
+  public TurtleDrawer(Turtle turtle, Pane canvas, Group elements) {
+    this.canvas = canvas;
+    this.turtle = turtle;
+    this.elements = elements;
     running = false;
     prevImg = "";
     imgName = "";
     currentTurtleGif = new SimpleObjectProperty<>();
-    elements = new Group();
     currentTrans = new LinkedList<>();
+    addTurtleToCanvas();
 
   }
 
-  public void addTurtleToCanvas(Pane canvas, Turtle turtle) {
-    this.canvas = canvas;
-    this.turtle = turtle;
+  public void addTurtleToCanvas() {
     makeCenterBindings();
-    if (!canvas.getChildren().contains(elements)) {
-      canvas.getChildren().add(elements);
-    }
     turtleNode = new WrapableTurtleImage(turtle, canvas, centerX, centerY, currentTurtleGif);
     setMouseClick();
     elements.getChildren().add(turtleNode);
@@ -186,10 +184,5 @@ public class TurtleDrawer {
     return new VisibleAnimation(turtle, turtleNode);
 
   }
-
-  /*
-  private WrapableLine drawLine(double startX, double startY, double endX, double endY){
-    WrapableLine ret = new WrapableLine(startX, startY, endX, endY, canvas);
-  }*/
 
 }

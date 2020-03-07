@@ -32,7 +32,7 @@ public class ControllerInitial implements ControllerInterface {
   private ViewInterface generateView(ControllerInterface cont, Stage primaryStage,
       Turtle turtle) {
     CommandStruct workSpaceInfo = model.getCommandStruct();
-    ViewInterface view = new View(this, primaryStage, turtle);
+    ViewInterface view = new View(this, primaryStage, turtle, workSpaceInfo);
     addViewListener(view);
     return view;
   }

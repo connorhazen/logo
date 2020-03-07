@@ -1,14 +1,13 @@
 package slogo.view;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javafx.application.Application;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -17,9 +16,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import slogo.ControllerInterface;
 import slogo.ExceptionHelper;
+import slogo.structs.CommandStruct;
 import slogo.view.ViewFactory.BorderPaneElement;
 import slogo.view.ViewFactory.ElementFactory;
-import slogo.view.ViewFactory.ElementMove;
 import slogo.windows.BackgroundColor;
 import slogo.windows.HelpWindow;
 import slogo.windows.PenColorWindow;
@@ -33,23 +32,27 @@ public class View implements ViewInterface {
   private final Scene scene;
   private Stage mainStage;
   private Pane canvas;
-  private Turtle currentTurtle;
   private static final String STYLESHEET = "slogo/view/default.css";
   private static final String PROPERTIES = "src/slogo/view/button_properties.txt";
   private final ExceptionHelper errorHelper;
-  private final TurtleDrawer drawer;
   private TextArea errorBox;
   private TextArea historyBox;
   private TextArea inputBox;
   private CommandHistoryView boxHistory;
   private ArrayList<String> clickedCommands;
   protected Color myColor;
+  private CommandStruct commandStruct;
+  private List<TurtleDrawer> turtleDrawers;
 
-  public View(ControllerInterface cont, Stage primaryStage, Turtle turtle){
+  public View(ControllerInterface cont, Stage primaryStage, Turtle turtle, CommandStruct workSpaceInfo){
+    commandStruct = workSpaceInfo;
     clickedCommands = new ArrayList<>();
-    drawer = new TurtleDrawer();
-    currentTurtle = turtle;
+    turtleDrawers = new ArrayList<>();
+
     canvas = new Pane();
+    ElementDrawer drawer = new ElementDrawer(workSpaceInfo);
+    drawer.setCanvas(canvas);
+
     boxHistory = new CommandHistoryView();
     errorHelper = new ExceptionHelper();
     this.mainStage = primaryStage;
