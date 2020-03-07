@@ -25,8 +25,8 @@ public class Model implements ModelInterface{
         language = LANGUAGE_DEFAULT;
     }
 
-    public Set<Turtle> getAllTurtles(){
-        return commandStruct.getFullTurtleSet();
+    public CommandStruct getCommandStruct(){
+        return commandStruct;
     }
 
     public Model(String lang){
