@@ -95,18 +95,16 @@ public class Parser {
                 if(s.equals(LIST_BEGIN_SYMBOL)) {beginCount += 1; listCommand += s + " ";}
                 else if(s.equals(LIST_END_SYMBOL)) {
                     endCount += 1;
-                    if(beginCount == endCount) {
-                        listCommand += s;
-                        argumentStack.push(listCommand);
-                        isSlogoList = false; listCommand = ""; beginCount = 0; endCount = 0;
-                    } else { listCommand += s + " "; }
+                    if(beginCount == endCount) { listCommand += s; argumentStack.push(listCommand); isSlogoList = false; listCommand = ""; beginCount = 0; endCount = 0; }
+                    else { listCommand += s + " "; }
                 } else { listCommand += s + " "; }
             }
             else {
                 if (isConstant(s) || userDef == true) { argumentStack.push(s); userDef = false; }
                 else if (commandMap.containsKey(s)) { if(commandMap.get(s).equals("MakeVariable")) {userDef = true;} commandStack.push(s); }
-                else if (!(commandStruct.getVariable(s)==null)) { argumentStack.push(commandStruct.getVariable(s).getValue()); }
-                else { throw new UnknownCommandException(ERROR_MESSAGES.getString("UnknownCommand") + s); } // TODO: Error? OR if commandMap does not contain user-defined commands/variable, check if it's one of those
+                else if (commandStruct.containsVariable(s)) { argumentStack.push(commandStruct.getVariable(s).getValue()); }
+                else if (Character.toString(s.charAt(0)).equals(":")) {commandStruct.addVariable(new VariableStruct(s, 0)); argumentStack.push(0); }
+                else { throw new UnknownCommandException(ERROR_MESSAGES.getString("UnknownCommand") + s); }
             }
             basicCommandList = buildTree(basicCommandList);
         }
