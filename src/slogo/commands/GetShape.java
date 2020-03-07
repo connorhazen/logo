@@ -7,8 +7,8 @@ import slogo.view.Turtle;
 
 import java.util.List;
 
-public class Shape extends TurtleQuery{
-    public Shape(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
+public class GetShape extends TurtleQuery{
+    public GetShape(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
         super(commandStruct, text, args, toldTurtle);
         setMyNumArgs(0);
     }

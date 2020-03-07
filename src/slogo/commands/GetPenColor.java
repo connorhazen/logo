@@ -7,8 +7,8 @@ import slogo.view.Turtle;
 
 import java.util.List;
 
-public class PenColor extends TurtleQuery {
-    public PenColor(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
+public class GetPenColor extends TurtleQuery {
+    public GetPenColor(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
         super(commandStruct, text, args, toldTurtle);
         setMyNumArgs(0);
     }

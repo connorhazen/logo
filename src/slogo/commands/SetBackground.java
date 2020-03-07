@@ -7,8 +7,8 @@ import slogo.view.Turtle;
 
 import java.util.List;
 
-public class SetBackgroundColor extends Misc {
-    public SetBackgroundColor(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
+public class SetBackground extends Misc {
+    public SetBackground(CommandStruct commandStruct, String text, List<String> args, Turtle toldTurtle) {
         super(commandStruct, text, args, toldTurtle);
         setMyNumArgs(1);
     }
