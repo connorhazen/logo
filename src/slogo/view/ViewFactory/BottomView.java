@@ -10,20 +10,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import slogo.ExceptionHelper;
-import slogo.view.BorderPaneLocation;
+import slogo.view.MovableElements.BorderPaneLocation;
 import slogo.view.Turtle;
 import slogo.view.View;
-import slogo.view.ViewFactory.BorderPaneElement;
 import slogo.view.ViewInterface;
 
 public class BottomView<T> implements BorderPaneElement {
-  TextArea inputText;
-  Turtle turtle;
-  ViewInterface view;
+  private TextArea inputText;
+  private ViewInterface view;
   private BorderPaneLocation loc;
-  public BottomView(TextArea ta, Turtle turtle, ViewInterface view, BorderPaneLocation loc){
+  public BottomView(TextArea ta, ViewInterface view, BorderPaneLocation loc){
     inputText = ta;
-    this.turtle = turtle;
     this.view = view;
     this.loc = loc;
   }
@@ -54,12 +51,10 @@ public class BottomView<T> implements BorderPaneElement {
           b.setOnAction(e -> {
             try {
               m.setAccessible(true);
-              if(m.getName().equals("reset")) m.invoke(obj, turtle);
+              if(m.getName().equals("reset")) m.invoke(obj);
               else m.invoke(obj);
             } catch (IllegalAccessException | InvocationTargetException ex) {
-              System.out.println(ex.getLocalizedMessage());
-              ExceptionHelper errorHelper = new ExceptionHelper();
-              errorHelper.reflectionError(ex);
+              new ExceptionHelper().reflectionError(ex);
 
             }
           });
@@ -68,7 +63,6 @@ public class BottomView<T> implements BorderPaneElement {
         }
       }
     }
-    //myBox.getChildren().add(inputText);
     return myBox;
   }
 }

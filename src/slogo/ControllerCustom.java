@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.stage.Stage;
+import slogo.structs.CommandStruct;
 import slogo.view.CustomView;
 import slogo.view.Turtle;
 import slogo.view.View;
@@ -30,7 +31,7 @@ public class ControllerCustom implements ControllerInterface {
 
   private ViewInterface generateView(ControllerInterface cont, Stage primaryStage,
       Turtle turtle, File path) {
-    ViewInterface view = new CustomView(this, primaryStage, turtle, path);
+    //ViewInterface view = new View(this, primaryStage, turtle, );
     addViewListener(view);
     return view;
   }

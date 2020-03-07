@@ -2,10 +2,13 @@ package slogo.view;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import javafx.animation.Animation;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -14,6 +17,7 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
+import javafx.util.Pair;
 import slogo.ExceptionHelper;
 import slogo.view.animations.MoveAnimation;
 import slogo.view.animations.RotateAnimation;
@@ -31,22 +35,24 @@ public class TurtleDrawer {
   private SimpleDoubleProperty centerX;
   private SimpleDoubleProperty centerY;
   private SimpleObjectProperty<Image> currentTurtleGif;
-  private boolean running;
   private Pane canvas;
   public Turtle turtle;
   private String imgName;
   private String prevImg;
+  private SimpleBooleanProperty newAnimations;
 
   public TurtleDrawer(Turtle turtle, Pane canvas, Group elements) {
     this.canvas = canvas;
     this.turtle = turtle;
     this.elements = elements;
-    running = false;
+
     prevImg = "";
     imgName = "";
     currentTurtleGif = new SimpleObjectProperty<>();
     currentTrans = new LinkedList<>();
+    newAnimations = new SimpleBooleanProperty(false);
     addTurtleToCanvas();
+
 
   }
 
@@ -71,24 +77,14 @@ public class TurtleDrawer {
     });
   }
 
-  public void reset() {
-    elements.getChildren().clear();
-  }
 
-  public void run(DoubleProperty speed, double maxSpeed) {
-    if (running) {
-      return;
-    }
-    running = true;
-    play(speed, maxSpeed);
-  }
 
   public void changeImage(String file) {
     String path = "data/turtleImages/" + file + ".gif";
     setImage(path);
   }
 
-  private void play(DoubleProperty speed, double maxSpeed) {
+  public boolean play(TurtleAnimation toPlay, DoubleProperty speed, double maxSpeed) {
     Group lines = new Group();
     elements.getChildren().add(lines);
     SimpleDoubleProperty turtleX = turtleNode.getXLocLines();
@@ -97,18 +93,16 @@ public class TurtleDrawer {
     double startLocX = turtleX.doubleValue();
     double startLocY = turtleY.doubleValue();
 
-    if (!currentTrans.isEmpty()) {
-      TurtleAnimation toPlay = currentTrans.poll();
-      if (speed.doubleValue() == maxSpeed) {
-        normalExecute(toPlay, lines, startLocX, startLocY);
-        play(speed, maxSpeed);
-      } else {
-        animateExecute(toPlay, lines, turtleX, turtleY, startLocX, startLocY, speed, maxSpeed);
-      }
+    if (speed.doubleValue() == maxSpeed) {
+      normalExecute(toPlay, lines, startLocX, startLocY);
+    } else {
+      animateExecute(toPlay, lines, turtleX, turtleY, startLocX, startLocY, speed, maxSpeed);
     }
+    return true;
   }
 
-  private void animateExecute(TurtleAnimation toPlay, Group lines, SimpleDoubleProperty turtleX, SimpleDoubleProperty turtleY, double startLocX, double startLocY, DoubleProperty speed,
+  private void animateExecute(TurtleAnimation toPlay, Group lines, SimpleDoubleProperty turtleX,
+      SimpleDoubleProperty turtleY, double startLocX, double startLocY, DoubleProperty speed,
       double maxSpeed) {
     ChangeListener<Number> lis = (e, ee, eee) -> {
       lines.getChildren().clear();
@@ -122,17 +116,14 @@ public class TurtleDrawer {
       turtleX.removeListener(lis);
       turtleY.removeListener(lis);
       lines.getChildren().add(makeLines(startLocX, startLocY));
-      checkDoneAnimating();
-      play(speed, maxSpeed);
     });
     ana.play();
   }
 
-  private void normalExecute(TurtleAnimation toPlay, Group lines, double startLocX, double startLocY) {
+  private void normalExecute(TurtleAnimation toPlay, Group lines, double startLocX,
+      double startLocY) {
     toPlay.execute();
-    System.out.println("executed");
     lines.getChildren().add(makeLines(startLocX, startLocY));
-    checkDoneAnimating();
   }
 
 
@@ -141,11 +132,6 @@ public class TurtleDrawer {
         turtleNode.getYLocLines().doubleValue(), canvas, centerX, centerY, turtle.getPen());
   }
 
-  private void checkDoneAnimating() {
-    if (currentTrans.isEmpty()) {
-      running = false;
-    }
-  }
 
   private void makeCenterBindings() {
     centerY = new SimpleDoubleProperty();
@@ -162,14 +148,22 @@ public class TurtleDrawer {
       currentTurtleGif.set(new Image(inputStream));
     } catch (FileNotFoundException fnfe) {
       new ExceptionHelper().fileNotFound(fnfe);
-
     }
   }
 
   private void makeAnimationBindings() {
-    turtle.getVisibleProperty().addListener(e -> currentTrans.add(visibleAnimation()));
-    turtle.getCordsProperty().addListener(e -> currentTrans.add(moveAnimation()));
-    turtle.getAngleProperty().addListener(e -> currentTrans.add(rotateAnimation()));
+    turtle.getVisibleProperty().addListener(e -> {
+      currentTrans.add(visibleAnimation());
+      newAnimations.set(true);
+    });
+    turtle.getCordsProperty().addListener(e -> {
+      currentTrans.add(moveAnimation());
+      newAnimations.set(true);
+    });
+    turtle.getAngleProperty().addListener(e -> {
+      currentTrans.add(rotateAnimation());
+      newAnimations.set(true);
+    });
   }
 
   private TurtleAnimation rotateAnimation() {
@@ -185,4 +179,20 @@ public class TurtleDrawer {
 
   }
 
+  public void setAnimationListener(ChangeListener<Boolean> func) {
+    newAnimations.addListener(func);
+  }
+
+  public List<Pair<TurtleDrawer, TurtleAnimation>> getAnimations() {
+    ArrayList<Pair<TurtleDrawer, TurtleAnimation>> ret = new ArrayList<>();
+    if(!newAnimations.getValue()){
+      return ret;
+    }
+    for(TurtleAnimation animation : currentTrans){
+      ret.add(new Pair<>(this, animation));
+    }
+    currentTrans.clear();
+    newAnimations.set(false);
+    return ret;
+  }
 }

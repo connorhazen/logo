@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import slogo.ControllerInterface;
 import slogo.ExceptionHelper;
 import slogo.structs.CommandStruct;
+import slogo.view.MovableElements.BorderPaneLocation;
 import slogo.view.ViewFactory.BorderPaneElement;
 import slogo.view.ViewFactory.ElementFactory;
 import slogo.windows.BackgroundColor;
@@ -42,15 +43,14 @@ public class View implements ViewInterface {
   private ArrayList<String> clickedCommands;
   protected Color myColor;
   private CommandStruct commandStruct;
-  private List<TurtleDrawer> turtleDrawers;
+  private ElementDrawer drawer;
 
   public View(ControllerInterface cont, Stage primaryStage, Turtle turtle, CommandStruct workSpaceInfo){
     commandStruct = workSpaceInfo;
     clickedCommands = new ArrayList<>();
-    turtleDrawers = new ArrayList<>();
 
     canvas = new Pane();
-    ElementDrawer drawer = new ElementDrawer(workSpaceInfo);
+    drawer = new ElementDrawer(workSpaceInfo);
     drawer.setCanvas(canvas);
 
     boxHistory = new CommandHistoryView();
@@ -86,7 +86,7 @@ public class View implements ViewInterface {
 
   private BorderPane createBorderPane(){
     BorderPane borderPane = new BorderPane();
-    ElementFactory factory = ElementFactory.startFactory(controller, this, currentTurtle, clickedCommands);
+    ElementFactory factory = ElementFactory.startFactory(controller, this, clickedCommands);
 
     BorderPaneElement top = factory.getNode("SettingsBar", BorderPaneLocation.TOP);
     BorderPaneElement right = factory.getNode("RightView", BorderPaneLocation.RIGHT, errorBox, historyBox);
@@ -147,16 +147,17 @@ public class View implements ViewInterface {
   }
 
   @SuppressWarnings("Used in reflection")
-  private void reset(Turtle turtle){
-    turtle.reset();
+  private void reset(){
+    commandStruct.
     drawer.reset();
     errorBox.clear();
     historyBox.clear();
-    drawer.addTurtleToCanvas(canvas, currentTurtle);
+    drawer.makeTurtles();
+
   }
 
   private void makeTurtle(){
-    drawer.addTurtleToCanvas(canvas, currentTurtle);
+    drawer.makeTurtles();
   }
 
   @Override
@@ -171,7 +172,7 @@ public class View implements ViewInterface {
   @Override
   public void setImage(String file){
     try {
-      drawer.changeImage(file);
+      drawer.setImageForAll(file);
     }
     catch (Exception e){
       printError("TurtleFileNotFound");
@@ -190,10 +191,9 @@ public class View implements ViewInterface {
   @Override
   public void updateView(List<String> history) {
     SimpleDoubleProperty tempVal = new SimpleDoubleProperty(4);
-
     drawer.run(tempVal, 4);
     printHistory(history);
-    setBackGroundColor(currentTurtle.getBackgroundColor());
+    //setBackGroundColor(currentTurtle.getBackgroundColor());
   }
 
   private void changeInputBox(String replace){
