@@ -1,14 +1,13 @@
 package slogo.view;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javafx.application.Application;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -17,9 +16,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import slogo.ControllerInterface;
 import slogo.ExceptionHelper;
+import slogo.structs.CommandStruct;
+import slogo.view.MovableElements.BorderPaneLocation;
 import slogo.view.ViewFactory.BorderPaneElement;
 import slogo.view.ViewFactory.ElementFactory;
-import slogo.view.ViewFactory.ElementMove;
 import slogo.windows.BackgroundColor;
 import slogo.windows.HelpWindow;
 import slogo.windows.PenColorWindow;
@@ -33,23 +33,25 @@ public class View implements ViewInterface {
   private final Scene scene;
   private Stage mainStage;
   private Pane canvas;
-  private Turtle currentTurtle;
   private static final String STYLESHEET = "slogo/view/default.css";
   private static final String PROPERTIES = "src/slogo/view/button_properties.txt";
   private final ExceptionHelper errorHelper;
-  private final TurtleDrawer drawer;
   private TextArea errorBox;
   private TextArea historyBox;
   private TextArea inputBox;
   private CommandHistoryView boxHistory;
   private ArrayList<String> clickedCommands;
-  private Color myColor;
+  protected Color myColor;
+  private CommandStruct commandStruct;
+  private ElementDrawer drawer;
 
-  public View(ControllerInterface cont, Stage primaryStage, Turtle turtle){
+  public View(ControllerInterface cont, Stage primaryStage, CommandStruct workSpaceInfo){
+    commandStruct = workSpaceInfo;
     clickedCommands = new ArrayList<>();
-    drawer = new TurtleDrawer();
-    currentTurtle = turtle;
+
     canvas = new Pane();
+    drawer = new ElementDrawer(workSpaceInfo);
+
     boxHistory = new CommandHistoryView();
     errorHelper = new ExceptionHelper();
     this.mainStage = primaryStage;
@@ -61,6 +63,7 @@ public class View implements ViewInterface {
     mainStage.setScene(scene);
     mainStage.show();
     makeKeyListens();
+    drawer.setCanvas(canvas);
 
     makeTurtle();
 
@@ -83,7 +86,7 @@ public class View implements ViewInterface {
 
   private BorderPane createBorderPane(){
     BorderPane borderPane = new BorderPane();
-    ElementFactory factory = ElementFactory.startFactory(controller, this, currentTurtle, clickedCommands);
+    ElementFactory factory = ElementFactory.startFactory(controller, this, clickedCommands);
 
     BorderPaneElement top = factory.getNode("SettingsBar", BorderPaneLocation.TOP);
     BorderPaneElement right = factory.getNode("RightView", BorderPaneLocation.RIGHT, errorBox, historyBox);
@@ -91,23 +94,12 @@ public class View implements ViewInterface {
     BorderPaneElement left = factory.getNode("CommandView", BorderPaneLocation.LEFT);
     BorderPaneElement center = factory.getNode("CanvasView", BorderPaneLocation.CENTER, canvas);
 
-    List<BorderPaneElement> borderList = Arrays.asList(top, right, bottom, left, center);
-
     borderPane.setTop(top.getElement());
     borderPane.setRight(right.getElement());
     borderPane.setBottom(bottom.getElement());
     borderPane.setLeft(left.getElement());
     borderPane.setCenter(center.getElement());
 
-    for(int i = 0; i < 4; i++){
-      Node n = borderPane.getChildren().get(i);
-      BorderPaneElement bpe = borderList.get(i);
-
-      n.setOnMouseReleased(new ElementMove(borderPane, borderList, n, bpe));
-
-
-
-    }
     return borderPane;
   }
 
@@ -155,16 +147,16 @@ public class View implements ViewInterface {
   }
 
   @SuppressWarnings("Used in reflection")
-  private void reset(Turtle turtle){
-    turtle.reset();
+  private void reset(){
     drawer.reset();
     errorBox.clear();
     historyBox.clear();
-    drawer.addTurtleToCanvas(canvas, currentTurtle);
+    drawer.makeTurtles();
+
   }
 
   private void makeTurtle(){
-    drawer.addTurtleToCanvas(canvas, currentTurtle);
+    drawer.makeTurtles();
   }
 
   @Override
@@ -179,7 +171,7 @@ public class View implements ViewInterface {
   @Override
   public void setImage(String file){
     try {
-      drawer.changeImage(file);
+      drawer.setImageForAll(file);
     }
     catch (Exception e){
       printError("TurtleFileNotFound");
@@ -198,10 +190,9 @@ public class View implements ViewInterface {
   @Override
   public void updateView(List<String> history) {
     SimpleDoubleProperty tempVal = new SimpleDoubleProperty(4);
-
     drawer.run(tempVal, 4);
     printHistory(history);
-    setBackGroundColor(currentTurtle.getBackgroundColor());
+    //setBackGroundColor(currentTurtle.getBackgroundColor());
   }
 
   private void changeInputBox(String replace){

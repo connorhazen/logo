@@ -20,18 +20,25 @@ public class Model implements ModelInterface{
     private static final ResourceBundle ERROR_MESSAGES = ResourceBundle.getBundle("slogo/exceptions/exception_messages");
     private static final String LANGUAGE_DEFAULT = "English";
 
+    /**
+     * This is the constructor for the model which uses English as the default language.
+     */
     public Model(){
-        commandStruct = new CommandStruct(this);
-        language = LANGUAGE_DEFAULT;
+        this(LANGUAGE_DEFAULT);
     }
 
-    public CommandStruct getCommandStruct(){
-        return commandStruct;
-    }
-
+    /**
+     * This is the constructor for the model which uses the given language in parsing commands
+     * @param lang String of language to be used in model
+     */
     public Model(String lang){
         commandStruct = new CommandStruct(this);
         language = lang;
+    }
+
+    @Override
+    public CommandStruct getCommandStruct(){
+        return commandStruct;
     }
 
     @Override
@@ -39,7 +46,9 @@ public class Model implements ModelInterface{
         if(input.trim().equals("")) { throw new UnknownCommandException(ERROR_MESSAGES.getString("NoCommand")); }
         Parser parser = new Parser(language, commandStruct);
         List<String> parsedCommands = parser.parseCommand(input);
+
         Map<String, String> commandMap = parser.getCommandMap();
+
         for (String basicCmd : parsedCommands) {
             String[] parsedCommand = parser.parseList(basicCmd);
             String command = commandMap.get(parsedCommand[Parser.COMMAND_INDEX]);
@@ -52,15 +61,18 @@ public class Model implements ModelInterface{
                 Object obj = cons.newInstance(params);
                 Method method = cls.getMethod("executeCommand", Parser.NOPARAMS);
                 method.invoke(obj);
-            } catch (Exception e) { throw new UnknownCommandException(e, ERROR_MESSAGES.getString("UnknownCommand") + command); }
+            } catch (Exception e) {
+                throw new UnknownCommandException(e, ERROR_MESSAGES.getString("UnknownCommand") + command); }
         }
         return parsedCommands;
     }
 
+    @Override
     public void changeLanguage(String lang){
         language = lang;
     }
 
+    @Override
     public String getLanguage(){
         return language;
     }

@@ -23,7 +23,7 @@ public class Tell extends Misc {
 
         for(Double turtleID : idList){
             int id = (int) Math.round(turtleID);
-            Turtle currentTurtle = getCommandStruct().getTurtle(id);
+            Turtle currentTurtle = getCommandStruct().getTurtleAndAdd(id);
             executeOnTurtleSet.add(currentTurtle);
         }
 
