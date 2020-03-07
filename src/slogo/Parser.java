@@ -1,6 +1,7 @@
 package slogo;
 
 import slogo.commands.Command;
+import slogo.commands.Variable;
 import slogo.exceptions.InvalidParameterException;
 import slogo.exceptions.UnknownCommandException;
 import slogo.structs.CommandStruct;
@@ -9,11 +10,13 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.regex.Pattern;
+
+import slogo.structs.VariableStruct;
 import slogo.view.Turtle;
 
 import static java.lang.Class.forName;
 
-public class Parser implements ParserInterface{
+public class Parser {
     private Map<String, String> savedCommands;
     private Stack argumentStack;
     private Stack commandStack;
@@ -40,6 +43,11 @@ public class Parser implements ParserInterface{
     private static final String LANGUAGE_PACKAGE = "resources.languages/";
     private static final ResourceBundle ERROR_MESSAGES = ResourceBundle.getBundle("slogo/exceptions/exception_messages");
 
+    /**
+     * This is the constructor for the parser class
+     * @param language String of language to be used in parsing
+     * @param cs CommandStruct passed in from the model which contains user-defined commands and variables
+     */
     public Parser(String language, CommandStruct cs) {
         savedCommands = new HashMap<>();
         commandMap = new HashMap<>();
@@ -52,7 +60,11 @@ public class Parser implements ParserInterface{
         dummyCommandStruct = new CommandStruct(new Model(currentLanguage));
     }
 
-
+    /**
+     * Takes a command of any length and parses it into commands that can be recognized and run by the model
+     * @param cmd String of command to be parsed
+     * @return List of strings containing commands for model after parsing
+     */
     public List<String> parseCommand(String cmd) throws UnknownCommandException, InvalidParameterException {
         String cleanCommand = removeComments(cmd);
         cleanCommand = cleanCommand.trim().replaceAll(" +", " ");
@@ -74,7 +86,7 @@ public class Parser implements ParserInterface{
         return noComments;
     }
 
-    public List<String> convertToBasicCommands(String[] originalCmd) throws UnknownCommandException, InvalidParameterException {
+    private List<String> convertToBasicCommands(String[] originalCmd) throws UnknownCommandException, InvalidParameterException {
         clearStacks();
         List<String> basicCommandList = new ArrayList<>(); boolean isSlogoList = false; String listCommand = ""; int beginCount = 0; int endCount = 0; boolean userDef = false;
         for(String s : originalCmd) {
@@ -93,7 +105,7 @@ public class Parser implements ParserInterface{
             else {
                 if (isConstant(s) || userDef == true) { argumentStack.push(s); userDef = false; }
                 else if (commandMap.containsKey(s)) { if(commandMap.get(s).equals("MakeVariable")) {userDef = true;} commandStack.push(s); }
-                else if (commandStruct.containsVariable(s)) { argumentStack.push(commandStruct.getVariable(s).getValue()); }
+                else if (!(commandStruct.getVariable(s)==null)) { argumentStack.push(commandStruct.getVariable(s).getValue()); }
                 else { throw new UnknownCommandException(ERROR_MESSAGES.getString("UnknownCommand") + s); } // TODO: Error? OR if commandMap does not contain user-defined commands/variable, check if it's one of those
             }
             basicCommandList = buildTree(basicCommandList);
@@ -151,6 +163,11 @@ public class Parser implements ParserInterface{
         }
     }
 
+    /**
+     * Takes a command and returns the command's return value
+     * @param cmd String of command to get return value of
+     * @return return value of given command
+     */
     public double getCommandRetValue(String cmd) throws InvalidParameterException {
         String[] parsedCommand = parseList(cmd);;
         String command = commandMap.get(parsedCommand[COMMAND_INDEX]);
@@ -162,6 +179,7 @@ public class Parser implements ParserInterface{
             Class cls = forName("slogo.commands." + command);
             Constructor cons = cls.getDeclaredConstructor(COMMAND_CLASS_PARAMS);
             Object params[] = new Object[] {dummyCommandStruct, "[ ]", args, DUMMY_TURTLE};
+            if(command.equals("MakeVariable")) {params = new Object[] {commandStruct, "[ ]", args, DUMMY_TURTLE};}
             Object obj = cons.newInstance(params);
             Method method = cls.getDeclaredMethod("execute", EXECUTE_CLASS_PARAMS);
             method.setAccessible(true);
@@ -171,6 +189,11 @@ public class Parser implements ParserInterface{
         }
     }
 
+    /**
+     * Recognizes lists and includes them as one argument instead of multiple commands or arguments
+     * @param cmd String of command to parse into string array (including lists)
+     * @return String array containing commands and arguments (including lists) as separate entries
+     */
     public String[] parseList(String cmd){
         String[] parsedCommand = cmd.split(" ");
         ArrayList<String> cmdList = new ArrayList<>(); boolean isSlogoList = false; String listCommand = ""; int beginCount = 0; int endCount = 0;
@@ -210,6 +233,10 @@ public class Parser implements ParserInterface{
         return CONSTANT_PATTERN.matcher(s).matches();
     }
 
+    /**
+     * Creates a map that can go from Slogo commands to command class names
+     * @return map with language's recognized commands as keys and the command class name as values
+     */
     public Map<String, String> getCommandMap(){
         Enumeration<String> commands = languageResource.getKeys();
         while(commands.hasMoreElements()){

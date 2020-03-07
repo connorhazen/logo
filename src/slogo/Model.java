@@ -20,18 +20,26 @@ public class Model implements ModelInterface{
     private static final ResourceBundle ERROR_MESSAGES = ResourceBundle.getBundle("slogo/exceptions/exception_messages");
     private static final String LANGUAGE_DEFAULT = "English";
 
+    /**
+     * This is the constructor for the model which uses English as the default language.
+     */
     public Model(){
         commandStruct = new CommandStruct(this);
         language = LANGUAGE_DEFAULT;
     }
 
-    public CommandStruct getCommandStruct(){
-        return commandStruct;
-    }
-
+    /**
+     * This is the constructor for the model which uses the given language in parsing commands
+     * @param lang String of language to be used in model
+     */
     public Model(String lang){
         commandStruct = new CommandStruct(this);
         language = lang;
+    }
+
+    @Override
+    public CommandStruct getCommandStruct(){
+        return commandStruct;
     }
 
     @Override
@@ -57,10 +65,12 @@ public class Model implements ModelInterface{
         return parsedCommands;
     }
 
+    @Override
     public void changeLanguage(String lang){
         language = lang;
     }
 
+    @Override
     public String getLanguage(){
         return language;
     }
