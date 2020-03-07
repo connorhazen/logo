@@ -13,13 +13,12 @@ import slogo.ExceptionHelper;
 import slogo.view.BorderPaneLocation;
 import slogo.view.Turtle;
 import slogo.view.View;
-import slogo.view.ViewFactory.BorderPaneElement;
 import slogo.view.ViewInterface;
 
 public class BottomView<T> implements BorderPaneElement {
-  TextArea inputText;
-  Turtle turtle;
-  ViewInterface view;
+  private TextArea inputText;
+  private Turtle turtle;
+  private ViewInterface view;
   private BorderPaneLocation loc;
   public BottomView(TextArea ta, Turtle turtle, ViewInterface view, BorderPaneLocation loc){
     inputText = ta;
@@ -57,9 +56,7 @@ public class BottomView<T> implements BorderPaneElement {
               if(m.getName().equals("reset")) m.invoke(obj, turtle);
               else m.invoke(obj);
             } catch (IllegalAccessException | InvocationTargetException ex) {
-              System.out.println(ex.getLocalizedMessage());
-              ExceptionHelper errorHelper = new ExceptionHelper();
-              errorHelper.reflectionError(ex);
+              new ExceptionHelper().reflectionError(ex);
 
             }
           });
@@ -68,7 +65,6 @@ public class BottomView<T> implements BorderPaneElement {
         }
       }
     }
-    //myBox.getChildren().add(inputText);
     return myBox;
   }
 }
