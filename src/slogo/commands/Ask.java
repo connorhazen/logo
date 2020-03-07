@@ -19,6 +19,7 @@ public class Ask extends Misc{
     @Override
     protected double execute(Turtle executeOnTurtle) throws UnknownCommandException, InvalidParameterException {
         List<Double> idList = getLoopConstants();
+        HashSet<Turtle> prevSet = (HashSet) getCommandStruct().getTurtleSet();
         HashSet<Turtle> executeOnTurtlesSet = new HashSet<>();
 
         CommandStruct s = getCommandStruct();
@@ -36,7 +37,7 @@ public class Ask extends Misc{
         List<String> parsed = p.parseCommand(getListString2());
         double ret = p.getCommandRetValue(parsed.get(parsed.size()-1));
 
-        getCommandStruct().setTurtleSetDefault();
+        getCommandStruct().setTurtleSet(prevSet);
 
         return ret;
     }

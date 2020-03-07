@@ -36,10 +36,11 @@ public class CommandStruct {
     }
 
 
-    public Turtle getTurtle(int index){ return myTurtleMap.get(index);}
-
-    public boolean turtleExists(int index){
-        return myTurtleMap.containsKey(index);
+    public Turtle getTurtle(int index){
+        if(!myTurtleMap.containsKey(index)){
+            myTurtleMap.put(index, new Turtle(index,0,0,-90));
+        }
+        return myTurtleMap.get(index);
     }
 
     public int totalTurtles(){
@@ -52,8 +53,9 @@ public class CommandStruct {
         myTurtleSet = turtleSet;
     }
 
-    public void setTurtleSetDefault(){
-        myTurtleSet = (HashSet) myTurtleMap.values();
+    public void deleteAllTurtles(){
+        myTurtleMap = new HashMap<>();
+        myTurtleSet = new HashSet<>();
     }
 
     public Set<Turtle> getFullTurtleSet(){return (HashSet) myTurtleMap.values();}

@@ -156,7 +156,7 @@ public class Turtle implements TurtleInterface {
         return myPen;
     }
 
-    //TODO: catch out of bounds
+
     @Override
     public boolean setShape(int index) {
         myShapeIndex.set(index);

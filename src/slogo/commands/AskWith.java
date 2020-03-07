@@ -19,8 +19,9 @@ public class AskWith extends Misc {
     @Override
     protected double execute(Turtle executeOnTurtle) throws UnknownCommandException, InvalidParameterException {
         HashSet<Turtle> executeOnTurtleSet = new HashSet<>();
+        HashSet<Turtle> prevSet = (HashSet) getCommandStruct().getTurtleSet();
 
-        for(Turtle turtle : getCommandStruct().getTurtleSet()){
+        for(Turtle turtle : getCommandStruct().getFullTurtleSet()){
             HashSet<Turtle> temp = new HashSet<>();
             temp.add(turtle);
             getCommandStruct().setTurtleSet(temp);
@@ -40,7 +41,7 @@ public class AskWith extends Misc {
         List<String> parsed = p.parseCommand(getListString2());
         double ret = p.getCommandRetValue(parsed.get(parsed.size()-1));
 
-        getCommandStruct().setTurtleSetDefault();
+        getCommandStruct().setTurtleSet(prevSet);
 
         return ret;
     }
