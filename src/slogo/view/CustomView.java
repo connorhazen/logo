@@ -1,7 +1,9 @@
 package slogo.view;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -21,12 +23,14 @@ public class CustomView extends View {
   private void loadDataFromProperties(){
     Properties props = new Properties();
     try{
-      props.load(View.class.getResourceAsStream(myPropertiesPath.toString()));
+      InputStream is = new FileInputStream(myPropertiesPath.toString());
+      props.load(is);
     } catch(IOException e){
       new ExceptionHelper().fileNotFound(e);
     }
     for(String key : props.keySet().toArray(new String[0])){
-      if(key.equals("Color")) super.myColor = Color.web(props.getProperty(key));
+      if(key.equals("Color")) super.setBackGroundColor(Color.web(props.getProperty(key)));
+      System.out.println(super.myColor.toString());
     }
   }
 }
