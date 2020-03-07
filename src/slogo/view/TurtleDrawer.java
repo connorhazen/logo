@@ -36,7 +36,6 @@ public class TurtleDrawer {
   private Turtle turtle;
   private String imgName;
   private String prevImg;
-  private boolean animatePen = false;
 
   public TurtleDrawer() {
     running = false;
