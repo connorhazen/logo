@@ -101,11 +101,12 @@ public class WrapableTurtleImage extends ImageView{
   public SimpleDoubleProperty getYLocLines(){
     return turtleYRelative;
   }
+
   public double getLastX(){
-    return lastX;
+    return turtle.getLastX();
   }
   public double getLastY(){
-    return  lastY;
+    return  turtle.getLastY();
   }
 
 }

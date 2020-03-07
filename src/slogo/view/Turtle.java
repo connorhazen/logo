@@ -1,14 +1,13 @@
 package slogo.view;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
-import javafx.util.Pair;
 
 //todo: add checking for if updating turtle location is valid
 //todo: add statuses for turtle command execution
@@ -23,11 +22,13 @@ public class Turtle implements TurtleInterface {
     private SimpleObjectProperty <Coordinates> cords;
 
     private static int myID;
+    private double lastX;
+    private double lastY;
 
     private SimpleDoubleProperty myAngle;
     private boolean myPenStatus = true; // up when false
     private SimpleBooleanProperty myVisibilityStatus; //visibile when true
-    private ObservableList<Object> myHistory;
+    private List<Coordinates> myHistory;
 
     private boolean isActive;
     private SimpleIntegerProperty myShapeIndex = new SimpleIntegerProperty();
@@ -41,15 +42,16 @@ public class Turtle implements TurtleInterface {
         isActive = true;
         myInitialX = xCoor;
         myInitialY = yCoor;
+        lastX = xCoor;
+        lastY = yCoor;
         cords = new SimpleObjectProperty<>(new Coordinates(xCoor, yCoor));
         myInitialAngle = orientation;
         myID = ID;
         myShapeIndex.set(0);
         myAngle = new SimpleDoubleProperty(orientation);
         myVisibilityStatus = new SimpleBooleanProperty(true);
-        myHistory =  FXCollections.observableArrayList();
-        Pair<Double, Double> storeCurLoc = new Pair<>(cords.getValue().getX(), cords.getValue().getY());
-        myHistory.add(storeCurLoc);
+        myHistory =  new ArrayList<>();
+        myHistory.add(new Coordinates(xCoor, yCoor));
     }
 
     @Override
@@ -61,11 +63,12 @@ public class Turtle implements TurtleInterface {
     @Override
     public boolean setLocation(double xCord, double yCord) {
         if(!isActive) return isActive;
-        Pair<Double, Double> storeCurLoc = new Pair<>(cords.getValue().getX(), cords.getValue().getY());
+        lastX = cords.getValue().getX();
+        lastY = cords.getValue().getX();
 
         cords.set(new Coordinates(xCord, yCord));
 
-        myHistory.add(storeCurLoc);
+        myHistory.add(cords.getValue());
         return true;
     }
 
@@ -98,13 +101,14 @@ public class Turtle implements TurtleInterface {
 
     @Override
     public boolean reset() {
+        lastY = myInitialY;
+        lastX = myInitialX;
         cords.set(new Coordinates(myInitialX, myInitialY));
         myAngle.set(myInitialAngle);
         myVisibilityStatus.set(true);
         myHistory.clear();
 
-        Pair<Double, Double> storeCurLoc = new Pair<>(cords.getValue().getX(), cords.getValue().getY());
-        myHistory.add(storeCurLoc);
+        myHistory.add(cords.getValue());
         return true;
     }
 
@@ -120,9 +124,10 @@ public class Turtle implements TurtleInterface {
     }
 
     @Override
-    public ObservableList<Object> getHistory() {
+    public List<Coordinates> getHistory() {
         return myHistory;
     }
+
 
     @Override
     public boolean clearHistory() {
@@ -154,6 +159,16 @@ public class Turtle implements TurtleInterface {
     @Override
     public Pen getPen() {
         return myPen;
+    }
+
+    @Override
+    public double getLastY() {
+        return lastY;
+    }
+
+    @Override
+    public double getLastX() {
+        return lastX;
     }
 
     //TODO: catch out of bounds

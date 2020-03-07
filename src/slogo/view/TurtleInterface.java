@@ -1,5 +1,6 @@
 package slogo.view;
 
+import java.util.List;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -27,7 +28,7 @@ public interface TurtleInterface {
 
   boolean getPenStatus();
 
-  ObservableList<Object> getHistory();
+  List<Coordinates> getHistory();
 
   boolean clearHistory();
 
@@ -45,4 +46,7 @@ public interface TurtleInterface {
 
   Pen getPen();
 
+  double getLastY();
+
+  double getLastX();
 }

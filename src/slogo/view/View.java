@@ -3,11 +3,14 @@ package slogo.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.function.Consumer;
 import javafx.application.Application;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Scene;
 
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -44,6 +47,7 @@ public class View implements ViewInterface {
   protected Color myColor;
   private CommandStruct commandStruct;
   private ElementDrawer drawer;
+  private Slider slider;
 
   public View(ControllerInterface cont, Stage primaryStage, CommandStruct workSpaceInfo){
     commandStruct = workSpaceInfo;
@@ -85,16 +89,16 @@ public class View implements ViewInterface {
   }
 
   private BorderPane createBorderPane(){
+    Consumer<Slider>  trial = param -> slider = param;
     BorderPane borderPane = new BorderPane();
     ElementFactory factory = ElementFactory.startFactory(controller, this, clickedCommands);
 
     BorderPaneElement top = factory.getNode("SettingsBar", BorderPaneLocation.TOP);
     BorderPaneElement right = factory.getNode("RightView", BorderPaneLocation.RIGHT, errorBox, historyBox);
-    BorderPaneElement bottom = factory.getNode("BottomView", BorderPaneLocation.BOTTOM, inputBox);
+    BorderPaneElement bottom = factory.getNode("BottomView", BorderPaneLocation.BOTTOM, inputBox, trial);
     BorderPaneElement left = factory.getNode("CommandView", BorderPaneLocation.LEFT);
     BorderPaneElement center = factory.getNode("CanvasView", BorderPaneLocation.CENTER, canvas);
-
-    borderPane.setTop(top.getElement());
+        borderPane.setTop(top.getElement());
     borderPane.setRight(right.getElement());
     borderPane.setBottom(bottom.getElement());
     borderPane.setLeft(left.getElement());
@@ -102,6 +106,7 @@ public class View implements ViewInterface {
 
     return borderPane;
   }
+
 
   private void launchWindow(Application application){
     try {
@@ -189,8 +194,7 @@ public class View implements ViewInterface {
 
   @Override
   public void updateView(List<String> history) {
-    SimpleDoubleProperty tempVal = new SimpleDoubleProperty(4);
-    drawer.run(tempVal, 4);
+    drawer.run(slider.valueProperty(), slider.getMax());
     printHistory(history);
     //setBackGroundColor(currentTurtle.getBackgroundColor());
   }

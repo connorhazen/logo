@@ -31,7 +31,7 @@ public class Parser {
     private static final String SAVE_SYMBOL = "=";
     public static final int COMMAND_INDEX = 0;
     private static final int SAVE_SYMBOL_INDEX = 1;
-    private static final Turtle DUMMY_TURTLE = new Turtle(0,0,0,0);
+    private static final Turtle DUMMY_TURTLE = new Turtle(0,0,0,-90);
     public static final Class<?> NOPARAMS[] = {};
     public static final Class<?> COMMAND_CLASS_PARAMS[] = new Class<?>[] {CommandStruct.class, String.class, List.class, Turtle.class};
     private static final Object COMMAND_PARAMS[] = new Object[] {new CommandStruct(new Model()), "[ ]", new ArrayList<>(), DUMMY_TURTLE};

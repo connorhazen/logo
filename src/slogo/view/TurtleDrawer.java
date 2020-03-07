@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
 import javafx.animation.Animation;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
@@ -84,7 +85,7 @@ public class TurtleDrawer {
     setImage(path);
   }
 
-  public boolean play(TurtleAnimation toPlay, DoubleProperty speed, double maxSpeed) {
+  public boolean play(TurtleAnimation toPlay, DoubleProperty speed, double maxSpeed, Runnable a) {
     Group lines = new Group();
     elements.getChildren().add(lines);
     SimpleDoubleProperty turtleX = turtleNode.getXLocLines();
@@ -95,15 +96,15 @@ public class TurtleDrawer {
 
     if (speed.doubleValue() == maxSpeed) {
       normalExecute(toPlay, lines, startLocX, startLocY);
+      a.run();
     } else {
-      animateExecute(toPlay, lines, turtleX, turtleY, startLocX, startLocY, speed, maxSpeed);
+      animateExecute(toPlay, lines, turtleX, turtleY, startLocX, startLocY, speed, a);
     }
     return true;
   }
 
   private void animateExecute(TurtleAnimation toPlay, Group lines, SimpleDoubleProperty turtleX,
-      SimpleDoubleProperty turtleY, double startLocX, double startLocY, DoubleProperty speed,
-      double maxSpeed) {
+      SimpleDoubleProperty turtleY, double startLocX, double startLocY, DoubleProperty speed, Runnable a) {
     ChangeListener<Number> lis = (e, ee, eee) -> {
       lines.getChildren().clear();
       lines.getChildren().add(makeLines(startLocX, startLocY));
@@ -116,6 +117,7 @@ public class TurtleDrawer {
       turtleX.removeListener(lis);
       turtleY.removeListener(lis);
       lines.getChildren().add(makeLines(startLocX, startLocY));
+      a.run();
     });
     ana.play();
   }
@@ -195,4 +197,6 @@ public class TurtleDrawer {
     newAnimations.set(false);
     return ret;
   }
+
+
 }

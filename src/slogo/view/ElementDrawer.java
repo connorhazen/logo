@@ -1,35 +1,16 @@
 package slogo.view;
 
-import java.awt.Canvas;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import javafx.animation.Animation;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleMapProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
-import javafx.util.Duration;
 import javafx.util.Pair;
-import slogo.ExceptionHelper;
 import slogo.structs.CommandStruct;
-import slogo.view.animations.MoveAnimation;
-import slogo.view.animations.RotateAnimation;
 import slogo.view.animations.TurtleAnimation;
-import slogo.view.animations.VisibleAnimation;
-import slogo.view.wrapableObjects.WrapableLine;
-import slogo.view.wrapableObjects.WrapableTurtleImage;
 
 public class ElementDrawer {
   private CommandStruct commandStruct;
@@ -55,8 +36,10 @@ public class ElementDrawer {
     currentTrans = new LinkedList<>();
 
     mapChanged.addListener(e -> {
-      makeTurtles();
-      commandStruct.resetChangedMap();
+      if(canvas!=null){
+        makeTurtles();
+        commandStruct.resetChangedMap();
+      }
     });
 
 
@@ -84,7 +67,7 @@ public class ElementDrawer {
     currentTrans.addAll(toAdd.getAnimations());
   }
 
-  public void run(SimpleDoubleProperty speed, double maxSpeed){
+  public void run(DoubleProperty speed, double maxSpeed){
     if(!running){
       running = true;
       playAnimations(speed, maxSpeed);
@@ -92,15 +75,14 @@ public class ElementDrawer {
 
   }
 
-  private void playAnimations(SimpleDoubleProperty speed, double maxSpeed) {
+  private void playAnimations(DoubleProperty speed, double maxSpeed) {
     if(currentTrans.isEmpty()){
       running = false;
       return;
     }
 
     Pair<TurtleDrawer, TurtleAnimation> toPlay = currentTrans.poll();
-    toPlay.getKey().play(toPlay.getValue(), speed, maxSpeed);
-    playAnimations(speed, maxSpeed);
+    toPlay.getKey().play(toPlay.getValue(), speed, maxSpeed, () -> playAnimations(speed, maxSpeed));
   }
 
   public void setImageForAll(String file){
@@ -113,6 +95,8 @@ public class ElementDrawer {
     td.changeImage(currentImage);
   }
   public void reset(){
+    running = false;
+    currentTrans.clear();
     elements.getChildren().clear();
     commandStruct.reset();
     drawnTurtles.clear();

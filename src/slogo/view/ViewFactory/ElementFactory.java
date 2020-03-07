@@ -2,6 +2,9 @@ package slogo.view.ViewFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import javafx.beans.property.DoubleProperty;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
 import slogo.ControllerInterface;
@@ -36,7 +39,7 @@ public class ElementFactory<T> {
       case "CanvasView":
         if(node[0] instanceof Pane) return new CanvasView<>(loc, node[0]);
       case "BottomView":
-        return new BottomView<TextArea>((TextArea)node[0], viewInterface, loc);
+        return new BottomView<TextArea>((TextArea)node[0], viewInterface, loc, (Consumer<Slider>) node[1]);
       default:
         return null;
     }

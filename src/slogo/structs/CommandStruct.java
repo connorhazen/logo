@@ -79,6 +79,7 @@ public class CommandStruct {
     public boolean addTurtle(Turtle newTurtle){
         if (firstTurtle==null){
             firstTurtle = newTurtle;
+            setActiveTurtle(firstTurtle);
         }
         changedMap.set(true);
         myTurtleSet.add(newTurtle);
