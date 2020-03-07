@@ -1,5 +1,7 @@
 package slogo.commands;
 
+import slogo.Model;
+import slogo.Parser;
 import slogo.exceptions.InvalidParameterException;
 import slogo.exceptions.UnknownCommandException;
 import slogo.structs.VariableStruct;
@@ -30,13 +32,18 @@ public class For extends Misc{
         double increment = loopConstants.get(2);
         String varName = parseStringIntoVar(getListString1()).get(0);
 
+        CommandStruct s = getCommandStruct();
+        Model m = s.getModel();
+        Parser p = new Parser(m.getLanguage(), s);
+
         for(double i = start; i < end; i += increment){
             VariableStruct itterator = new VariableStruct(varName, i);
             getCommandStruct().addVariable(itterator);
-            getCommandStruct().getModel().runCommand(getListString1(), executeOnTurtle);
+            getCommandStruct().getModel().runCommand(getListString2(), executeOnTurtle);
 
             if(i >= end - increment ){
-                ret = retVal(getListString1());
+                List<String> parsed = p.parseCommand(getListString2());
+                ret = p.getCommandRetValue(parsed.get(parsed.size()-1));
             }
         }
         return ret;

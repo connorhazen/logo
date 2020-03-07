@@ -1,5 +1,7 @@
 package slogo.commands;
 
+import slogo.Model;
+import slogo.Parser;
 import slogo.exceptions.InvalidParameterException;
 import slogo.exceptions.UnknownCommandException;
 import slogo.structs.CommandStruct;
@@ -28,10 +30,15 @@ public class AskWith extends Misc {
             }
         }
 
+        CommandStruct s = getCommandStruct();
+        Model m = s.getModel();
+        Parser p = new Parser(m.getLanguage(), s);
+
         getCommandStruct().setTurtleSet(executeOnTurtleSet);
 
         getCommandStruct().getModel().runCommand(getListString2(), executeOnTurtle);
-        double ret = retVal(getListString2());
+        List<String> parsed = p.parseCommand(getListString2());
+        double ret = p.getCommandRetValue(parsed.get(parsed.size()-1));
 
         getCommandStruct().setTurtleSetDefault();
 
