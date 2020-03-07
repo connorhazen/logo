@@ -117,7 +117,12 @@ public class CommandStruct {
     }
 
     public boolean containsVariable(String variableName) {
-        return !(getVariable(variableName) == null);
+        for(VariableStruct v: myVariables){
+            if(v.getName().equals(variableName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void addVariable(VariableStruct var){
