@@ -17,6 +17,7 @@ public class SetPenSize extends TurtleCommand {
     protected double execute(Turtle executeOnTurtle) throws UnknownCommandException, InvalidParameterException {
         int index = (int) Math.round(getArgsDouble().get(0));
         executeOnTurtle.getPen().setSize(index);
+        getCommandStruct().setPenSize(index);
         return index;
     }
 }

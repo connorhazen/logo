@@ -20,6 +20,7 @@ public class SetPenColor extends TurtleCommand {
         if(indexExists){
             executeOnTurtle.getPen().setPenColorIndex(index);
             executeOnTurtle.getPen().setColor(this.getCommandStruct().getColor(index));
+            getCommandStruct().setPenColor(index);
             return index;
         }
         return 0;

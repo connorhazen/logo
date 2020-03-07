@@ -18,14 +18,25 @@ public class CommandStruct {
     private Map<Integer, Turtle> myTurtleMap = new HashMap<>();
     private Set<Turtle> myTurtleSet = new HashSet<>();
     private SimpleObjectProperty<Turtle> myActiveTurtle = new SimpleObjectProperty<>();
+
+    private int myPenColor = 1;
+    private int myPenSize = 3;
+    private int myShape = 1;
+
     private SimpleBooleanProperty changedMap = new SimpleBooleanProperty(false);
+
 
     public CommandStruct(Model inputModel) {
         myVariables = new ArrayList<VariableStruct>();
         myUserCommands = new ArrayList<UserCommandStruct>();
         myModel = inputModel;
+        setColor(1, 0, 0, 0);
         firstTurtle = null;
 
+    }
+
+    public List<UserCommandStruct> getUserCommands(){
+        return Collections.unmodifiableList(myUserCommands);
     }
 
     public Turtle getActiveTurtle(){
@@ -40,10 +51,24 @@ public class CommandStruct {
         return myModel;
     }
 
+
     public Turtle getTurtle(int index){ return myTurtleMap.get(index);}
 
     public boolean turtleExists(int index){
         return myTurtleMap.containsKey(index);
+    }
+
+
+
+    public Turtle getTurtleAndAdd(int index){
+        if(!myTurtleMap.containsKey(index)){
+            Turtle newTurtle = new Turtle(index, 0, 0, -90);
+            newTurtle.getPen().setColor(myColorMap.get(myPenColor));
+            newTurtle.getPen().setSize(myPenSize);
+            newTurtle.setShape(myShape);
+            myTurtleMap.put(index, newTurtle);
+        }
+        return myTurtleMap.get(index);
     }
 
     public int totalTurtles(){
@@ -56,8 +81,9 @@ public class CommandStruct {
         myTurtleSet = turtleSet;
     }
 
-    public void setTurtleSetDefault(){
-        myTurtleSet = (HashSet) myTurtleMap.values();
+    public void deleteAllTurtles(){
+        myTurtleMap = new HashMap<>();
+        myTurtleSet = new HashSet<>();
     }
 
     public Set<Turtle> getFullTurtleSet(){return (HashSet) myTurtleMap.values();}
@@ -104,6 +130,18 @@ public class CommandStruct {
         return true;
     }
 
+    public void setPenColor(int index){
+        myPenColor = index;
+    }
+
+    public void setPenSize(int size){
+        myPenSize = size;
+    }
+
+    public void setPenShape(int index){
+        myShape = index;
+    }
+
     private int castIntInRange(int val){
         if(val < 0){
             return 0;
@@ -115,7 +153,7 @@ public class CommandStruct {
     }
 
     public List<VariableStruct> getVariables() {
-        return myVariables;
+        return Collections.unmodifiableList(myVariables);
     }
 
     public List<VariableStruct> getStackVariables() {
