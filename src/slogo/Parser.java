@@ -1,7 +1,6 @@
 package slogo;
 
 import slogo.commands.Command;
-import slogo.commands.Variable;
 import slogo.exceptions.InvalidParameterException;
 import slogo.exceptions.UnknownCommandException;
 import slogo.structs.CommandStruct;
@@ -100,11 +99,12 @@ public class Parser {
                 } else { listCommand += s + " "; }
             }
             else {
-                if (isConstant(s) || userDef == true) { argumentStack.push(s); userDef = false; }
+                if (isConstant(s) || userDef) { argumentStack.push(s); userDef = false; }
                 else if (commandMap.containsKey(s)) { if(commandMap.get(s).equals("MakeVariable")) {userDef = true;} commandStack.push(s); }
                 else if (commandStruct.containsVariable(s)) { argumentStack.push(commandStruct.getVariable(s).getValue()); }
                 else if (Character.toString(s.charAt(0)).equals(":")) {commandStruct.addVariable(new VariableStruct(s, 0)); argumentStack.push(0); }
-                else { throw new UnknownCommandException(ERROR_MESSAGES.getString("UnknownCommand") + s); }
+                else if (commandStruct.containsUserCommand(s)) { commandStack.push(commandStruct.getUserCommand(s).getCommandInput()); }
+                else { commandExcept(s); }
             }
             basicCommandList = buildTree(basicCommandList);
         }
@@ -127,7 +127,7 @@ public class Parser {
                 }
                 else{ break; }
             }
-            else { throw new UnknownCommandException(ERROR_MESSAGES.getString("UnknownCommand") + command); }
+            else { commandExcept(command); }
         }
         if(commandStack.empty()) { argumentStack.clear(); }
         return commandList;
@@ -157,8 +157,9 @@ public class Parser {
             Method method = cls.getMethod("getNumArgs", NOPARAMS);
             return (int) method.invoke(obj);
         } catch (Exception e) {
-            throw new UnknownCommandException(ERROR_MESSAGES.getString("UnknownCommand") + cmd);
+            commandExcept(cmd);
         }
+        return Integer.MAX_VALUE;
     }
 
     /**
@@ -177,7 +178,7 @@ public class Parser {
             Class cls = forName("slogo.commands." + command);
             Constructor cons = cls.getDeclaredConstructor(COMMAND_CLASS_PARAMS);
             Object params[] = new Object[] {dummyCommandStruct, "[ ]", args, DUMMY_TURTLE};
-            if(command.equals("MakeVariable")) {params = new Object[] {commandStruct, "[ ]", args, DUMMY_TURTLE};}
+            if(command.equals("MakeVariable") || command.equals("MakeUserInstruction")) {params = new Object[] {commandStruct, "[ ]", args, DUMMY_TURTLE};}
             Object obj = cons.newInstance(params);
             Method method = cls.getDeclaredMethod("execute", EXECUTE_CLASS_PARAMS);
             method.setAccessible(true);
@@ -229,6 +230,10 @@ public class Parser {
     private boolean isConstant(String s){
         if(s == null) {return false;}
         return CONSTANT_PATTERN.matcher(s).matches();
+    }
+
+    private void commandExcept(String s) throws UnknownCommandException {
+        throw new UnknownCommandException(ERROR_MESSAGES.getString("UnknownCommand") + s);
     }
 
     /**

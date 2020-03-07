@@ -23,6 +23,10 @@ public class CommandStruct {
 
     }
 
+    public List<UserCommandStruct> getUserCommands(){
+        return Collections.unmodifiableList(myUserCommands);
+    }
+
     public Turtle getActiveTurtle(){
         return myActiveTurtle.getValue();
     }
@@ -92,7 +96,7 @@ public class CommandStruct {
     }
 
     public List<VariableStruct> getVariables() {
-        return myVariables;
+        return Collections.unmodifiableList(myVariables);
     }
 
     public List<VariableStruct> getStackVariables() {
