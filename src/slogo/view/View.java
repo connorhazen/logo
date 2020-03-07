@@ -52,7 +52,7 @@ public class View implements ViewInterface {
   private TextArea inputBox;
   private CommandHistoryView boxHistory;
   private ArrayList<String> clickedCommands;
-  private Color myColor;
+  protected Color myColor;
 
   public View(ControllerInterface cont, Stage primaryStage, Turtle turtle){
     clickedCommands = new ArrayList<>();
