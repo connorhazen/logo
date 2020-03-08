@@ -1,19 +1,13 @@
 package slogo.view.ViewFactory;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
-import slogo.ExceptionHelper;
 import slogo.view.MovableElements.BorderPaneLocation;
-import slogo.view.Turtle;
-import slogo.view.View;
 
 
 public class RightView<T> implements BorderPaneElement {

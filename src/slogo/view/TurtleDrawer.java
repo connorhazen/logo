@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Function;
 import javafx.animation.Animation;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
@@ -27,6 +26,11 @@ import slogo.view.animations.VisibleAnimation;
 import slogo.view.wrapableObjects.WrapableLine;
 import slogo.view.wrapableObjects.WrapableTurtleImage;
 
+/**
+ * The turtle drawer class is responsible for listening to turtle movements or changes, and
+ * creating the associated animations. The Element drawer then pulls the animations into its onw queue
+ * inorder to be played at end of command execution.
+ */
 public class TurtleDrawer {
 
   private Group elements;
@@ -57,6 +61,9 @@ public class TurtleDrawer {
 
   }
 
+
+
+
   public void addTurtleToCanvas() {
     makeCenterBindings();
     turtleNode = new WrapableTurtleImage(turtle, canvas, centerX, centerY, currentTurtleGif);
@@ -65,27 +72,7 @@ public class TurtleDrawer {
     makeAnimationBindings();
   }
 
-  private void setMouseClick() {
-    turtleNode.setOnMouseClicked(e -> {
-      System.out.println(currentTurtleGif.getValue().toString());
-      boolean activeState = turtle.switchActive();
-      System.out.println(activeState);
-      if (!activeState) {
-        this.changeImage("inactive_turtle");
-      } else {
-        this.setImage(prevImg);
-      }
-    });
-  }
-
-
-
-  public void changeImage(String file) {
-    String path = "data/turtleImages/" + file + ".gif";
-    setImage(path);
-  }
-
-  public boolean play(TurtleAnimation toPlay, DoubleProperty speed, double maxSpeed, Runnable a) {
+  public  void play(TurtleAnimation toPlay, DoubleProperty speed, double maxSpeed, Runnable a) {
     Group lines = new Group();
     elements.getChildren().add(lines);
     SimpleDoubleProperty turtleX = turtleNode.getXLocLines();
@@ -100,8 +87,33 @@ public class TurtleDrawer {
     } else {
       animateExecute(toPlay, lines, turtleX, turtleY, startLocX, startLocY, speed, a);
     }
-    return true;
   }
+
+  public void changeImage(String file) {
+    String path = "data/turtleImages/" + file + ".gif";
+    setImage(path);
+  }
+
+  public void setAnimationListener(ChangeListener<Boolean> func) {
+    newAnimations.addListener(func);
+  }
+
+  public List<Pair<TurtleDrawer, TurtleAnimation>> getAnimations() {
+    ArrayList<Pair<TurtleDrawer, TurtleAnimation>> ret = new ArrayList<>();
+    if(!newAnimations.getValue()){
+      return ret;
+    }
+    for(TurtleAnimation animation : currentTrans){
+      ret.add(new Pair<>(this, animation));
+    }
+    currentTrans.clear();
+    newAnimations.set(false);
+    return ret;
+  }
+
+
+
+
 
   private void animateExecute(TurtleAnimation toPlay, Group lines, SimpleDoubleProperty turtleX,
       SimpleDoubleProperty turtleY, double startLocX, double startLocY, DoubleProperty speed, Runnable a) {
@@ -128,12 +140,23 @@ public class TurtleDrawer {
     lines.getChildren().add(makeLines(startLocX, startLocY));
   }
 
-
   private Node makeLines(double startLocX, double startLocY) {
     return new WrapableLine(startLocX, startLocY, turtleNode.getXLocLines().doubleValue(),
         turtleNode.getYLocLines().doubleValue(), canvas, centerX, centerY, turtle.getPen());
   }
 
+  private void setMouseClick() {
+    turtleNode.setOnMouseClicked(e -> {
+      System.out.println(currentTurtleGif.getValue().toString());
+      boolean activeState = turtle.switchActive();
+      System.out.println(activeState);
+      if (!activeState) {
+        this.changeImage("inactive_turtle");
+      } else {
+        this.setImage(prevImg);
+      }
+    });
+  }
 
   private void makeCenterBindings() {
     centerY = new SimpleDoubleProperty();
@@ -180,23 +203,4 @@ public class TurtleDrawer {
     return new VisibleAnimation(turtle, turtleNode);
 
   }
-
-  public void setAnimationListener(ChangeListener<Boolean> func) {
-    newAnimations.addListener(func);
-  }
-
-  public List<Pair<TurtleDrawer, TurtleAnimation>> getAnimations() {
-    ArrayList<Pair<TurtleDrawer, TurtleAnimation>> ret = new ArrayList<>();
-    if(!newAnimations.getValue()){
-      return ret;
-    }
-    for(TurtleAnimation animation : currentTrans){
-      ret.add(new Pair<>(this, animation));
-    }
-    currentTrans.clear();
-    newAnimations.set(false);
-    return ret;
-  }
-
-
 }

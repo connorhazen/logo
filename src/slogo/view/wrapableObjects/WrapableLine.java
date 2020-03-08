@@ -9,6 +9,11 @@ import javafx.scene.layout.Pane;
 import slogo.view.Coordinates;
 import slogo.view.PenInterface;
 
+
+/**
+ * This class creates the line object between two coordinates. It handles the necessary screen wrapping
+ * and listens for canvas resize to redraw.
+ */
 public class WrapableLine extends Group {
 
   private double startX;
@@ -75,24 +80,20 @@ public class WrapableLine extends Group {
   }
 
   private Node drawLine(double x1, double y1, double x2, double y2) {
-    double xloc1 = x1%canvas.getWidth();
-    if(xloc1<0){
-      xloc1 = canvas.getWidth()+xloc1;
-    }
-    double yloc1 = y1%canvas.getHeight();
-    if(yloc1<0){
-      yloc1 = canvas.getHeight()+yloc1;
-    }
-    double xloc2 = x2%canvas.getWidth();
-    if(xloc2<0){
-      xloc2 = canvas.getWidth()+xloc2;
-    }
-    double yloc2 = y2%canvas.getHeight();
-    if(yloc2<0){
-      yloc2 = canvas.getHeight()+yloc2;
-    }
 
+    double xloc1 = getVisualLoc(x1, canvas.getWidth());
+    double yloc1 = getVisualLoc(y1, canvas.getHeight());
+    double xloc2 = getVisualLoc(x2, canvas.getWidth());
+    double yloc2 = getVisualLoc(y2, canvas.getWidth());
     return new slogoLine(xloc1, yloc1, xloc2, yloc2, pen);
+  }
+
+  private double getVisualLoc(double val, double compare){
+    double loc1 = val%compare;
+    if(loc1<0){
+      loc1 = compare+loc1;
+    }
+    return loc1;
   }
 
   private void getYBreaks(Map<Double, Coordinates> breakPoints) {

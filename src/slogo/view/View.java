@@ -2,14 +2,9 @@ package slogo.view;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import java.util.function.Consumer;
 import javafx.application.Application;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Scene;
-
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
@@ -33,8 +28,6 @@ public class View implements ViewInterface {
   private final int HEIGHT = 600;
 
   private final ControllerInterface controller;
-  private final Scene scene;
-  private Stage mainStage;
   private Pane canvas;
   private static final String STYLESHEET = "slogo/view/default.css";
   private static final String PROPERTIES = "src/slogo/view/button_properties.txt";
@@ -45,12 +38,10 @@ public class View implements ViewInterface {
   private CommandHistoryView boxHistory;
   private ArrayList<String> clickedCommands;
   protected Color myColor;
-  private CommandStruct commandStruct;
   private ElementDrawer drawer;
   private Slider slider;
 
   public View(ControllerInterface cont, Stage primaryStage, CommandStruct workSpaceInfo){
-    commandStruct = workSpaceInfo;
     clickedCommands = new ArrayList<>();
 
     canvas = new Pane();
@@ -58,14 +49,13 @@ public class View implements ViewInterface {
 
     boxHistory = new CommandHistoryView();
     errorHelper = new ExceptionHelper();
-    this.mainStage = primaryStage;
     controller = cont;
     instantiateGUIElements();
-    scene = new Scene(createBorderPane() , WIDTH, HEIGHT);
+    Scene scene = new Scene(createBorderPane(), WIDTH, HEIGHT);
     scene.getStylesheets().add(STYLESHEET);
 
-    mainStage.setScene(scene);
-    mainStage.show();
+    primaryStage.setScene(scene);
+    primaryStage.show();
     makeKeyListens();
     drawer.setCanvas(canvas);
 

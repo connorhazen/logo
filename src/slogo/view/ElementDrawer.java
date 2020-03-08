@@ -12,11 +12,18 @@ import javafx.util.Pair;
 import slogo.structs.CommandStruct;
 import slogo.view.animations.TurtleAnimation;
 
+
+/**
+ * This class serves as the creator for the various turtle objects located in the passed command struct.
+ * It uses a boolean property combined with a listener to determine when the turtle map has changed
+ * or is modified.
+ *
+ * It creates Turtle Drawer objects for each instance.
+ */
 public class ElementDrawer {
   private CommandStruct commandStruct;
   private Pane canvas;
 
-  private SimpleBooleanProperty mapChanged;
   private List<Turtle> drawnTurtles;
   private List<TurtleDrawer> turtleDrawers;
   private Group elements;
@@ -27,7 +34,7 @@ public class ElementDrawer {
 
   public ElementDrawer(CommandStruct commandStruct){
     this.commandStruct = commandStruct;
-    mapChanged = commandStruct.getChangedMap();
+    SimpleBooleanProperty mapChanged = commandStruct.getChangedMap();
     drawnTurtles = new ArrayList<>();
     turtleDrawers = new ArrayList<>();
     elements = new Group();
@@ -43,6 +50,26 @@ public class ElementDrawer {
     });
 
 
+  }
+
+  public void setImageForAll(String file){
+    currentImage  = file;
+    for (TurtleDrawer d : turtleDrawers){
+      setImage(d);
+    }
+  }
+
+  public void setImage(TurtleDrawer td){
+    td.changeImage(currentImage);
+  }
+
+  public void reset(){
+    running = false;
+    currentTrans.clear();
+    elements.getChildren().clear();
+    commandStruct.reset();
+    drawnTurtles.clear();
+    turtleDrawers.clear();
   }
 
   public void setCanvas(Pane canvas){
@@ -63,16 +90,20 @@ public class ElementDrawer {
     }
   }
 
-  private void getAnimations(TurtleDrawer toAdd) {
-    currentTrans.addAll(toAdd.getAnimations());
-  }
-
   public void run(DoubleProperty speed, double maxSpeed){
     if(!running){
       running = true;
       playAnimations(speed, maxSpeed);
     }
 
+  }
+
+
+
+
+
+  private void getAnimations(TurtleDrawer toAdd) {
+    currentTrans.addAll(toAdd.getAnimations());
   }
 
   private void playAnimations(DoubleProperty speed, double maxSpeed) {
@@ -83,23 +114,5 @@ public class ElementDrawer {
 
     Pair<TurtleDrawer, TurtleAnimation> toPlay = currentTrans.poll();
     toPlay.getKey().play(toPlay.getValue(), speed, maxSpeed, () -> playAnimations(speed, maxSpeed));
-  }
-
-  public void setImageForAll(String file){
-    currentImage  = file;
-    for (TurtleDrawer d : turtleDrawers){
-      setImage(d);
-    }
-  }
-  public void setImage(TurtleDrawer td){
-    td.changeImage(currentImage);
-  }
-  public void reset(){
-    running = false;
-    currentTrans.clear();
-    elements.getChildren().clear();
-    commandStruct.reset();
-    drawnTurtles.clear();
-    turtleDrawers.clear();
   }
 }

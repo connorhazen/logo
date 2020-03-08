@@ -9,17 +9,20 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import slogo.view.Turtle;
 
+/**
+ * Similar to the wrapable line, this class acts as the translator between given x,y location
+ * and actual display location.
+ */
 public class WrapableTurtleImage extends ImageView{
 
   private static final double TURTLE_SIZE = 80;
-  private double lastX;
-  private double lastY;
   private Turtle turtle;
   private SimpleDoubleProperty turtleXRelative;
   private SimpleDoubleProperty turtleYRelative;
   private SimpleDoubleProperty visualXOffset;
   private SimpleDoubleProperty visualYOffset;
   private Pane canvas;
+
 
   public WrapableTurtleImage(Turtle turtle, Pane canvas,  SimpleDoubleProperty centerX, SimpleDoubleProperty centerY, SimpleObjectProperty<Image> currentTurtleGif){
     super();
@@ -29,9 +32,6 @@ public class WrapableTurtleImage extends ImageView{
     visualXOffset = new SimpleDoubleProperty(0);
     visualYOffset = new SimpleDoubleProperty(0);
     this.turtle = turtle;
-    lastX = turtle.getX();
-    lastY = turtle.getY();
-
     makeInitialTurtle(currentTurtleGif);
     makeLocBinding(centerX, centerY);
   }

@@ -1,5 +1,9 @@
 package slogo.view;
 
+
+/**
+ * simple class to hold coordinates.
+ */
 public class Coordinates {
   private double x;
   private double y;

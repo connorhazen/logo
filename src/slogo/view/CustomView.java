@@ -1,15 +1,5 @@
 package slogo.view;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-import slogo.ControllerInterface;
-import slogo.ExceptionHelper;
-import slogo.structs.CommandStruct;
 /*
 public class CustomView extends View {
   private File myPropertiesPath;

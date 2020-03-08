@@ -6,7 +6,6 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.function.Consumer;
-import javafx.beans.property.DoubleProperty;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -16,7 +15,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import slogo.ExceptionHelper;
 import slogo.view.MovableElements.BorderPaneLocation;
-import slogo.view.Turtle;
 import slogo.view.View;
 import slogo.view.ViewInterface;
 

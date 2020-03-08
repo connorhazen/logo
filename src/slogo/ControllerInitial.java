@@ -2,7 +2,6 @@ package slogo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import javafx.stage.Stage;
 import slogo.structs.CommandStruct;

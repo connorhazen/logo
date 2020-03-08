@@ -3,7 +3,6 @@ package slogo.view.ViewFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import javafx.beans.property.DoubleProperty;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
