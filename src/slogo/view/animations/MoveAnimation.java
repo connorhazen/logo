@@ -4,6 +4,7 @@ package slogo.view.animations;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.util.Duration;
+import slogo.view.Coordinates;
 import slogo.view.Turtle;
 import slogo.view.wrapableObjects.WrapableTurtleImage;
 
@@ -14,10 +15,10 @@ public class MoveAnimation implements TurtleAnimation {
   private double lastY;
   private double endX;
   private double endY;
-  public MoveAnimation(Turtle turtle, WrapableTurtleImage viewTurtle){
+  public MoveAnimation(Turtle turtle, WrapableTurtleImage viewTurtle, Coordinates last){
     this.viewTurtle = viewTurtle;
-    lastX = viewTurtle.getLastX();
-    lastY = viewTurtle.getLastY();
+    lastX = last.getX();
+    lastY = last.getY();
     endX = turtle.getX();
     endY = turtle.getY();
 

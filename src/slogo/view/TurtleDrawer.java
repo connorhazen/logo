@@ -45,6 +45,7 @@ public class TurtleDrawer {
   private String imgName;
   private String prevImg;
   private SimpleBooleanProperty newAnimations;
+  private Coordinates last;
 
   public TurtleDrawer(Turtle turtle, Pane canvas, Group elements) {
     this.canvas = canvas;
@@ -57,6 +58,7 @@ public class TurtleDrawer {
     currentTrans = new LinkedList<>();
     newAnimations = new SimpleBooleanProperty(false);
     addTurtleToCanvas();
+    last = new Coordinates(turtle.getX(), turtle.getY());
 
 
   }
@@ -203,6 +205,7 @@ public class TurtleDrawer {
     turtle.getCordsProperty().addListener(e -> {
       currentTrans.add(moveAnimation());
       newAnimations.set(true);
+      last = new Coordinates(turtle.getX(), turtle.getY());
     });
     turtle.getAngleProperty().addListener(e -> {
       currentTrans.add(rotateAnimation());
@@ -215,7 +218,7 @@ public class TurtleDrawer {
   }
 
   private TurtleAnimation moveAnimation() {
-    return new MoveAnimation(turtle, turtleNode);
+    return new MoveAnimation(turtle, turtleNode, last);
   }
 
   private TurtleAnimation visibleAnimation() {
