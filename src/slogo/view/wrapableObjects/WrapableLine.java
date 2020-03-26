@@ -84,7 +84,7 @@ public class WrapableLine extends Group {
     double xloc1 = getVisualLoc(x1, canvas.getWidth());
     double yloc1 = getVisualLoc(y1, canvas.getHeight());
     double xloc2 = getVisualLoc(x2, canvas.getWidth());
-    double yloc2 = getVisualLoc(y2, canvas.getWidth());
+    double yloc2 = getVisualLoc(y2, canvas.getHeight());
     return new slogoLine(xloc1, yloc1, xloc2, yloc2, pen);
   }
 
