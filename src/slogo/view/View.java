@@ -22,6 +22,8 @@ import slogo.windows.BackgroundColor;
 import slogo.windows.HelpWindow;
 import slogo.windows.PenColorWindow;
 
+
+
 public class View implements ViewInterface {
 
   private final int WIDTH = 1200;

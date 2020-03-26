@@ -52,6 +52,10 @@ public class ElementDrawer {
 
   }
 
+  /**
+   * This changes all active turtle images.
+   * @param file
+   */
   public void setImageForAll(String file){
     currentImage  = file;
     for (TurtleDrawer d : turtleDrawers){
@@ -59,10 +63,17 @@ public class ElementDrawer {
     }
   }
 
+  /**
+   * This changes the turtle image for a specific turtle.
+   * @param td
+   */
   public void setImage(TurtleDrawer td){
     td.changeImage(currentImage);
   }
 
+  /**
+   * This is a general method to reset all elements, it clears the turtles and returns to origin.
+   */
   public void reset(){
     running = false;
     currentTrans.clear();
@@ -72,11 +83,20 @@ public class ElementDrawer {
     turtleDrawers.clear();
   }
 
+  /**
+   * This method is used to set the pane in which we add turtles.
+   *
+   * It is not done in constructor since the pane may have not been initialized.
+   * @param canvas
+   */
   public void setCanvas(Pane canvas){
     this.canvas = canvas;
     canvas.getChildren().add(elements);
   }
 
+  /**
+   * This runs through all the created turtles and instantiates an associated turtle drawer.
+   */
   public void makeTurtles(){
     Map<Integer, Turtle> turtles = commandStruct.getMyTurtleMap();
     for (Turtle t : turtles.values()){
@@ -90,6 +110,13 @@ public class ElementDrawer {
     }
   }
 
+  /**
+   * This method runs the queue of animations created by the slogo code.
+   * If the speed == max speed, then we remove the animations all together and just execute
+   * instantaneously.
+   * @param speed
+   * @param maxSpeed
+   */
   public void run(DoubleProperty speed, double maxSpeed){
     if(!running){
       running = true;

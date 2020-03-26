@@ -61,9 +61,9 @@ public class TurtleDrawer {
 
   }
 
-
-
-
+  /**
+   * This methods is used to create the actual turtle object and bind its loaction, angle, etc
+   */
   public void addTurtleToCanvas() {
     makeCenterBindings();
     turtleNode = new WrapableTurtleImage(turtle, canvas, centerX, centerY, currentTurtleGif);
@@ -72,6 +72,13 @@ public class TurtleDrawer {
     makeAnimationBindings();
   }
 
+  /**
+   * This method runs the given animation on its javaFx object.
+   * @param toPlay
+   * @param speed
+   * @param maxSpeed
+   * @param a
+   */
   public  void play(TurtleAnimation toPlay, DoubleProperty speed, double maxSpeed, Runnable a) {
     Group lines = new Group();
     elements.getChildren().add(lines);
@@ -89,15 +96,27 @@ public class TurtleDrawer {
     }
   }
 
+  /**
+   * This method simply changes the displayed image.
+   * @param file
+   */
   public void changeImage(String file) {
     String path = "data/turtleImages/" + file + ".gif";
     setImage(path);
   }
 
+  /**
+   * This method is used to create a listener on the current animation queue with the passed function.
+   * @param func
+   */
   public void setAnimationListener(ChangeListener<Boolean> func) {
     newAnimations.addListener(func);
   }
 
+  /**
+   * This method returns the current queue of animations.
+   * @return
+   */
   public List<Pair<TurtleDrawer, TurtleAnimation>> getAnimations() {
     ArrayList<Pair<TurtleDrawer, TurtleAnimation>> ret = new ArrayList<>();
     if(!newAnimations.getValue()){

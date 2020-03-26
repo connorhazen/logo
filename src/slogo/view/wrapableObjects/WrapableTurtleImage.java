@@ -23,7 +23,13 @@ public class WrapableTurtleImage extends ImageView{
   private SimpleDoubleProperty visualYOffset;
   private Pane canvas;
 
-
+  /**
+   * @param turtle
+   * @param canvas
+   * @param centerX
+   * @param centerY
+   * @param currentTurtleGif
+   */
   public WrapableTurtleImage(Turtle turtle, Pane canvas,  SimpleDoubleProperty centerX, SimpleDoubleProperty centerY, SimpleObjectProperty<Image> currentTurtleGif){
     super();
     this.canvas = canvas;
@@ -35,6 +41,40 @@ public class WrapableTurtleImage extends ImageView{
     makeInitialTurtle(currentTurtleGif);
     makeLocBinding(centerX, centerY);
   }
+
+  public void setTurtleXRelative(double val){
+    turtleXRelative.set(val);
+  }
+  public void setTurtleYRelative(double val){
+    turtleYRelative.set(val);
+  }
+
+
+  /**
+   * These two getters are used to get the actual turtle coordinates based off center of screen.
+   * However, it is not the visual location, which wraps, but rather the raw coordinate.
+   * @return
+   */
+  public SimpleDoubleProperty getXLocLines(){
+    return turtleXRelative;
+  }
+  public SimpleDoubleProperty getYLocLines(){
+    return turtleYRelative;
+  }
+
+  /**
+   * These two getters are used to get turtles last location.
+   * @return
+   */
+  public double getLastX(){
+    return turtle.getLastX();
+  }
+  public double getLastY(){
+    return  turtle.getLastY();
+  }
+
+
+
 
   private void makeLocBinding(SimpleDoubleProperty centerX, SimpleDoubleProperty centerY) {
     NumberBinding xLoc = Bindings.add(turtleXRelative, centerX);
@@ -86,27 +126,6 @@ public class WrapableTurtleImage extends ImageView{
     this.setFitWidth(TURTLE_SIZE);
     this.setFitHeight(TURTLE_SIZE);
     this.setRotate(turtle.getAngle() + 90);
-  }
-
-  public void setTurtleXRelative(double val){
-    turtleXRelative.set(val);
-  }
-  public void setTurtleYRelative(double val){
-    turtleYRelative.set(val);
-  }
-
-  public SimpleDoubleProperty getXLocLines(){
-    return turtleXRelative;
-  }
-  public SimpleDoubleProperty getYLocLines(){
-    return turtleYRelative;
-  }
-
-  public double getLastX(){
-    return turtle.getLastX();
-  }
-  public double getLastY(){
-    return  turtle.getLastY();
   }
 
 }
